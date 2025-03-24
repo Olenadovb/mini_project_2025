@@ -1,0 +1,32 @@
+body {
+    font-family: sans-serif;
+    background-color: #f4f4f4;
+    text-align: justify;
+    margin: 10px;
+    padding: 0;
+}
+
+h1 {
+    color: #333;
+}
+
+nav {
+    margin: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    background: #007BFF;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+nav a:hover {
+    background: #0056b3;
+}
+
+p {
+    margin: 10px
+}
