@@ -42,6 +42,21 @@ async def categories():
     return FileResponse("static/categories.html")
 
 
+@app.get("/settings")
+async def settings():
+    return FileResponse("static/settings.html")
+
+
+@app.get("/profile")
+async def profile():
+    return FileResponse("static/profile.html")
+
+
+@app.get("/aboutus")
+async def aboutus():
+    return FileResponse("static/aboutus.html")
+
+
 @app.get("/registrate")
 async def registrate():
     return FileResponse("static/registration.html")
