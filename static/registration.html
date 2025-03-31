@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,5 +16,337 @@
         <a href="/aboutus">About Us</a>
     </nav>
     <a href='/login'>Login with Google</a>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCU Apps - Registration</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: #9DA4B9;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        .hero-text {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .hero-text h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .hero-text p {
+            font-style: italic;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        
+        .registration-form {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        .form-group input:invalid {
+            border-color: #e01010;
+        }
+        
+        .phone-input {
+            display: flex;
+        }
+        
+        .phone-prefix {
+            padding: 12px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-right: none;
+            border-radius: 6px 0 0 6px;
+            color: #555;
+        }
+        
+        .phone-number {
+            border-radius: 0 6px 6px 0;
+            flex: 1;
+        }
+        
+        .password-hint {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .signup-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2D3F74;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 15px 0;
+            transition: background-color 0.3s;
+        }
+        
+        .signup-btn:hover {
+            background-color: #9DA4B9;
+        }
+        
+        .google-signup {
+            width: 100%;
+            padding: 12px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #555;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        /* .google-signup img {
+            width: 20px;
+            margin-right: 10px;
+        } */
+        
+        .login-link {
+            text-align: center;
+            color: #7f8c8d;
+        }
+        
+        .login-link a {
+            color: #2D3F74;
+            text-decoration: none;
+        }
+        
+        footer {
+            background-color: #9DA4B9;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ff6b6b;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; top: 0; }
+            to { opacity: 1; top: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="alert" id="alert">You need to fill out everything!</div>
+    
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/categories">Categories</a>
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+            <a href="/aboutus">About us</a>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="hero-text">
+            <h1>You are one step closer to becoming a part of us!</h1>
+            <p>With open hearts and helping hands, we stand as one to heal the land!</p>
+        </div>
+        
+        <div class="registration-form">
+            <form id="registerForm" novalidate>
+                <div class="form-group">
+                    <label>Your name</label>
+                    <input type="text" id="name" placeholder="Enter name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Your phone number</label>
+                    <div class="phone-input">
+                        <span class="phone-prefix">+380</span>
+                        <input type="tel" id="phone" class="phone-number" placeholder="Your phone number" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Your email</label>
+                    <input type="email" id="email" placeholder="Enter email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Create password</label>
+                    <input type="password" id="password" placeholder="Eg: nggih578DJ2" required>
+                    <div class="password-hint">Use a mix of letters, numbers and symbols</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirm password</label>
+                    <input type="password" id="confirmPassword" placeholder="Re-enter your password" required>
+                </div>
+                
+                <button type="submit" class="signup-btn">Sign up</button>
+                
+                <button type="button" class="google-signup">
+                    <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google logo"> -->
+                    Sign up via Google
+                </button>
+                
+                <div class="login-link">
+                    Already have an account? <a href="#">Log in</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <span>Name c 2025</span>
+            <span>UCU APPS Industries</span>
+            <span>All rights reserved</span>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!name || !phone || !email || !password || !confirmPassword) {
+                showAlert("You need to fill out everything!");
+                highlightEmptyFields();
+                return false;
+            }
+            
+            if (password !== confirmPassword) {
+                showAlert("Passwords do not match!");
+                document.getElementById('password').style.borderColor = '#ff6b6b';
+                document.getElementById('confirmPassword').style.borderColor = '#ff6b6b';
+                return false;
+            }
+            
+            alert('Registration successful!');
+        });
+
+        function showAlert(message) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        function highlightEmptyFields() {
+            document.querySelectorAll('input').forEach(input => {
+                if (!input.value) {
+                    input.style.borderColor = '#ff6b6b';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
