@@ -1,0 +1,168 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  .navbar {
+    background-color: #a0a4b8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 24px;
+    gap: 24px;
+  }
+  
+  .logo {
+    height: 40px;
+  }
+  
+  .nav-menu {
+    display: flex;
+    gap: 16px;
+  }
+  
+  header.navbar nav button {
+    background-color: #5E678B;
+    color: white;
+    font-size: 22px;
+    padding: 15.5px 71.5px;
+    border-radius: 14px;
+    border: 1px solid #E8E8E8;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .nav-menu button:hover {
+    background-color: #4d5678;
+  }
+  
+  .container {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 122px;
+    padding-right: 122px;
+  }
+  
+  .profile {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .contact-info {
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .user-info-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .user-info h1 {
+    color: #344c8c;
+    font-size: 24px;
+  }
+  
+  .tags span {
+    display: inline-block;
+    border: 1px solid #344c8c;
+    padding: 4px 8px;
+    border-radius: 16px;
+    margin-right: 6px;
+    margin-top: 6px;
+    font-size: 14px;
+  }
+
+  .add-activity button {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 16px;
+    height: 48px;
+    width: 184px;
+    text-align: center;
+  }
+
+
+  .user-info button {
+    justify-content: center;
+    margin-top: 12px;
+    padding: 6px 12px;
+    border: 1px solid #344c8c;
+    background: none;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  
+  .user-text {
+    max-width: 500px;
+  }
+  
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .history {
+    margin-top: 32px;
+  }
+  
+  .cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .card {
+    width: 296px;
+    height: 249px;
+    background-color: #7F7C98;
+    color: white;
+    padding: 20px;
+    font-size: 24px;
+    border-radius: 16px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .card span {
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 16px;
+    align-self: flex-start;
+  }
+  
+  .card::after {
+    content: "↗";
+    position: absolute;
+    bottom: 27px;
+    right: 17.5px;
+    font-size: 20px;
+    color: white;
+  }
+  
+  footer {
+    margin-top: 40px;
+    padding: 16px;
+    background-color: #a0a4b8;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #333;
+  }
