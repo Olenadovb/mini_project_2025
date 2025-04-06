@@ -4,7 +4,7 @@ Server file
 
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Depends
-from fastapi.responses import RedirectResponse, FileResponse
+from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
 from google_auth_oauthlib.flow import Flow
@@ -12,9 +12,9 @@ from google.oauth2.credentials import Credentials
 
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
-from .models import models
-from .crud import crud
-from .schemas import schemas
+from models import models
+from crud import crud
+from schemas import schemas
 import os
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -25,7 +25,7 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 models.Base.metadata.create_all(bind=engine)
 
-# frontend
+# FRONTEND
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
@@ -36,10 +36,6 @@ SCOPES = [
     "https://www.googleapis.com/auth/userinfo.profile",
 ]
 REDIRECT_URI = "http://localhost:8000/callback"
-
-flow = Flow.from_client_secrets_file(
-    CLIENT_SECRETS_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI
-)
 
 
 @app.get("/")
@@ -75,12 +71,18 @@ async def registrate():
 
 @app.get("/login")
 async def login():
+    flow = Flow.from_client_secrets_file(
+        CLIENT_SECRETS_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI
+    )
     auth_url, state = flow.authorization_url(prompt="consent")
     return RedirectResponse(auth_url)
 
 
 @app.get("/callback")
 async def callback(request: Request):
+    flow = Flow.from_client_secrets_file(
+        CLIENT_SECRETS_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI
+    )
     flow.fetch_token(authorization_response=str(request.url))
     credentials = flow.credentials
     return RedirectResponse(url="/create_profile")
@@ -97,8 +99,7 @@ async def create_pr(request: Request):
 #     return static.TemplateResponse("welcome.html", {"request": request})
 
 
-# database
-
+# DATABASE
 
 def get_db():
     db = SessionLocal()
@@ -108,8 +109,8 @@ def get_db():
         db.close()
 
 
-@app.post("/register", response_model=schemas.UserResponse)
-def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+@app.post("/create_user", response_model=schemas.UserResponse)
+def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db, user)
 
 
@@ -118,7 +119,7 @@ def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)
     return crud.create_request(db, req)
 
 
-# if __name__ == "__main__":
-#     import uvicorn
+if __name__ == "__main__":
+    import uvicorn
 
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

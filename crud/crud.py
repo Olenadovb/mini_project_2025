@@ -5,7 +5,17 @@ import json
 
 
 def create_user(db: Session, user: UserCreate):
-    db_user = User(**user.dict())
+    # db_user = User(**user.dict())
+    db_user = User(
+        name=user.name,
+        surname=user.surname,
+        email=user.email,
+        phone=user.phone,
+        description=user.description,
+        image_path=user.image_path,
+        country=user.country,
+        city=user.city,
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

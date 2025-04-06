@@ -377,9 +377,27 @@
                 // Collect selected categories
                 const selectedCategories = Array.from(categoryCheckboxes).map(cb => cb.value);
                 
-                alert('Registration successful! Form would be submitted to the server.\nSelected categories: ' + selectedCategories.join(', '));
+                // alert('Registration successful! Form would be submitted to the server.\nSelected categories: ' + selectedCategories.join(', '));
                 // In a real application, you would send the form data to the server here
                 // this.submit();
+
+                const formData = new FormData(document.getElementById('registrationForm'));
+                formData.append("categories", selectedCategories.join(", "));  // Додаємо вибрані категорії
+
+                fetch('/users/', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.idUsers) {
+                        alert('Registration successful!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Registration failed');
+                });
             }
         });
     </script>

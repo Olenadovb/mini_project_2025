@@ -36,7 +36,7 @@ class Request(Base):
     description = Column(String(400))
     image_path = Column(String(250))
     created_at = Column(TIMESTAMP, default=datetime.datetime.utcnow)
-    state = Column(Integer)
+    state = Column(Integer, default=1)
     id_author = Column(Integer, ForeignKey("Users.idUsers"))
 
     author = relationship("User", back_populates="requests")
