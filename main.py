@@ -5,9 +5,16 @@ Server file
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Depends
 from fastapi.responses import RedirectResponse, FileResponse
+from fastapi.templating import Jinja2Templates
+
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
-from fastapi.templating import Jinja2Templates
+
+from sqlalchemy.orm import Session
+from database import SessionLocal, engine
+from .models import models
+from .crud import crud
+from .schemas import schemas
 import os
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -15,6 +22,10 @@ app = FastAPI()
 static = Jinja2Templates(directory="static")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
+
+models.Base.metadata.create_all(bind=engine)
+
+# frontend
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
@@ -86,7 +97,28 @@ async def create_pr(request: Request):
 #     return static.TemplateResponse("welcome.html", {"request": request})
 
 
-if __name__ == "__main__":
-    import uvicorn
+# database
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@app.post("/register", response_model=schemas.UserResponse)
+def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    return crud.create_user(db, user)
+
+
+@app.post("/requests", response_model=schemas.RequestResponse)
+def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)):
+    return crud.create_request(db, req)
+
+
+# if __name__ == "__main__":
+#     import uvicorn
+
+#     uvicorn.run(app, host="0.0.0.0", port=8000)

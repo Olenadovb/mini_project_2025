@@ -3,18 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini-project2</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        input[type="file"] {
+            border: none;
+            padding-left: 0;
+        }
+        
+        .required::after {
+            content: " *";
+            color: red;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .preview-container {
+            width: 150px;
+            height: 150px;
+            border: 1px dashed #ccc;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        #imagePreview {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+        
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello! This is home page</h1>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/categories">Categories</a>
-        <a href="/profile">Profile</a>
-        <a href="/settings">Settings</a>
-        <a href="/aboutus">About Us</a>
-    </nav>
-    <p>Here you can create your profile</p>
+    <script>
+
+    </script>
+    <h1>Registration Form</h1>
+    
+    <form id="registrationForm">
+        <div class="form-group">
+            <label for="firstName" class="required">First Name</label>
+            <input type="text" id="firstName" name="firstName" maxlenght="45" required>
+            <div id="firstNameError" class="error">Please enter your first name</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="secondName" class="required">Second Name</label>
+            <input type="text" id="secondName" name="secondName" maxlenght="45" required>
+            <div id="secondNameError" class="error">Please enter your second name</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="age" class="required">Age</label>
+            <input type="number" id="age" name="age" min="17" max="120" required>
+            <div id="ageError" class="error">Please enter a valid age</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="country" class="required">Country</label>
+            <select id="country" name="country" required>
+                <option value="" disabled selected>Select your country</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="UK">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+                <option value="JP">Japan</option>
+                <option value="CN">China</option>
+                <option value="IN">India</option>
+                <option value="BR">Brazil</option>
+                <option value="UA">Ukraine</option>
+                <!-- Add more countries as needed -->
+            </select>
+            <div id="countryError" class="error">Please select a country</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="city" class="required">City</label>
+            <input type="text" id="city" name="city" maxlenght="45" required>
+            <div id="cityError" class="error">Please enter your city</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="phone" class="required">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="e.g., +380 507 456 789" required>
+            <div id="phoneError" class="error">Please enter a valid phone number</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="email" class="required">Email</label>
+            <input type="email" id="email" name="email" maxlenght="99" required>
+            <div id="emailError" class="error">Please enter a valid email address</div>
+        </div>
+        
+
+        <div class="form-group">
+            <label class="required">Categories (Select at least one)</label>
+            <div class="checkbox-group">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-clothing" name="categories" value="Clothing & Gear">
+                    <label for="category-clothing">Clothing & Gear</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-navigation" name="categories" value="Navigation & Surveillance">
+                    <label for="category-navigation">Navigation & Surveillance</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-communication-equipment" name="categories" value="Communication Equipment">
+                    <label for="category-communication-equipment">Communication Equipment</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-shelter-sleeping-gear" name="categories" value="Shelter & Sleeping Gear">
+                    <label for="category-shelter-sleeping-gear">Shelter & Sleeping Gear</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-food-water-supplies" name="categories" value="Food & Water Supplies">
+                    <label for="category-food-water-supplies">Food & Water Supplies</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-medical-first-aid" name="categories" value="Medical & First Aid">
+                    <label for="category-medical-first-aid">Medical & First Aid</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-tools-repair-kits" name="categories" value="Tools & Repair Kits">
+                    <label for="category-tools-repair-kits">Tools & Repair Kits</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-power-energy" name="categories" value="Power & Energy">
+                    <label for="category-power-energy">Power & Energy</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-vehicle" name="categories" value="Vehicle & Transport Support">
+                    <label for="category-vehicle">Vehicle & Transport Support</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-power-energy" name="categories" value="Protective Equipment">
+                    <label for="category-power-energy">Protective Equipment</label>
+                </div>
+            </div>
+            <div id="categoriesError" class="error">Please select at least one category</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="photo" class="required">Photo</label>
+            <input type="file" id="photo" name="photo" accept="image/*" required>
+            <div class="preview-container">
+                <img id="imagePreview" src="#" alt="Image preview">
+            </div>
+            <div id="photoError" class="error">Please upload a photo</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="about" class="required">About You</label>
+            <textarea id="about" name="about" rows="4" maxlenght="200" required></textarea>
+            <div class="char-counter" id="aboutCounter">0/200 characters</div>
+            <div id="aboutError" class="error">Please tell us about yourself (maximum 200 characters)</div>
+        </div>
+        
+        <button type="submit">Register</button>
+    </form>
+
+    <script>
+        // Character counter functions
+        function setupCharCounter(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            
+            // Initial count
+            counter.textContent = `${input.value.length}/${maxLength} characters`;
+            
+            // Update count on input
+            input.addEventListener('input', function() {
+                counter.textContent = `${this.value.length}/${maxLength} characters`;
+            });
+        }
+        
+        // Setup character counters for text fields
+        setupCharCounter('firstName', 'firstNameCounter', 45);
+        setupCharCounter('secondName', 'secondNameCounter', 45);
+        setupCharCounter('city', 'cityCounter', 45);
+        setupCharCounter('email', 'emailCounter', 99);
+        setupCharCounter('about', 'aboutCounter', 200);
+        
+        // Image preview functionality
+        document.getElementById('photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form validation
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            
+            // Validate first name
+            const firstName = document.getElementById('firstName');
+            const firstNameError = document.getElementById('firstNameError');
+            const firstNameLength = firstName.value.trim().length;
+            if (firstNameLength === 0 || firstNameLength > 45) {
+                firstNameError.style.display = 'block';
+                isValid = false;
+            } else {
+                firstNameError.style.display = 'none';
+            }
+            
+            // Validate second name
+            const secondName = document.getElementById('secondName');
+            const secondNameError = document.getElementById('secondNameError');
+            const secondNameLength = secondName.value.trim().length;
+            if (secondNameLength === 0 || secondNameLength > 45) {
+                secondNameError.style.display = 'block';
+                isValid = false;
+            } else {
+                secondNameError.style.display = 'none';
+            }
+            
+            // Validate age
+            const age = document.getElementById('age');
+            const ageError = document.getElementById('ageError');
+            const ageValue = parseInt(age.value);
+            if (isNaN(ageValue) || ageValue < 1 || ageValue > 999) {
+                ageError.style.display = 'block';
+                isValid = false;
+            } else {
+                ageError.style.display = 'none';
+            }
+            
+            // Validate country
+            const country = document.getElementById('country');
+            const countryError = document.getElementById('countryError');
+            if (country.value === '') {
+                countryError.style.display = 'block';
+                isValid = false;
+            } else {
+                countryError.style.display = 'none';
+            }
+            
+            // Validate city
+            const city = document.getElementById('city');
+            const cityError = document.getElementById('cityError');
+            const cityLength = city.value.trim().length;
+            if (cityLength === 0 || cityLength > 45) {
+                cityError.style.display = 'block';
+                isValid = false;
+            } else {
+                cityError.style.display = 'none';
+            }
+            
+            // Validate phone
+            const phone = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            
+            // Remove all spaces from the phone number for validation
+            const phoneValue = phone.value.replace(/\s+/g, '');
+            
+            // Check if the phone starts with + and has exactly 12 digits after removing spaces
+            const phoneValid = phoneValue.startsWith('+') && 
+                               phoneValue.length === 13 && 
+                               /^\+\d{12}$/.test(phoneValue);
+            
+            if (!phoneValid) {
+                phoneError.style.display = 'block';
+                isValid = false;
+            } else {
+                phoneError.style.display = 'none';
+            }
+            
+            // Validate email
+            const email = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            const emailLength = email.value.length;
+            
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value) || emailLength === 0 || emailLength > 99) {
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+            }
+            
+            // Validate categories (at least one must be selected)
+            const categoryCheckboxes = document.querySelectorAll('input[name="categories"]:checked');
+            const categoriesError = document.getElementById('categoriesError');
+            if (categoryCheckboxes.length === 0) {
+                categoriesError.style.display = 'block';
+                isValid = false;
+            } else {
+                categoriesError.style.display = 'none';
+            }
+            
+            // Validate photo
+            const photo = document.getElementById('photo');
+            const photoError = document.getElementById('photoError');
+            if (photo.files.length === 0) {
+                photoError.style.display = 'block';
+                isValid = false;
+            } else {
+                photoError.style.display = 'none';
+            }
+            
+            // Validate about
+            const about = document.getElementById('about');
+            const aboutError = document.getElementById('aboutError');
+            const aboutLength = about.value.trim().length;
+            if (aboutLength === 0 || aboutLength > 200) {
+                aboutError.style.display = 'block';
+                isValid = false;
+            } else {
+                aboutError.style.display = 'none';
+            }
+            
+            if (isValid) {
+                // Collect selected categories
+                const selectedCategories = Array.from(categoryCheckboxes).map(cb => cb.value);
+                
+                alert('Registration successful! Form would be submitted to the server.\nSelected categories: ' + selectedCategories.join(', '));
+                // In a real application, you would send the form data to the server here
+                // this.submit();
+            }
+        });
+    </script>
 </body>
 </html>
