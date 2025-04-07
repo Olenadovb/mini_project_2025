@@ -7,11 +7,10 @@ body {
   .navbar {
     background-color: #a0a4b8;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 12px 60px;
+    padding: 12px 24px 0 0;
     gap: 24px;
-    flex-wrap: nowrap;
   }
   
   .logo {
@@ -20,20 +19,24 @@ body {
   
   .nav-menu {
     display: flex;
-    gap: 16px;
-    flex-wrap: nowrap;
+    gap: 0;
   }
   
   header.navbar nav button {
     background-color: #5E678B;
     color: white;
+    padding: 14px 58px;
     font-size: 22px;
-    padding: 15.5px 71.5px;
-    border-radius: 14px;
+    border-radius: 6px 6px 0 0;
     border: 1px solid #E8E8E8;
     cursor: pointer;
     transition: background-color 0.3s;
   }
+
+  .nav-menu button:hover {
+    background-color: #4d5678;
+  }
+  
 
   .nav-menu button:hover {
     background-color: #4d5678;
@@ -113,8 +116,8 @@ body {
   
   .container {
     max-width: 100%;
-    padding-left: 125px;
-    padding-right: 125px;
+    margin: 20px;
+    padding: 0 16px;
     box-sizing: border-box;
   }
   
@@ -122,41 +125,51 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-size: 24px;
+    padding: 32px 16px;
+    gap: 48px;
     flex-wrap: wrap;
-  }
-  
-  .contact-info {
-    flex: 1;
-    min-width: 250px;
   }
   
   .user-info-flex {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: nowrap;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .tags-and-button {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     flex-wrap: wrap;
+    margin-top: 12px;
   }
   
-  .user-info h1 {
-    color: #344c8c;
-    font-size: 24px;
-  }
-  
-  .tags span {
+  .tags span{
     display: inline-block;
+    max-width: 115px;
     border: 1px solid #344c8c;
     padding: 4px 8px;
     border-radius: 16px;
     margin-right: 6px;
     margin-top: 6px;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .add-activity button {
     display: block;
     color: #f9f9f9;
+    border: 1px solid #344c8c;
     background-color: #344c8c;
     margin: 20px auto;
     padding: 12px 24px;
@@ -179,6 +192,7 @@ body {
   
   .user-text {
     max-width: 500px;
+    font-size: 24px;
   }
   
   .avatar {
@@ -189,17 +203,21 @@ body {
   }
   
   .history {
-    margin-top: 32px;
+    max-width: 1000px;
+    margin: 32px auto 0 auto;
+    padding: 0 16px;
   }
   
   .cards {
     display: flex;
-    justify-content: center;
-    gap: 20px;
     flex-wrap: wrap;
-    margin-top: 20px;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 16px;
   }
-  
+
   .card {
     width: 296px;
     height: 249px;
@@ -210,10 +228,11 @@ body {
     border-radius: 16px;
     position: relative;
     display: flex;
+    align-items: baseline;
     flex-direction: column;
     justify-content: space-between;
+    box-sizing: border-box;
   }
-  
   .about-section {
     /* padding-top: 153px; */
     background-color: #dfe6d5;
