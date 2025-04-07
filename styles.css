@@ -59,6 +59,19 @@ body {
     cursor: pointer;
   }
   
+  .homepage_button_join {
+    border: none;
+    background-color: #344c8c;
+    color: white;
+    width: 220px;
+    height: 49px;
+    /* background: none; */
+    padding: 12px 24px;
+    border-radius: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
   .activity-row {
     display: flex;
     align-items: center;
