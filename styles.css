@@ -56,6 +56,7 @@ body {
   
   .outlined-btn {
     border: 1px solid #344c8c;
+    width: 228px;
     color: #344c8c;
     background: none;
     padding: 12px 24px;
