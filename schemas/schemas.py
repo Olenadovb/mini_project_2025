@@ -6,13 +6,16 @@ from datetime import datetime
 class UserCreate(BaseModel):
     name: str
     surname: str
-    email: str
-    phone: str
-    description: Optional[str] = None
-    image_path: Optional[str] = None
+    age: int
     country: str
     city: str
-
+    phone: str
+    email: str
+    categories: str
+    image_path: Optional[str] = None
+    description: Optional[str] = None
+    created_at: Optional[str] = None
+    requests: list = []
 
 class UserResponse(UserCreate):
     idUsers: int
