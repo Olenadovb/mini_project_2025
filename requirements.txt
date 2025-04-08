@@ -1,0 +1,13 @@
+fastapi
+google_auth_oauthlib.flow
+google.oauth2.credentials
+sqlalchemy
+os
+shutil
+uuid
+logging
+pydantic_settings
+typing
+datetime
+json
+
