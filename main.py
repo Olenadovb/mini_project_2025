@@ -15,15 +15,15 @@ from database import SessionLocal, engine
 from models import models
 from crud import crud
 from schemas import schemas
+from config import settings
 import os
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 app = FastAPI()
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 static = Jinja2Templates(directory="static")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
-
-models.Base.metadata.create_all(bind=engine)
 
 # FRONTEND
 
@@ -50,7 +50,7 @@ async def categories():
 
 
 @app.get("/settings")
-async def settings():
+async def settings_page():
     return FileResponse("static/settings.html")
 
 
@@ -100,6 +100,8 @@ async def create_pr(request: Request):
 
 
 # DATABASE
+
+# models.Base.metadata.create_all(bind=engine)
 
 def get_db():
     db = SessionLocal()

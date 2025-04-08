@@ -91,7 +91,7 @@
     </script>
     <h1>Registration Form</h1>
     
-    <form id="registrationForm">
+    <form id="registrationForm" method="POST">
         <div class="form-group">
             <label for="firstName" class="required">First Name</label>
             <input type="text" id="firstName" name="firstName" maxlenght="45" required>
@@ -215,7 +215,7 @@
         <button type="submit">Register</button>
     </form>
 
-    <script>
+    <!-- <script>
         // Character counter functions
         function setupCharCounter(inputId, counterId, maxLength) {
             const input = document.getElementById(inputId);
@@ -400,6 +400,45 @@
                 });
             }
         });
-    </script>
+    </script> -->
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+        
+            const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
+        
+            const formData = {
+                name: document.getElementById('firstName').value,
+                surname: document.getElementById('secondName').value,
+                age: parseInt(document.getElementById('age').value),
+                country: document.getElementById('country').value,
+                city: document.getElementById('city').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                categories: categories,
+                image_path: "image_placeholder.png",
+                description: document.getElementById('about').value,
+                created_at: time.now(),
+                requests: []
+            };
+        
+            const response = await fetch('/create_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+        
+            if (response.ok) {
+                const result = await response.json();
+                alert('User created successfully! 🎉');
+                console.log(result);
+            } else {
+                const error = await response.text();
+                alert('Error creating user: ' + error);
+            }
+        });
+        </script>        
 </body>
 </html>

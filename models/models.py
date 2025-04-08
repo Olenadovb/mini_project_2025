@@ -24,7 +24,7 @@ class User(Base):
     created_at = Column(TIMESTAMP, default=datetime.datetime.utcnow)
     country = Column(String(50))
     city = Column(String(50))
-
+    categories = Column(String(50))
     requests = relationship("Request", back_populates="author")
 
 
