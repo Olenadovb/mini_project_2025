@@ -302,6 +302,64 @@ body {
     color: white;
   }
   
+  
+  .last-requests {
+    background-color: #5a668c;
+    border-radius: 20px;
+    padding: 20px 40px;
+    max-width: 1030px;
+    margin: 50px auto;
+    color: #000;
+  }
+  
+  .last-requests-header {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 24px;
+  }
+  
+  .request-row {
+    background-color: #949cb5;
+    border-radius: 20px;
+    padding: 16px 24px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .request-user {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 20px;
+  }
+  
+  .request-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .request-text {
+    font-size: 20px;
+  }
+  
+  .request-time {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .request-footer {
+    text-align: right;
+    font-size: 24px;
+    color: #949cb5;
+    margin-top: 10px;
+  }
+  
+
   footer {
     margin-top: 40px;
     padding: 16px;
