@@ -1,9 +1,18 @@
-body {
+/* body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     color: #333;
+  } */
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
+  
   .navbar {
     background-color: #a0a4b8;
     display: flex;
@@ -13,21 +22,18 @@ body {
     gap: 24px;
   }
   
-  .logo {
-    height: 40px;
-  }
   
   .nav-menu {
     display: flex;
-    gap: 0;
+    gap: 2;
   }
   
   header.navbar nav button {
     background-color: #5E678B;
     color: white;
-    padding: 14px 58px;
+    padding: 14px 69px;
     font-size: 22px;
-    border-radius: 6px 6px 0 0;
+    border-radius: 6px 6px;
     border: 1px solid #E8E8E8;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -36,12 +42,6 @@ body {
   .nav-menu button:hover {
     background-color: #4d5678;
   }
-  
-
-  .nav-menu button:hover {
-    background-color: #4d5678;
-  }
-  
 
 
   .primary-btn {
@@ -313,7 +313,7 @@ body {
   }
   
   .last-requests-header {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: bold;
     color: white;
     margin-bottom: 24px;
@@ -333,7 +333,8 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-    font-size: 20px;
+    font-weight: lighter;
+    font-size: 18px;
   }
   
   .request-avatar {
@@ -344,12 +345,13 @@ body {
   }
   
   .request-text {
-    font-size: 20px;
+    font-size: 26px;
   }
   
   .request-time {
-    font-size: 16px;
-    color: #333;
+    font-size: 14px;
+    font-weight: lighter;
+    color: rgb(68, 64, 52);
   }
   
   .request-footer {
@@ -359,13 +361,19 @@ body {
     margin-top: 10px;
   }
   
+.logo_small {
+  max-width: 47px;
+  max-height: 49px;
+}
 
-  footer {
-    margin-top: 40px;
-    padding: 16px;
-    background-color: #a0a4b8;
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    color: #333;
-  }
+footer {
+  background-color: #a0a4b8;
+  margin-top: 40px;
+  padding: 16px 32px;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  gap: 12px;
+}
