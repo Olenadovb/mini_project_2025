@@ -5,21 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UCU Apps - Registration</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body class="registration-page">
     <div class="alert" id="alert">You need to fill out everything!</div>
     
-    <header class="navbar">
-        <img src="logo_white.png" class="logo_small" />
-        <nav>
-            <a href="home_page.html"><button>Home</button></a>
-            <button>Categories</button>
-            <a href="user_page.html"><button>Profile</button></a>
-            <a href="settings.html"><button>Settings</button></a>
-            <a href="about_us.html"><button>About us</button></a>
-        </nav>
-    </header>
+    <div id="header"></div>
     
     <main>
         <div class="hero-text">
@@ -71,12 +62,21 @@
         </div>
     </main>
     
-    <footer>
-        <img src="logo_white.png" class="logo_small" />
-        <p>Name © 2025</p>
-        <p>UCU Apps Industries</p>
-        <p>All rights reserved</p>
-      </footer>
+    <div id="footer"></div>
+
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('header').innerHTML = html;
+        });
+
+        fetch('footer.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('footer').innerHTML = html;
+        });
+    </script>
     </body>
     </html>
 
