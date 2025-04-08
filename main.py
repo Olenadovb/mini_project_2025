@@ -3,12 +3,15 @@ Server file
 """
 
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, UploadFile, File, Form
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
+
+from alembic import command
+from alembic.config import Config
 
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
@@ -16,7 +19,15 @@ from models import models
 from crud import crud
 from schemas import schemas
 from config import settings
+from uuid import uuid4
+import shutil
 import os
+
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 app = FastAPI()
 
@@ -24,6 +35,7 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 static = Jinja2Templates(directory="static")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
+
 
 # FRONTEND
 
@@ -111,9 +123,52 @@ def get_db():
         db.close()
 
 
-@app.post("/create_user", response_model=schemas.UserResponse)
-def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    return crud.create_user(db, user)
+# @app.post("/create_user", response_model=schemas.UserResponse)
+# async def create_user(formData: schemas.UserCreate, db: Session = Depends(get_db)):
+#     user = crud.create_user(db, formData)
+#     logger.info(f"User created: {user.name} {user.surname}, ID: {user.idUsers}")
+#     return {"message": "User registered successfully"}
+
+
+@app.post("/create_user")
+async def create_user(
+    name: str = Form(...),
+    surname: str = Form(...),
+    email: str = Form(...),
+    phone: str = Form(...),
+    description: str = Form(...),
+    country: str = Form(...),
+    city: str = Form(...),
+    photo: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    uploads_dir = "static/uploads"
+    os.makedirs(uploads_dir, exist_ok=True)
+    filename = f"{uuid4().hex}_{photo.filename}"
+    file_path = os.path.join(uploads_dir, filename)
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(photo.file, buffer)
+
+    image_path = f"/{file_path}"
+
+    user = crud.create_user(
+        db=db,
+        name=name,
+        surname=surname,
+        email=email,
+        phone=phone,
+        description=description,
+        image_path=image_path,
+        country=country,
+        city=city,
+    )
+    return RedirectResponse(url="/", status_code=303)
+    # return {"message": "User created", "user_id": user.idUsers}
+
+
+# def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+#     return crud.create_user(db, user)
 
 
 @app.post("/requests", response_model=schemas.RequestResponse)
@@ -121,7 +176,20 @@ def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)
     return crud.create_request(db, req)
 
 
+@app.get("/users")
+def get_users(db: Session = Depends(get_db)):
+    return db.query(models.User).all()
+
+
+# DATABASE MIGRATIONS
+
+
+def run_migrations():
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
+
+
 if __name__ == "__main__":
     import uvicorn
-
+    run_migrations()
     uvicorn.run(app, host="0.0.0.0", port=8000)
