@@ -56,6 +56,11 @@ async def home(request: Request):
     return static.TemplateResponse("index.html", {"request": request})
 
 
+@app.get("/home")
+async def home():
+    return FileResponse("static/home.html")
+
+
 @app.get("/categories")
 async def categories():
     return FileResponse("static/categories.html")
@@ -163,7 +168,7 @@ async def create_user(
         country=country,
         city=city,
     )
-    return RedirectResponse(url="/", status_code=303)
+    return RedirectResponse(url="/home", status_code=303)
     # return {"message": "User created", "user_id": user.idUsers}
 
 

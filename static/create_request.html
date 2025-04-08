@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Request</title>
-    <style>
-        /* Твій стиль залишаємо без змін */
-    </style>
+    <title>Hands - Create Request</title>
+    <link rel="stylesheet" href="/static/styles.css"/>
 </head>
 <body>
     <h1>Create a Request</h1>
@@ -30,13 +28,11 @@
         <div class="form-group">
             <label for="categories" class="required">Categories (Select at least one)</label>
             <div class="checkbox-group">
-                <!-- Перелічуємо категорії -->
                 <input type="checkbox" id="category-clothing" name="category_ids" value="1">
                 <label for="category-clothing">Clothing & Gear</label>
 
                 <input type="checkbox" id="category-navigation" name="category_ids" value="2">
                 <label for="category-navigation">Navigation & Surveillance</label>
-                <!-- Додаткові категорії -->
             </div>
         </div>
 
@@ -58,7 +54,7 @@
             formData.append("name", document.getElementById('name').value);
             formData.append("description", document.getElementById('description').value);
             formData.append("state", document.getElementById('state').value);
-            formData.append("category_ids", categories.join(', ')); // Можемо передавати як список
+            formData.append("category_ids", categories.join(', '));
             formData.append("image", document.getElementById('photo').files[0]);
 
             const response = await fetch('/create_request', {

@@ -1,42 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini-project2</title>
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Volunteer Profile</title>
+  <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-    <h1>Profile</h1>
+  <header class="navbar">
+    <img src="/photos/logo_white.png" class="logo_small" />
     <nav>
-        <a href="/">Home</a>
-        <a href="/categories">Categories</a>
-        <a href="/profile">Profile</a>
-        <a href="/settings">Settings</a>
-        <a href="/aboutus">About Us</a>
+      <a href="/">Home</a>
+      <a href="/categories">Categories</a>
+      <a href="/profile">Profile</a>
+      <a href="/settings">Settings</a>
+      <a href="/aboutus">About Us</a>
     </nav>
-    <div>
-        <section id="profile" class="profile-section">
-            <div class="profile-info">
-                <h2>Volunteeer</h2>
-                <p>23 y. o.<br>City Lviv</p>
-                <p><strong>Contacts</strong><br>+380123456789<br>volunteer@gmail.com</p>
-                <p><strong>Specifies in:</strong></p>
-                <div class="tags">
-                    <span>Clothes</span>
-                    <span>Furniture</span>
-                    <span>Medicine</span>
-                </div>
-                <button>Edit my information</button>
+  </header>
+
+
+  <main class="container">
+    <section class="profile">
+      <div class="contact-info">
+        <h2>My profile</h2>
+        <p><strong>Contacts</strong></p>
+        <p>+380123456789</p>
+        <p>volunteer@gmail.com</p>
+      </div>
+    
+      <div class="user-info-flex">
+        <div class="user-text">
+          <h1>Volunteer</h1>
+          <p>23 y. o.</p>
+          <p>city Lviv</p>
+          <p>specifies in:</p>
+    
+          <div class="tags-and-button">
+            <div class="tags">
+              <span>Clothes</span>
+              <span>Furniture</span>
+              <span>Medicine</span>
             </div>
-        </section>
-        <button class="add-activity">Add new activity</button>
-        <section class="activity-history">
-            <h3>History of activity</h3>
-            <div class="activity-card medicine">Bought a lot of medicine for army</div>
-            <div class="activity-card clothes">Bought a lot of clothes for army</div>
-            <div class="activity-card furniture">Bought a lot of guns for army</div>
-        </section>
-    </div>
+            <button class="outlined-btn">Edit my information</button>
+          </div>
+        </div>
+    
+        <img src="/photos/person1.avif" alt="Profile photo" class="avatar" />
+      </div>
+    </section>
+
+    <section class="add-activity">
+      <button>Add new activity</button>
+    </section>
+
+    <section class="history">
+      <h2>History of activity</h2>
+      <div class="cards">
+        <div class="card">
+          <p>Bought a lot of medicine for army</p>
+          <span>Medicine</span>
+        </div>
+        <div class="card">
+          <p>Bought a lot of clothes for army</p>
+          <span>Clothes</span>
+        </div>
+        <div class="card">
+          <p>Bought a lot of guns for army</p>
+          <span>Furniture</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <footer>
+    <img src="/photos/logo_white.png" class="logo_small" />
+    <p>Name © 2025</p>
+    <p>UCU Apps Industries</p>
+    <p>All rights reserved</p>
+  </footer>
 </body>
 </html>

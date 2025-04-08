@@ -1,30 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini-project2</title>
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hands — Home</title>
+  <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-    <h1>Hello! This is home page</h1>
+  <header class="navbar">
+    <img src="/photos/logo_white.png" class="logo_small" />
     <nav>
-        <a href="/">Home</a>
-        <a href="/categories">Categories</a>
-        <a href="/profile">Profile</a>
-        <a href="/settings">Settings</a>
-        <a href="/aboutus">About Us</a>
+      <a href="/">Home</a>
+      <a href="/categories">Categories</a>
+      <a href="/profile">Profile</a>
+      <a href="/settings">Settings</a>
+      <a href="/aboutus">About Us</a>
     </nav>
-    <a href="/registrate">Join</a>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia impedit rem nulla, earum repudiandae error assumenda ea possimus sequi perspiciatis, dolore qui optio numquam. Provident perferendis laboriosam numquam dolore necessitatibus.
-    Fuga veritatis distinctio, aliquam temporibus tempora corrupti eos, sint laboriosam inventore exercitationem neque libero sed quam, explicabo odit iste delectus suscipit dolore vel facilis reiciendis enim qui! Ipsa, temporibus excepturi?
-    Ullam illum omnis iusto cum necessitatibus est optio laboriosam veniam dolor beatae rerum commodi ad obcaecati repellat distinctio vero debitis id eligendi praesentium quae eum, magni facilis vitae eveniet. Optio?
-    Dolorem sed rerum iusto nihil alias incidunt autem voluptate a! Repellat ab ratione officiis, dolorem odit maxime error iusto numquam unde sapiente expedita quibusdam at, eaque consectetur rem explicabo! Nihil!
-    Eaque quasi dolore in, doloremque obcaecati, amet culpa laboriosam, unde atque voluptatem saepe ad aspernatur iusto totam necessitatibus dicta? Assumenda minus animi labore fugit quia cumque cum sequi dolor qui?
-    Dignissimos, praesentium similique, voluptatibus molestiae perspiciatis quo doloribus quos enim nisi officia minus cum. Provident dolorem aperiam quos impedit eaque accusantium repellendus odio ullam tempora nesciunt iure corrupti, ratione hic.
-    Nisi ex dolorem illum, sapiente id doloremque! Earum porro asperiores, quibusdam dolore fugiat iste magni illum enim laborum fuga eum consequuntur minus odio laboriosam itaque dicta amet sed incidunt. Rerum.
-    Ab repellendus, quos quas odit facere, necessitatibus molestiae, illo dolorum distinctio placeat optio maiores minus voluptate libero? Perspiciatis repudiandae assumenda laborum facilis delectus? Libero quidem quo quos corporis nam alias.
-    Expedita iure quisquam dignissimos quasi vitae autem a eius, cupiditate voluptate vero eaque perferendis tenetur et beatae eum reiciendis sit eligendi animi possimus quaerat nesciunt dolore rerum. Odit, quam iste?
-    Deserunt delectus officiis quaerat eveniet et quis in dolore quibusdam culpa facere accusamus sit molestias velit modi laudantium quia voluptas ipsam praesentium iusto earum hic, ullam alias? Unde, iusto et!</p>    
+  </header>
+
+
+  <main class="container">
+
+    <!-- HERO -->
+    <section style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 40px; margin: 60px 0;">
+      <img src="/photos/photo_volunteers.png" alt="Volunteers working" style="width: 505px; height: 422px; border-radius: 16px; box-shadow: 6px 4px 26px rgba(45, 63, 116, 1);" />
+      <div style="max-width: 458px;">
+        <h1 style="font-size: 24px; text-align: center;font-size: 28px; font-weight: 700;">With open hearts and helping hands, we stand as one to heal the land!</h1>
+        <p style="margin-top: 12px; text-align: center;font-size: 28px; font-family: 'crimson text';">Our mission is to unite communities, mobilize resources, and deliver critical support to defenders on the front lines.</p>
+        <div style="margin-top: 20px; display: flex; gap: 12px;">
+          <!-- <button class="homepage_button_join">Join</button> -->
+          <a href="/registrate" class="homepage_button_join">Join</a>
+          <button class="outlined-btn">Already have an account</button>
+        </div>
+      </div>
+    </section>
+
+        <!-- about service -->
+        <section class="about-section">
+            <div class="about-container">
+              <h2>What is this service about?</h2>
+          
+              <div class="about-row">
+                <img src="/photos/photo_volunteers.png" class="about-image" />
+                <p class="about-text">We are a volunteer organization dedicated to supporting the Ukrainian army by providing essential supplies, logistical assistance, and humanitarian aid.</p>
+              </div>
+          
+              <div class="about-row reverse">
+                <img src="/photos/photo_volunteers.png" class="about-image" />
+                <p class="about-text">Through fundraising, partnerships, and volunteer efforts, we strive to strengthen Ukraine’s resilience and ensure those who protect our country have everything they need..</p>
+              </div>
+            </div>
+          </section>
+
+    <!-- COMMUNITY JOIN CTA -->
+    <section style="text-align: center; margin: 60px 0;">
+      <h2 style="font-size: 36px; color: rgb(68, 64, 52)">Want to become a part of our community?<br>Welcome!</h2>
+      <div style="margin-top: 20px; display: flex; justify-content: center; gap: 12px;">
+        <!-- <button class="homepage_button_join_green">Join</button> -->
+        <a href="/registrate" class="homepage_button_join_green">Join</a>
+        <button class="outlined-btn" style="color:rgb(68, 64, 52)">Already have an account</button>
+      </div>
+    </section>
+
+
+
+    <!-- ACTIVITY PREVIEW -->
+    <section style="margin: 71px 77px 79px 79px; align-items: center">
+      <h2 style="text-align: center; color: #344c8c; font-size: 36px;">Here’s what user activity looks like...</h2>
+      <div style="margin-top: 71px; height:305px; width: 1122px;display: flex; flex-direction: column; align-items: center; gap: 25px;">
+        <div class="activity-row">
+          <img src="/photos/mini_project_2025/user1.jpg" class="avatar" />
+          <span>Name Surname</span>
+          <span style="flex: 1;">Report of user requests</span>
+          <span style="color: #666;">20:07</span>
+        </div>
+        <div class="activity-row">
+          <img src="/photos/mini_project_2025/user2.jpg" class="avatar" />
+          <span>Name Surname</span>
+          <span style="flex: 1;">Report of user requests</span>
+          <span style="color: #666;">20:05</span>
+        </div>
+        <div class="activity-row">
+          <img src="/photos/mini_project_2025/user3.jpg" class="avatar" />
+          <span>Name Surname</span>
+          <span style="flex: 1;">Report of user requests</span>
+          <span style="color: #666;">18:47</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section style="text-align: center; margin-bottom: 60px;">
+      <h2 style="color: #344c8c; font-size: 36px;">Do not hesitate.</h2>
+      <div style="margin-top: 20px; display: flex; justify-content: center; gap: 12px;">
+        <!-- <button class="homepage_button_join">Join</button> -->
+        <a href="/registrate" class="homepage_button_join">Join</a>
+        <button class="outlined-btn">Already have an account</button>
+      </div>
+    </section>
+
+
+
+  </main>
+
+  <footer>
+    <img src="/photos/logo_white.png" class="logo_small" />
+    <p>Name © 2025</p>
+    <p>UCU Apps Industries</p>
+    <p>All rights reserved</p>
+  </footer>
 </body>
 </html>
