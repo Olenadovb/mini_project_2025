@@ -7,17 +7,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="navbar">
-    <img src="logo_white.png" class="logo_small" />
-    <nav>
-      <button>Home</button>
-      <button>Categories</button>
-      <button>Profile</button>
-      <button>Settings</button>
-      <button>About us</button>
-    </nav>
-  </header>
-
+  <div id="header"></div>
 
   <main class="container">
 
@@ -101,11 +91,20 @@
 
   </main>
 
-  <footer>
-    <img src="logo_white.png" class="logo_small" />
-    <p>Name © 2025</p>
-    <p>UCU Apps Industries</p>
-    <p>All rights reserved</p>
-  </footer>
+  <div id="footer"></div>
+
+  <script>
+    fetch('header.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('header').innerHTML = html;
+      });
+
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+      });
+  </script>
 </body>
 </html>
