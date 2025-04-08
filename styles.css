@@ -39,10 +39,12 @@
     transition: background-color 0.3s;
   }
 
-  .nav-menu button:hover {
+  .navbar button:hover {
     background-color: #4d5678;
   }
-
+  .outlined-btn:hover {
+    background-color: lightgrey;
+  }
 
   .primary-btn {
     background-color: #344c8c;
@@ -109,6 +111,7 @@
   }
   
   .activity-row .avatar {
+    margin-top: -20px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -151,7 +154,7 @@
   .tags-and-button {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
     flex-wrap: wrap;
     margin-top: 12px;
   }
