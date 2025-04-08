@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <style>
         .settings-container {
             max-width: 800px;
@@ -81,16 +81,7 @@
     </style>
 </head>
 <body>
-    <header class="navbar">
-        <img src="logo_white.png" class="logo" />
-        <nav>
-            <a href="home_page.html"><button>Home</button></a>
-            <button>Categories</button>
-            <a href="user_page.html"><button>Profile</button></a>
-            <a href="settings.html"><button>Settings</button></a>
-            <a href="about_us.html"><button>About us</button></a>
-        </nav>
-    </header>
+    <div id="header"></div>
     
     <main class="container">
         <h1 class="settings-title">Settings</h1>
@@ -141,12 +132,20 @@
         </div>
     </main>
     
-    <footer>
-        <div class="footer">
-            <span>Name c 2025</span>
-            <span>UCU Apps Industries</span>
-            <span>All rights reserved</span>
-        </div>
-    </footer>
+    <div id="footer"></div>
+
+    <script>
+      fetch('header.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('header').innerHTML = html;
+        });
+  
+      fetch('footer.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('footer').innerHTML = html;
+        });
+    </script>
 </body>
 </html>
