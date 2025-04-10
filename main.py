@@ -136,6 +136,7 @@ async def create_user(
     surname: str = Form(...),
     email: str = Form(...),
     phone: str = Form(...),
+    # categories: list[str] = Form(...),
     description: str = Form(...),
     country: str = Form(...),
     city: str = Form(...),
