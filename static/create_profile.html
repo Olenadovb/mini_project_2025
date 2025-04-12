@@ -164,13 +164,13 @@
             <input type="tel" id="phone" name="phone" placeholder="e.g., +380 507 456 789" required>
             <div id="phoneError" class="error">Please enter a valid phone number</div>
         </div>
-        
+<!--         
         <div class="form-group">
             <label for="email" class="required">Email</label>
             <input type="email" id="email" name="email" maxlength="99" required>
             <div id="emailError" class="error">Please enter a valid email address</div>
         </div>
-        
+         -->
 
         <div class="form-group">
             <label class="required">Categories (Select at least one)</label>
@@ -267,7 +267,7 @@
             isValid &= showError("countryError", getValue("country") === "");
             isValid &= showError("cityError", getValue("city") === "");
             isValid &= showError("phoneError", !/^\+\d{12}$/.test(getValue("phone").replace(/\s+/g, "")));
-            isValid &= showError("emailError", !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(getValue("email")));
+            // isValid &= showError("emailError", !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(getValue("email")));
             isValid &= showError("photoError", document.getElementById("photo").files.length === 0);
             isValid &= showError("aboutError", getValue("about") === "" || getValue("about").length > 200);
             isValid &= showError("categoriesError", document.querySelectorAll("input[name='categories']:checked").length === 0);
@@ -281,7 +281,7 @@
                     formData.append("country", getValue("country"));
                     formData.append("city", getValue("city"));
                     formData.append("phone", getValue("phone"));
-                    formData.append("email", getValue("email"));
+                    // formData.append("email", getValue("email"));
                     formData.append("description", getValue("about"));
                     formData.append("photo", document.getElementById("photo").files[0]);
         
