@@ -15,7 +15,7 @@ class UserCreate(BaseModel):
     image_path: Optional[str] = None
     description: Optional[str] = None
     created_at: Optional[str] = None
-    requests: list = []
+
 
 class UserResponse(UserCreate):
     idUsers: int

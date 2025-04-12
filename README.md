@@ -12,3 +12,23 @@ cliend ID:
 
 render start:
 uvicorn main:app --host=0.0.0.0 --port=$PORT
+
+
+
+
+import mysql.connector
+db=mysql.connector.connect(host="your host", user="your username", password="your
+password",database="database_name")
+
+cursor=db.cursor()
+
+query="UPDATE Students SET City='Kolkata' WHERE Name='Kriti'"
+cursor.execute(query)
+db.commit()
+
+query="SELECT * FROM Students"
+cursor.execute(query)
+
+for row in cursor:
+   print(row)
+db.close()

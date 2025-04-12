@@ -3,7 +3,7 @@ Server file
 """
 
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, Request, Depends, UploadFile, File, Form
+from fastapi import FastAPI, Request, Depends, UploadFile, File, Form, HTTPException
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
@@ -13,15 +13,20 @@ from google.oauth2.credentials import Credentials
 from alembic import command
 from alembic.config import Config
 
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
-from models import models
-from crud import crud
-from schemas import schemas
+import models
+import crud
+import schemas
 from config import settings
 from uuid import uuid4
 import shutil
 import os
+
+from pathlib import Path
+from datetime import datetime
+import traceback
 
 import logging
 
@@ -30,6 +35,14 @@ logger = logging.getLogger(__name__)
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 static = Jinja2Templates(directory="static")
@@ -51,9 +64,14 @@ REDIRECT_URI = "http://localhost:8000/callback"
 
 
 @app.get("/")
-async def home(request: Request):
+async def index(request: Request):
     # return FileResponse("static/index.html")
     return static.TemplateResponse("index.html", {"request": request})
+
+
+@app.get("/home")
+async def home():
+    return FileResponse("static/home.html")
 
 
 @app.get("/categories")
@@ -113,7 +131,10 @@ async def create_pr(request: Request):
 
 # DATABASE
 
-# models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
+
+UPLOAD_FOLDER = Path("static/uploads")
+UPLOAD_FOLDER.mkdir(exist_ok=True)
 
 def get_db():
     db = SessionLocal()
@@ -123,49 +144,86 @@ def get_db():
         db.close()
 
 
-# @app.post("/create_user", response_model=schemas.UserResponse)
-# async def create_user(formData: schemas.UserCreate, db: Session = Depends(get_db)):
-#     user = crud.create_user(db, formData)
-#     logger.info(f"User created: {user.name} {user.surname}, ID: {user.idUsers}")
-#     return {"message": "User registered successfully"}
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled error: {exc}")
+    return JSONResponse(status_code=500, content={"detail": str(exc)})
+
+
+logging.basicConfig()
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 
 @app.post("/create_user")
 async def create_user(
     name: str = Form(...),
     surname: str = Form(...),
-    email: str = Form(...),
-    phone: str = Form(...),
-    # categories: list[str] = Form(...),
-    description: str = Form(...),
+    age: int = Form(...),
     country: str = Form(...),
     city: str = Form(...),
+    phone: str = Form(...),
+    email: str = Form(...),
+    description: str = Form(...),
+    categories: str = Form(...),
     photo: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
-    uploads_dir = "static/uploads"
-    os.makedirs(uploads_dir, exist_ok=True)
-    filename = f"{uuid4().hex}_{photo.filename}"
-    file_path = os.path.join(uploads_dir, filename)
+    print("start")
+    try:
+        file_ext = os.path.splitext(photo.filename)[1]
+        filename = (
+            f"{email.replace('@', '_')}_{int(datetime.utcnow().timestamp())}{file_ext}"
+        )
+        file_path = UPLOAD_FOLDER / filename
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(photo.file, buffer)
+        with open(file_path, "wb") as buffer:
+            buffer.write(await photo.read())
 
-    image_path = f"/{file_path}"
+        print("image added", file_path)
+        new_user = models.User(
+            name=name,
+            surname=surname,
+            age=age,
+            country=country,
+            city=city,
+            phone=phone,
+            email=email,
+            description=description,
+            image_path=str(file_path),
+            created_at=datetime.utcnow(),
+            categories=categories,
+        )
 
-    user = crud.create_user(
-        db=db,
-        name=name,
-        surname=surname,
-        email=email,
-        phone=phone,
-        description=description,
-        image_path=image_path,
-        country=country,
-        city=city,
-    )
-    return RedirectResponse(url="/", status_code=303)
-    # return {"message": "User created", "user_id": user.idUsers}
+        print("user created (before adding)")
+        db.add(new_user)
+        print("after adding")
+        print("Поточна база:", db.bind.url)
+        try:
+            print("attemptig to commit...")
+            db.commit()
+            print("after commit (successfulS)")
+        except Exception as e:
+            print("❌ Помилка при коміті:", e)
+            traceback.print_exc()
+            db.rollback()
+        # db.flush()
+        print("user added")
+
+        return JSONResponse(
+            status_code=200,
+            content={"message": "User created", "redirect_url": "/home"},
+        )
+
+    except Exception as e:
+        print("EXCEPTION:", e)
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Server error: {e}")
+
+
+@app.get("/users")
+def list_users(request: Request, db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    return static.TemplateResponse("users.html", {"request": request, "users": users})
 
 
 # def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
