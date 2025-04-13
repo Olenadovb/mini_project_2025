@@ -3,17 +3,30 @@ Server file
 """
 
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, Request, Depends, UploadFile, File, Form, HTTPException
+from fastapi import (
+    FastAPI,
+    Request,
+    Response,
+    Depends,
+    UploadFile,
+    File,
+    Form,
+    HTTPException,
+)
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
+from google.oauth2 import id_token
+from googleapiclient.discovery import build
+from google.auth.transport import requests
 
 from alembic import command
 from alembic.config import Config
 
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 import models
@@ -36,18 +49,28 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:8000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["http://localhost:8000"],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
+app.add_middleware(SessionMiddleware, secret_key="some-secret-key")
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 static = Jinja2Templates(directory="static")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 # FRONTEND
@@ -84,9 +107,29 @@ async def settings_page():
     return FileResponse("static/settings.html")
 
 
-@app.get("/profile")
-async def profile():
-    return FileResponse("static/profile.html")
+@app.get("/error")
+async def error(request: Request, status_code: int):
+    status_text = ""
+    return static.TemplateResponse(
+        "error.html", {"status_code": status_code, "status_text": status_text}
+    )
+
+
+# @app.get("/profile")
+# async def profile():
+#     return FileResponse("static/profile.html")
+
+
+@app.get("/profile", response_class=FileResponse)
+def profile(request: Request, db: Session = Depends(get_db)):
+    user_email = request.session.get("user_email")
+    if not user_email:
+        return RedirectResponse(url="/login")
+
+    user = db.query(models.User).filter(models.User.email == user_email).first()
+    if not user:
+        return RedirectResponse(url="/create_profile")
+    return static.TemplateResponse("profile.html", {"request": request, "user": user})
 
 
 @app.get("/aboutus")
@@ -99,6 +142,9 @@ async def registrate():
     return FileResponse("static/registration.html")
 
 
+# LOG IN / SIGN IN
+
+
 @app.get("/login")
 async def login():
     flow = Flow.from_client_secrets_file(
@@ -108,14 +154,46 @@ async def login():
     return RedirectResponse(auth_url)
 
 
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/")
+
+
+# @app.get("/callback")
+# async def callback(request: Request):
+#     flow = Flow.from_client_secrets_file(
+#         CLIENT_SECRETS_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI
+#     )
+#     flow.fetch_token(authorization_response=str(request.url))
+#     credentials = flow.credentials
+#     return RedirectResponse(url="/create_profile")
+
+
 @app.get("/callback")
-async def callback(request: Request):
+async def callback(request: Request, db: Session = Depends(get_db)):
     flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI
     )
     flow.fetch_token(authorization_response=str(request.url))
     credentials = flow.credentials
-    return RedirectResponse(url="/create_profile")
+
+    oauth2_client = build("oauth2", "v2", credentials=credentials)
+    # user_info = oauth2_client.userinfo().get().execute()
+    # user_email = user_info["email"]
+    # request.session["user_email"] = user_email
+
+    id_info = id_token.verify_oauth2_token(
+        credentials.id_token, requests.Request(), audience=None
+    )
+    user_email = id_info["email"]
+    request.session["user_email"] = user_email
+    user = db.query(models.User).filter(models.User.email == user_email).first()
+
+    if user:
+        return RedirectResponse(url="/home")
+    else:
+        return RedirectResponse(url="/create_profile")
 
 
 @app.get("/create_profile", response_class=FileResponse)
@@ -136,12 +214,12 @@ async def create_pr(request: Request):
 UPLOAD_FOLDER = Path("static/uploads")
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# def get_db():
+#     db = SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
 
 
 @app.exception_handler(Exception)
@@ -154,30 +232,36 @@ logging.basicConfig()
 logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 
+# DATABASE WRITE
+
+
 @app.post("/create_user")
 async def create_user(
+    request: Request,
     name: str = Form(...),
     surname: str = Form(...),
     age: int = Form(...),
     country: str = Form(...),
     city: str = Form(...),
     phone: str = Form(...),
-    email: str = Form(...),
     description: str = Form(...),
     categories: str = Form(...),
     photo: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
+    user_email = request.session.get("user_email")
+    if not user_email:
+        # raise HTTPException(status_code=401, detail="Not authenticated")
+        return RedirectResponse(url="/error", status_code=401)
     print("start")
-    try:
-        file_ext = os.path.splitext(photo.filename)[1]
-        filename = (
-            f"{email.replace('@', '_')}_{int(datetime.utcnow().timestamp())}{file_ext}"
-        )
-        file_path = UPLOAD_FOLDER / filename
+    file_ext = os.path.splitext(photo.filename)[1]
+    filename = (
+        f"{user_email.replace('@', '_')}_{int(datetime.utcnow().timestamp())}{file_ext}"
+    )
+    file_path = UPLOAD_FOLDER / filename
 
-        with open(file_path, "wb") as buffer:
-            buffer.write(await photo.read())
+    with open(file_path, "wb") as buffer:
+        buffer.write(await photo.read())
 
     image_path = f"/{file_path}"
 
@@ -276,9 +360,13 @@ def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)
     return crud.create_request(db, req)
 
 
+# DATABASE READ
+
+
 @app.get("/users")
-def get_users(db: Session = Depends(get_db)):
-    return db.query(models.User).all()
+def list_users(request: Request, db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    return static.TemplateResponse("users.html", {"request": request, "users": users})
 
 
 # DATABASE MIGRATIONS
