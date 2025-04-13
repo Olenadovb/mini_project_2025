@@ -39,10 +39,6 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 # FRONTEND
 
-models.Base.metadata.create_all(bind=engine)
-
-# frontend
-
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 CLIENT_SECRETS_FILE = "client_secret.json"
@@ -191,15 +187,9 @@ def get_users(db: Session = Depends(get_db)):
     return db.query(models.User).all()
 
 
-# DATABASE MIGRATIONS
+# DATABASE
 
-
-def run_migrations():
-    alembic_cfg = Config("alembic.ini")
-    command.upgrade(alembic_cfg, "head")
-
-
-# database
+# models.Base.metadata.create_all(bind=engine)
 
 
 def get_db():
@@ -210,9 +200,52 @@ def get_db():
         db.close()
 
 
-@app.post("/register", response_model=schemas.UserResponse)
-def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    return crud.create_user(db, user)
+# @app.post("/create_user", response_model=schemas.UserResponse)
+# async def create_user(formData: schemas.UserCreate, db: Session = Depends(get_db)):
+#     user = crud.create_user(db, formData)
+#     logger.info(f"User created: {user.name} {user.surname}, ID: {user.idUsers}")
+#     return {"message": "User registered successfully"}
+
+
+@app.post("/create_user")
+async def create_user(
+    name: str = Form(...),
+    surname: str = Form(...),
+    email: str = Form(...),
+    phone: str = Form(...),
+    description: str = Form(...),
+    country: str = Form(...),
+    city: str = Form(...),
+    photo: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    uploads_dir = "static/uploads"
+    os.makedirs(uploads_dir, exist_ok=True)
+    filename = f"{uuid4().hex}_{photo.filename}"
+    file_path = os.path.join(uploads_dir, filename)
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(photo.file, buffer)
+
+    image_path = f"/{file_path}"
+
+    user = crud.create_user(
+        db=db,
+        name=name,
+        surname=surname,
+        email=email,
+        phone=phone,
+        description=description,
+        image_path=image_path,
+        country=country,
+        city=city,
+    )
+    return RedirectResponse(url="/home", status_code=303)
+    # return {"message": "User created", "user_id": user.idUsers}
+
+
+# def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+#     return crud.create_user(db, user)
 
 
 @app.post("/requests", response_model=schemas.RequestResponse)
@@ -220,7 +253,20 @@ def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)
     return crud.create_request(db, req)
 
 
-# if __name__ == "__main__":
-#     import uvicorn
+@app.get("/users")
+def get_users(db: Session = Depends(get_db)):
+    return db.query(models.User).all()
 
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+# DATABASE MIGRATIONS
+
+
+def run_migrations():
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
