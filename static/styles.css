@@ -145,6 +145,25 @@ header.navbar nav button {
   object-fit: cover;
 }
 
+.about-user {
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+.about-user h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.about-user p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+}
+
 /* Keep your existing .profile class as is */
 .profile {
   display: flex;

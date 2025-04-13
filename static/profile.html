@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Volunteer Profile</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <main class="container">
+    <section class="profile">
+      <div class="contact-info">
+        <h2>My profile</h2>
+        <p><strong>Contacts</strong></p>
+        <p>{{ user.phone }}</p>
+        <p>{{ user.email }}</p>
+      </div>
+      <div class="profile-container">
+        <div class="user-info">
+            <h1>{{ user.name }} {{ user.surname }}</h1>
+            <p>{{ user.age }} y. o.</p>
+            <p>{{ user.city }}</p>
+            <p>specifies in:</p>
+            <div class="tags">
+              {% for category in user.categories.split(",") %}
+                <span>{{ category }}</span>
+              {% endfor %}
+            </div>
+        </div>
+        <div class="profile-photo">
+            <img src="/{{ user.image_path if user.image_path else 'photos/default.svg' }}" alt="Volunteer" />
+        </div>
+    </div>
+</section>
+
+
+<div class="about-user">
+  <h2>About me</h2>
+  <p>
+    {{ user.description }}
+  </p>
+</div>
+
+<div class="center-wrapper">
+  <a href="/go_edit_profile"><button class="outlined-btn">Edit my information</button></a>
+    <section class="add-activity">
+      <a href="/add_request"><button>Add new activity</button></a>
+    </section>
+</div>
+
+    <section class="history">
+      <h2>History of activity</h2>
+      <div class="cards">
+        <div class="card">
+          <p>Bought a lot of medicine for army</p>
+          <span>Medicine</span>
+        </div>
+        <div class="card">
+          <p>Bought a lot of clothes for army</p>
+          <span>Clothes</span>
+        </div>
+        <div class="card">
+          <p>Bought a lot of guns for army</p>
+          <span>Furniture</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    fetch('header.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('header').innerHTML = html;
+  
+      const burger = document.getElementById('burger');
+      const navMenu = document.getElementById('nav-menu');
+  
+      burger.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    });
+
+
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
+  
+</body>
+</html>
