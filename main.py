@@ -39,6 +39,10 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 # FRONTEND
 
+models.Base.metadata.create_all(bind=engine)
+
+# frontend
+
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 CLIENT_SECRETS_FILE = "client_secret.json"
@@ -120,6 +124,7 @@ async def create_pr(request: Request):
 
 # models.Base.metadata.create_all(bind=engine)
 
+
 def get_db():
     db = SessionLocal()
     try:
@@ -194,7 +199,28 @@ def run_migrations():
     command.upgrade(alembic_cfg, "head")
 
 
-if __name__ == "__main__":
-    import uvicorn
-    run_migrations()
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# database
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@app.post("/register", response_model=schemas.UserResponse)
+def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    return crud.create_user(db, user)
+
+
+@app.post("/requests", response_model=schemas.RequestResponse)
+def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)):
+    return crud.create_request(db, req)
+
+
+# if __name__ == "__main__":
+#     import uvicorn
+
+#     uvicorn.run(app, host="0.0.0.0", port=8000)

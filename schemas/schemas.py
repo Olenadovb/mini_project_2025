@@ -17,6 +17,7 @@ class UserCreate(BaseModel):
     created_at: Optional[str] = None
     requests: list = []
 
+
 class UserResponse(UserCreate):
     idUsers: int
     created_at: datetime
