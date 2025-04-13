@@ -114,9 +114,10 @@ header.navbar nav button {
 }
 
 .container {
-  max-width: 100%;
-  margin: 20px;
-  padding: 0 16px;
+  max-width:  100%;
+  align-items: center;
+  margin: 0 auto;
+  padding: 50px 0px;
   box-sizing: border-box;
 }
 
@@ -445,12 +446,9 @@ gap: 12px;
 
 
 
-
-
-
 .contact-info {
 flex: 1;
-min-width: 250px;
+width: 250px;
 }
 
 body.registration-page {
