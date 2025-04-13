@@ -7,8 +7,13 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body class="login-page">
-  <header class="navbar">
-    <img src="/static/photos/logo_white.png" class="logo_small" />
+  <header class="header-main">
+    <div class="purple-bar">
+      <img src="/static/photos/logo_white.png" class="logo_header">
+    </div>
+  </header>
+  <!-- <header class="navbar">
+    <img src="/static/photos/logo_white.png" class="logo_header" />
     <nav>
         <a href="home_page.html"><button>Home</button></a>
         <button>Categories</button>
@@ -16,7 +21,7 @@
         <a href="settings.html"><button>Settings</button></a>
         <a href="about_us.html"><button>About us</button></a>
     </nav>
-  </header>
+  </header> -->
 
   <main>
     <div class="hero-text">
@@ -25,8 +30,8 @@
     </div>
 
     <div class="registration-form">
-        <form id="loginForm" novalidate>
-          <div class="form-group">
+        <!-- <form id="loginForm" novalidate> -->
+          <!-- <div class="form-group">
             <label>Your email</label>
             <input type="email" id="loginEmail" placeholder="Enter email" required />
           </div>
@@ -34,24 +39,37 @@
           <div class="form-group">
             <label>Your password</label>
             <input type="password" id="loginPassword" placeholder="Enter password" required />
-          </div>
+          </div> -->
       
-          <button type="submit" class="signup-btn">Log in</button>
+          <a href="/login"></a><button type="submit" class="signup-btn">Log in with Google</button></a>
       
-          <button type="button" class="google-signup">Log in via Google</button>
+          <!-- <button type="button" class="google-signup">Sigh up with Google</button> -->
       
           <div class="login-link">
-            Don’t have an account? <a href="registration.html">Sign up</a>
+            Don’t have an account? <a href="/login">Sign up</a>
           </div>
-        </form>
+        <!-- </form> -->
       </div>      
   </main>
 
-  <footer>
+  <div id="footer"></div>
+
+
+  <!-- <footer>
     <img src="/static/photos/logo_white.png" class="logo_small" />
     <p>Name © 2025</p>
     <p>UCU Apps Industries</p>
     <p>All rights reserved</p>
-  </footer>
+  </footer> -->
+
+
+  <script>
+      fetch('footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
 </body>
 </html>

@@ -370,6 +370,20 @@ max-width: 47px;
 max-height: 49px;
 }
 
+.header-main .purple-bar {
+  display: flex;
+  align-items: center;
+  background-color: #949cb5; /* фіолетовий, можеш змінити */
+  height: 60px;
+  padding: 0 20px;
+}
+
+.header-main .logo_header {
+  max-width: 47px;
+  max-height: 49px;
+  margin-right: 20px;
+}
+
 .history-section {
 display: table-cell;
 vertical-align: middle;

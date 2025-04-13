@@ -7,17 +7,7 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <header class="navbar">
-    <img src="/photos/logo_white.png" class="logo_small" />
-    <nav>
-      <a href="/">Home</a>
-      <a href="/categories">Categories</a>
-      <a href="/profile">Profile</a>
-      <a href="/settings">Settings</a>
-      <a href="/aboutus">About Us</a>
-    </nav>
-  </header>
-
+  <div id="header"></div>
 
   <main class="container">
     <section class="profile">
@@ -27,31 +17,30 @@
         <p>+380123456789</p>
         <p>volunteer@gmail.com</p>
       </div>
-    
-      <div class="user-info-flex">
-        <div class="user-text">
-          <h1>Volunteer</h1>
-          <p>23 y. o.</p>
-          <p>city Lviv</p>
-          <p>specifies in:</p>
-    
-          <div class="tags-and-button">
+      <div class="profile-container">
+        <div class="user-info">
+            <h2>Volunteer</h2>
+            <p>23 y. o.</p>
+            <p>city Lviv</p>
+            <p>specifies in:</p>
             <div class="tags">
-              <span>Clothes</span>
-              <span>Furniture</span>
-              <span>Medicine</span>
+                <span class="tag">Clothes</span>
+                <span class="tag">Furniture</span>
+                <span class="tag">Medicine</span>
             </div>
-            <button class="outlined-btn">Edit my information</button>
-          </div>
         </div>
-    
-        <img src="/photos/person1.avif" alt="Profile photo" class="avatar" />
-      </div>
-    </section>
+        <div class="profile-photo">
+            <img src="/static/photos/premium_photo-1690407617686-d449aa2aad3c.jpeg" alt="Volunteer" />
+        </div>
+    </div>
+</section>
 
-    <section class="add-activity">
-      <button>Add new activity</button>
-    </section>
+<div class="center-wrapper">
+    <button class="outlined-btn">Edit my information</button>
+    <form action="add_activity_page.html">
+        <button type="submit" class="homepage_button_join">Add new activity</button>
+    </form>
+</div>
 
     <section class="history">
       <h2>History of activity</h2>
@@ -72,12 +61,30 @@
     </section>
   </main>
 
+  <div id="footer"></div>
 
-  <footer>
-    <img src="/photos/logo_white.png" class="logo_small" />
-    <p>Name © 2025</p>
-    <p>UCU Apps Industries</p>
-    <p>All rights reserved</p>
-  </footer>
+  <script>
+    fetch('header.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('header').innerHTML = html;
+  
+      const burger = document.getElementById('burger');
+      const navMenu = document.getElementById('nav-menu');
+  
+      burger.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    });
+
+
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
+  
 </body>
 </html>
