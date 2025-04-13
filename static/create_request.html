@@ -26,20 +26,60 @@
             <textarea id="description" name="description" rows="4" maxlength="200" required></textarea>
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
+            <select name="state" type="number">
+                <option value="0"></option>
+                <option value="1">Active</option>
+              </select>
             <label for="state" class="required">State</label>
-            <input type="text" id="state" name="state" maxlength="50" required>
-        </div>
+            <input type="number" id="state" name="state" required>
+        </div> -->
 
         <div class="form-group">
-            <label for="categories" class="required">Categories (Select at least one)</label>
+            <label class="required">Categories (Select at least one)</label>
             <div class="checkbox-group">
-                <input type="checkbox" id="category-clothing" name="category_ids" value="1">
-                <label for="category-clothing">Clothing & Gear</label>
-
-                <input type="checkbox" id="category-navigation" name="category_ids" value="2">
-                <label for="category-navigation">Navigation & Surveillance</label>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-clothing" name="categories" value="Clothing & Gear">
+                    <label for="category-clothing">Clothing & Gear</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-navigation" name="categories" value="Navigation & Surveillance">
+                    <label for="category-navigation">Navigation & Surveillance</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-communication-equipment" name="categories" value="Communication Equipment">
+                    <label for="category-communication-equipment">Communication Equipment</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-shelter-sleeping-gear" name="categories" value="Shelter & Sleeping Gear">
+                    <label for="category-shelter-sleeping-gear">Shelter & Sleeping Gear</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-food-water-supplies" name="categories" value="Food & Water Supplies">
+                    <label for="category-food-water-supplies">Food & Water Supplies</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-medical-first-aid" name="categories" value="Medical & First Aid">
+                    <label for="category-medical-first-aid">Medical & First Aid</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-tools-repair-kits" name="categories" value="Tools & Repair Kits">
+                    <label for="category-tools-repair-kits">Tools & Repair Kits</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-power-energy" name="categories" value="Power & Energy">
+                    <label for="category-power-energy">Power & Energy</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-vehicle" name="categories" value="Vehicle & Transport Support">
+                    <label for="category-vehicle">Vehicle & Transport Support</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="category-power-energy" name="categories" value="Protective Equipment">
+                    <label for="category-power-energy">Protective Equipment</label>
+                </div>
             </div>
+            <div id="categoriesError" class="error">Please select at least one category</div>
         </div>
 
         <div class="form-group">
@@ -54,13 +94,13 @@
         document.getElementById('createRequestForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const categories = Array.from(document.querySelectorAll('input[name="category_ids"]:checked')).map(cb => parseInt(cb.value));
+            const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
             const formData = new FormData();
 
             formData.append("name", document.getElementById('name').value);
             formData.append("description", document.getElementById('description').value);
-            formData.append("state", document.getElementById('state').value);
-            formData.append("category_ids", categories.join(', '));
+            formData.append("state", 1);
+            formData.append("categories", categories.join(', '));
             formData.append("image", document.getElementById('photo').files[0]);
 
             const response = await fetch('/create_request', {
@@ -69,10 +109,12 @@
             });
 
             if (response.ok) {
-                alert('Request created successfully!');
+                const data = await response.json();
+                window.location.href = data.redirect_url;
             } else {
                 alert('Error creating request.');
             }
+
         });
     </script>        
 </body>

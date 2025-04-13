@@ -40,6 +40,7 @@ import os
 
 from pathlib import Path
 from datetime import datetime
+import pytz
 import traceback
 
 import logging
@@ -100,9 +101,19 @@ async def home():
     return FileResponse("static/home.html")
 
 
+# @app.get("/categories")
+# async def categories():
+#     return FileResponse("static/categories.html")
 @app.get("/categories")
-async def categories():
-    return FileResponse("static/categories.html")
+def show_categories(request: Request, db: Session = Depends(get_db)):
+    all_requests = db.query(models.Request).all()
+    return static.TemplateResponse(
+        "categories.html",
+        {
+            "request": request,
+            "requests": all_requests,
+        },
+    )
 
 
 @app.get("/settings")
@@ -149,10 +160,15 @@ async def registrate():
 
 
 def get_current_user(request: Request, db: Session = Depends(get_db)):
+    print("SESSION:", request.session)
     user_id = request.session.get("user_id")
-    if user_id:
-        return db.query(models.User).filter(models.User.idUsers == user_id).first()
+    user_email = request.session.get("user_email")
+    if user_id and user_email:
+        user = db.query(models.User).filter(models.User.idUsers == user_id).first()
+        if user:
+            return user
     raise HTTPException(status_code=401, detail="Unauthorized")
+    # return RedirectResponse(url="/error", status_code=401)
 
 
 @app.get("/login")
@@ -188,7 +204,7 @@ async def callback(request: Request, db: Session = Depends(get_db)):
     flow.fetch_token(authorization_response=str(request.url))
     credentials = flow.credentials
 
-    oauth2_client = build("oauth2", "v2", credentials=credentials)
+    # oauth2_client = build("oauth2", "v2", credentials=credentials)
     # user_info = oauth2_client.userinfo().get().execute()
     # user_email = user_info["email"]
     # request.session["user_email"] = user_email
@@ -199,18 +215,23 @@ async def callback(request: Request, db: Session = Depends(get_db)):
     user_email = id_info["email"]
     request.session["user_email"] = user_email
     user = db.query(models.User).filter(models.User.email == user_email).first()
-    request.session["user_id"] = user.idUsers
 
     if user:
+        request.session["user_id"] = user.idUsers
         return RedirectResponse(url="/home")
-    else:
-        return RedirectResponse(url="/create_profile")
+    return RedirectResponse(url="/create_profile")
 
 
 @app.get("/create_profile", response_class=FileResponse)
 async def create_pr(request: Request):
     # return FileResponse("static/create_pr.html")
     return static.TemplateResponse("create_profile.html", {"request": request})
+
+
+@app.get("/add_request", response_class=FileResponse)
+async def create_req(request: Request):
+    # return FileResponse("static/create_pr.html")
+    return static.TemplateResponse("create_request.html", {"request": request})
 
 
 @app.get("/go_edit_profile", response_class=HTMLResponse)
@@ -288,6 +309,7 @@ async def post_edit_profile(
 
 # DATABASE
 
+# models.Base.metadata.drop_all(bind=engine)
 # models.Base.metadata.create_all(bind=engine)
 
 UPLOAD_FOLDER = Path("static/uploads")
@@ -335,6 +357,7 @@ async def create_user(
     with open(file_path, "wb") as buffer:
         buffer.write(await photo.read())
 
+    # local_tz = pytz.timezone("Europe/Kyiv")
     print("image added", file_path)
     new_user = models.User(
         name=name,
@@ -354,9 +377,10 @@ async def create_user(
     db.add(new_user)
     # print("after adding")
     db.commit()
-    # db.flush()
+    db.refresh(new_user)
     print("user added")
     request.session["user_email"] = new_user.email
+    request.session["user_id"] = new_user.idUsers
 
     return JSONResponse(
         status_code=200,
@@ -364,13 +388,56 @@ async def create_user(
     )
 
 
+@app.post("/create_request")
+async def create_request(
+    request: Request,
+    name: str = Form(...),
+    description: str = Form(...),
+    state: int = Form(...),
+    categories: str = Form(...),
+    image: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    user_email = request.session.get("user_email")
+    if not user_email:
+        return RedirectResponse(url="/error", status_code=401)
+
+    user = db.query(models.User).filter_by(email=user_email).first()
+    if not user:
+        return RedirectResponse(url="/error", status_code=401)
+
+    file_ext = os.path.splitext(image.filename)[1]
+    filename = f"req_{uuid4().hex}{file_ext}"
+    file_path = UPLOAD_FOLDER / filename
+    with open(file_path, "wb") as buffer:
+        buffer.write(await image.read())
+
+    new_request = models.Request(
+        name=name,
+        description=description,
+        image_path=str(file_path),
+        created_at=datetime.utcnow(),
+        state=state,
+        id_author=user.idUsers,
+        categories=categories.strip(),
+    )
+
+    db.add(new_request)
+    db.commit()
+
+    return JSONResponse(
+        status_code=200,
+        content={"message": "Request created", "redirect_url": "/profile"},
+    )
+
+
 # def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 #     return crud.create_user(db, user)
 
 
-@app.post("/requests", response_model=schemas.RequestResponse)
-def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)):
-    return crud.create_request(db, req)
+# @app.post("/requests", response_model=schemas.RequestResponse)
+# def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)):
+#     return crud.create_request(db, req)
 
 
 # DATABASE READ

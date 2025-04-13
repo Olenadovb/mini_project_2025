@@ -31,7 +31,7 @@ class RequestCreate(BaseModel):
     image_path: str
     state: int
     id_author: int
-    category_ids: List[int]
+    categories: str
 
 
 class RequestResponse(BaseModel):
@@ -41,6 +41,7 @@ class RequestResponse(BaseModel):
     image_path: str
     created_at: datetime
     state: int
+    categories: str
 
     class Config:
         from_attributes = True

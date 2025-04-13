@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from server.models import User, Request, Category
+from server.models import User, Request
 from server.schemas import UserCreate, RequestCreate
 from fastapi import UploadFile, File
 from datetime import datetime
@@ -38,15 +38,13 @@ def create_user(
     # db.refresh(db_user)
     # return db_user
     try:
-        print("...adding user to DB:", db_user)
+        # print("...adding user to DB:", db_user)
         db.add(db_user)
         db.commit()
-        print("Committed to DB")
+        # print("Committed to DB")
         db.refresh(db_user)
-        print("Refreshed from DB")
-        print("user saved to db", db_user)
-        # db.flush()
-        # print("Flushed successfully")
+        # print("Refreshed from DB")
+        # print("user saved to db", db_user)
         return db_user
     except Exception as e:
         db.rollback()
@@ -55,47 +53,27 @@ def create_user(
 
 
 def create_request(db: Session, req: RequestCreate, image: UploadFile = File(...)):
-    image_path = f"uploads/{image.filename}"
-
-    with open(image_path, "wb") as f:
-        f.write(image.file.read())
+    # image_path = f"uploads/{image.filename}"
+    # with open(image_path, "wb") as f:
+    #     f.write(image.file.read())
 
     db_request = Request(
         name=req.name,
         description=req.description,
-        image_path=image_path,
+        image_path=req.image_path,
         state=req.state,
         id_author=req.id_author,
+        categories=req.categories,
+        created_at=datetime.utcnow(),
     )
 
-    for cat_id in req.category_ids:
-        category = db.query(Category).filter(Category.idCategories == cat_id).first()
-        if category:
-            db_request.categories.append(category)
+    # for cat_id in req.category_ids:
+    #     category = db.query(Category).filter(Category.idCategories == cat_id).first()
+    #     if category:
+    #         db_request.categories.append(category)
 
     db.add(db_request)
     db.commit()
     db.refresh(db_request)
 
     return db_request
-
-
-# def create_request(db: Session, req: RequestCreate):
-#     db_request = Request(
-#         name=req.name,
-#         description=req.description,
-#         image_path=req.image_path,
-#         state=req.state,
-#         id_author=req.id_author,
-#     )
-
-#     for cat_id in req.category_ids:
-#         category = db.query(Category).filter(Category.idCategories == cat_id).first()
-#         if category:
-#             db_request.categories.append(category)
-
-#     db.add(db_request)
-#     db.commit()
-#     db.refresh(db_request)
-
-#     return db_request
