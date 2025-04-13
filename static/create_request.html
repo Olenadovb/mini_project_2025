@@ -8,89 +8,134 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
-    <!-- <link rel="manifest" href="/favicon/site.webmanifest"> -->
+    <link rel="manifest" href="/favicon/site.webmanifest">
     <title>Hands - Create Request</title>
     <link rel="stylesheet" href="/static/styles.css"/>
 </head>
 <body>
-    <h1>Create a Request</h1>
-
-    <form id="createRequestForm" method="POST" enctype="multipart/form-data" action="/create_request">
-        <div class="form-group">
-            <label for="name" class="required">Request Name</label>
-            <input type="text" id="name" name="name" maxlength="100" required>
-        </div>
-
-        <div class="form-group">
-            <label for="description" class="required">Description</label>
-            <textarea id="description" name="description" rows="4" maxlength="200" required></textarea>
-        </div>
-
-        <!-- <div class="form-group">
-            <select name="state" type="number">
-                <option value="0"></option>
-                <option value="1">Active</option>
-              </select>
-            <label for="state" class="required">State</label>
-            <input type="number" id="state" name="state" required>
-        </div> -->
-
-        <div class="form-group">
-            <label class="required">Categories (Select at least one)</label>
-            <div class="checkbox-group">
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-clothing" name="categories" value="Clothing & Gear">
-                    <label for="category-clothing">Clothing & Gear</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-navigation" name="categories" value="Navigation & Surveillance">
-                    <label for="category-navigation">Navigation & Surveillance</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-communication-equipment" name="categories" value="Communication Equipment">
-                    <label for="category-communication-equipment">Communication Equipment</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-shelter-sleeping-gear" name="categories" value="Shelter & Sleeping Gear">
-                    <label for="category-shelter-sleeping-gear">Shelter & Sleeping Gear</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-food-water-supplies" name="categories" value="Food & Water Supplies">
-                    <label for="category-food-water-supplies">Food & Water Supplies</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-medical-first-aid" name="categories" value="Medical & First Aid">
-                    <label for="category-medical-first-aid">Medical & First Aid</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-tools-repair-kits" name="categories" value="Tools & Repair Kits">
-                    <label for="category-tools-repair-kits">Tools & Repair Kits</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-power-energy" name="categories" value="Power & Energy">
-                    <label for="category-power-energy">Power & Energy</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-vehicle" name="categories" value="Vehicle & Transport Support">
-                    <label for="category-vehicle">Vehicle & Transport Support</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="category-power-energy" name="categories" value="Protective Equipment">
-                    <label for="category-power-energy">Protective Equipment</label>
-                </div>
+    <div class="alert" id="alert">You need to fill out everything!</div>
+        
+    <div id="header"></div>
+    <main class="container">
+        <section>
+            <div style="
+                display: flex;
+                justify-content: flex-start;
+                padding-right: 24px;
+                ">
+                <div style="font-size: 32px; font-weight: bold; cursor: pointer; margin-right: 20px;" onclick="history.back()">&#x2039;</div>
+                <div style="font-size: 36px; font-weight: bold; color:rgb(42, 42, 95)">Add new activity</div>
+                <!-- <div style="margin-left: auto;">
+                </div> -->
             </div>
-            <div id="categoriesError" class="error">Please select at least one category</div>
-        </div>
 
-        <div class="form-group">
-            <label for="photo" class="required">Image</label>
-            <input type="file" id="photo" name="image" accept="image/*" required>
-        </div>
+            <form id="createRequestForm" method="POST" enctype="multipart/form-data" action="/create_request">
+                <div class="form-group">
+                    <label for="name" class="required">
+                        <div style="margin-bottom: 10px;">
+                        <p style="font-weight: bold; font-size: 24px">Request name:</p></div>
+                    </label>
+                    <input type="text" id="name" name="name" maxlength="100" required>
+                </div>
 
-        <button type="submit">Create Request</button>
-    </form>
+                <div class="form-group">
+                    <label for="description" class="required">
+                        <div style="display: flex; gap: 5px; flex-wrap: wrap; flex-direction: column;">
+                            <div style="flex: 1; width: 505px; max-width: 505px">
+                              <p style="font-weight: bold; font-size: 24px">Provide a description</p></div>
+                    </label>
+                    <textarea id="description" name="description" rows="4" maxlength="200" style="width: 60%; height: 160px; border: 1px solid #ccc; border-radius: 12px; padding: 12px; font-size: 24px;" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">
+                        <div style="margin-bottom: 24px;">
+                            <p style="font-weight: bold; font-size: 24px">Choose categories:</p></div>
+                    </label>
+                    <div class="checkbox-group-request">
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-clothing" name="categories" value="Clothing & Gear">
+                            <label for="category-clothing">Clothing & Gear</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-navigation" name="categories" value="Navigation & Surveillance">
+                            <label for="category-navigation">Navigation & Surveillance</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-communication-equipment" name="categories" value="Communication Equipment">
+                            <label for="category-communication-equipment">Communication Equipment</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-shelter-sleeping-gear" name="categories" value="Shelter & Sleeping Gear">
+                            <label for="category-shelter-sleeping-gear">Shelter & Sleeping Gear</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-food-water-supplies" name="categories" value="Food & Water Supplies">
+                            <label for="category-food-water-supplies">Food & Water Supplies</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-medical-first-aid" name="categories" value="Medical & First Aid">
+                            <label for="category-medical-first-aid">Medical & First Aid</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-tools-repair-kits" name="categories" value="Tools & Repair Kits">
+                            <label for="category-tools-repair-kits">Tools & Repair Kits</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-power-energy" name="categories" value="Power & Energy">
+                            <label for="category-power-energy">Power & Energy</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-vehicle" name="categories" value="Vehicle & Transport Support">
+                            <label for="category-vehicle">Vehicle & Transport Support</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="category-power-energy" name="categories" value="Protective Equipment">
+                            <label for="category-power-energy">Protective Equipment</label>
+                        </div>
+                    </div>
+                    <div id="categoriesError" class="error"><strong>Please select at least one category</strong></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo" class="required">
+                        <div style="flex: 1; min-width: 280px;">
+                            <p style="font-weight: bold; font-size: 24px">Attach a photo</p></div>
+                    </label>
+                    <input type="file" id="photo" name="image" accept="image/*" style="width: 100%; height: 160px; background-color: #e0e0e0; border-radius: 12px;" required>
+                </div>
+
+                <div style="margin-left: auto;">
+                    <button type="submit" class="homepage_button_join" style="padding: 12px 36px;">Publish</button>
+                </div>
+                <!-- <button type="submit">Create Request</button> -->
+            </form>
+
+    </section>
+    </main>
+    <div id="footer"></div>
 
     <script>
+        fetch('/static/header.html')
+        .then(response => response.text())
+        .then(html => {
+        document.getElementById('header').innerHTML = html;
+    
+        const burger = document.getElementById('burger');
+        const navMenu = document.getElementById('nav-menu');
+    
+        burger.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+        });
+
+        fetch('/static/footer.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('footer').innerHTML = html;
+            
+        });
+
         document.getElementById('createRequestForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 

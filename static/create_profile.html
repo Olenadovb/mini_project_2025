@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
     <!-- <link rel="manifest" href="/favicon/site.webmanifest"> -->
-    <title>Registration Form</title>
+    <title>Hands - Registration Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -144,17 +144,17 @@
             <label for="country" class="required">Country</label>
             <select id="country" name="country" required>
                 <option value="" disabled selected>Select your country</option>
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="UK">United Kingdom</option>
-                <option value="AU">Australia</option>
-                <option value="DE">Germany</option>
-                <option value="FR">France</option>
-                <option value="JP">Japan</option>
-                <option value="CN">China</option>
-                <option value="IN">India</option>
-                <option value="BR">Brazil</option>
-                <option value="UA">Ukraine</option>
+                <option value="United States">United States</option>
+                <option value="Canada">Canada</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Australia">Australia</option>
+                <option value="Germany">Germany</option>
+                <option value="France">France</option>
+                <option value="Japan">Japan</option>
+                <option value="China">China</option>
+                <option value="India">India</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Ukraine">Ukraine</option>
             </select>
             <div id="countryError" class="error">Please select a country</div>
         </div>
@@ -294,17 +294,6 @@
                     const categories = Array.from(document.querySelectorAll("input[name='categories']:checked")).map(cb => cb.value);
                     formData.append("categories", categories.join(", "));
         
-                    // try {
-                    //     const res = await fetch("/create_user", { method: "POST", body: formData });
-                    //     if (!res.ok) throw new Error(await res.text());
-                    //     alert("Successfully registered!");
-                    // } catch (err) {
-                    //     alert("Error: " + err.message);
-                    // }
-                    // fetch("/create_user", {
-                    //     method: "POST",
-                    //     body: formData,
-                    // })
                     const response = await fetch("/create_user", {
                         method: "POST",
                         body: formData
@@ -323,85 +312,8 @@
                     console.error("Помилка при відправці форми:", error);
                     alert(`Помилка: ${error.message}`);
                 }
-                    // .then(response => {
-                    //     console.log("Response status:", response.status);
-                    //     return response.json();
-                    // })
-                    // .then(data => {
-                    //     if (data.redirect_url) {
-                    //         window.location.href = data.redirect_url;
-                    //     } else {
-                    //         alert("⚠️ Помилка: " + (data.error || "Невідома помилка"));
-                    //     }
-                    // })
-                // .catch(err => {
-                //     console.error("❌ Failed to fetch:", err);
-                //     alert("❌ Failed to fetch. Можливо, проблема на сервері.");
-                // });
             }
         });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-    <!-- <script>
-        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const form = document.getElementById('registrationForm');
-            const formData = new FormData(form);
-
-            const selectedCategories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
-            if (selectedCategories.length === 0) {
-                document.getElementById("categoriesError").style.display = "block";
-                return;
-            } else {
-                document.getElementById("categoriesError").style.display = "none";
-            }
-
-            formData.append("categories", selectedCategories.join(", "));
-        
-            // const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
-            // formData.set('categories', categories.join(', '));
-            // const formData = {
-            //     name: document.getElementById('firstName').value,
-            //     surname: document.getElementById('secondName').value,
-            //     age: parseInt(document.getElementById('age').value),
-            //     country: document.getElementById('country').value,
-            //     city: document.getElementById('city').value,
-            //     phone: document.getElementById('phone').value,
-            //     email: document.getElementById('email').value,
-            //     categories: categories.join(', '),
-            //     image_path: "image_placeholder.png",
-            //     description: document.getElementById('about').value,
-            //     created_at: None,
-            //     requests: []
-            // };
-        
-            const response = await fetch('/create_user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': FormData
-                },
-                body: JSON.stringify(formData)
-            });
-        
-            if (response.ok) {
-                const result = await response.json();
-                alert('User created successfully!');
-                console.log(result);
-            } else {
-                const error = await response.text();
-                alert('Error creating user: ' + error);
-            }
-        });
-        </script>        
-</body>
-</html> -->

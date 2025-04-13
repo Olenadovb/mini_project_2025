@@ -15,6 +15,7 @@
 <body>
   <header class="navbar">
     <img src="/static/photos/logo_white.png" class="logo_small" />
+    <h1 id="index_title"><b>Helping Hands</b> — Glory to Ukraine! Glory to the Heroes!</h1>
   </header>
 
 
@@ -28,8 +29,8 @@
         <p style="margin-top: 12px; text-align: center;font-size: 28px; font-family: 'crimson text';">Our mission is to unite communities, mobilize resources, and deliver critical support to defenders on the front lines.</p>
         <div style="margin-top: 20px; display: flex; gap: 12px;">
           <!-- <button class="homepage_button_join">Join</button> -->
-          <a href="/registrate" class="homepage_button_join">Join</a>
-          <button class="outlined-btn">Already have an account</button>
+          <a href="/registrate"><button class="homepage_button_join">Join</button></a>
+          <a href="/registrate"><button class="outlined-btn">Already have an account</button></a>
         </div>
       </div>
     </section>
@@ -56,8 +57,8 @@
       <h2 style="font-size: 36px; color: rgb(68, 64, 52)">Want to become a part of our community?<br>Welcome!</h2>
       <div style="margin-top: 20px; display: flex; justify-content: center; gap: 12px;">
         <!-- <button class="homepage_button_join_green">Join</button> -->
-        <a href="/registrate" class="homepage_button_join_green">Join</a>
-        <button class="outlined-btn" style="color:rgb(68, 64, 52)">Already have an account</button>
+        <a href="/registrate"><button class="homepage_button_join_green">Join</button></a>
+        <a href="/registrate"><button class="outlined-btn" style="color:rgb(68, 64, 52)">Already have an account</button></a>
       </div>
     </section>
 
@@ -93,8 +94,8 @@
       <h2 style="color: #344c8c; font-size: 36px;">Do not hesitate.</h2>
       <div style="margin-top: 20px; display: flex; justify-content: center; gap: 12px;">
         <!-- <button class="homepage_button_join">Join</button> -->
-        <a href="/registrate" class="homepage_button_join">Join</a>
-        <button class="outlined-btn">Already have an account</button>
+        <a href="/registrate"><button class="homepage_button_join">Join</button></a>
+        <a href="/registrate"><button class="outlined-btn">Already have an account</button></a>
       </div>
     </section>
 
@@ -102,11 +103,16 @@
 
   </main>
 
-  <footer>
-    <img src="/static/photos/logo_white.png" class="logo_small" />
-    <p>Name © 2025</p>
-    <p>UCU Apps Industries</p>
-    <p>All rights reserved</p>
-  </footer>
+  <div id="footer"></div>
+
+
+  <script>
+    fetch('/static/footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
 </body>
 </html>

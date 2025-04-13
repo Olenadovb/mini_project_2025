@@ -9,21 +9,12 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
   <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
   <!-- <link rel="manifest" href="/favicon/site.webmanifest"> -->
-  <title>Volunteer Service — Home</title>
+  <title>Hands — Home</title>
   <link rel="stylesheet" href="/static/styles.css" />
 
 </head>
 <body style="background-color:#f9f9f9;">
-  <header class="navbar">
-    <img src="/static/photos/logo_white.png" class="logo_small" />
-    <nav>
-      <a href="/home"><button>Home</button></a>
-      <a href="/categories"><button>Categories</button></a>
-      <a href="/profile"><button>Profile</button></a>
-      <a href="/settings"><button>Settings</button></a>
-      <a href="/aboutus"><button>About Us</button></a>
-    </nav>
-  </header>
+  <div id="header"></div>
 
 <!-- Our History Section -->
 <section class="about-container">
@@ -89,11 +80,29 @@
     </div>
   </section>
 
-  <footer>
-    <img src="/static/photos/logo_white.png" class="logo_small" />
-    <p>Name © 2025</p>
-    <p>UCU Apps Industries</p>
-    <p>All rights reserved</p>
-  </footer>
+  <div id="footer"></div>
+
+  <script>
+    fetch('/static/header.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('header').innerHTML = html;
+  
+      const burger = document.getElementById('burger');
+      const navMenu = document.getElementById('nav-menu');
+  
+      burger.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    });
+
+
+    fetch('/static/footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
 </body>
 </html>

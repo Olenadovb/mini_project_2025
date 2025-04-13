@@ -113,15 +113,11 @@ header.navbar nav button {
   object-fit: cover;
 }
 
-.avatar {
-  max-width: 250px;
-  border-radius: 150px;
-}
-
 .container {
-  max-width: 100%;
-  margin: 20px;
-  padding: 0 16px;
+  max-width:  100%;
+  align-items: center;
+  margin: 0 auto;
+  padding: 50px 0px;
   box-sizing: border-box;
 }
 
@@ -148,6 +144,25 @@ header.navbar nav button {
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.about-user {
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+.about-user h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.about-user p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
 }
 
 /* Keep your existing .profile class as is */
@@ -375,6 +390,20 @@ max-width: 47px;
 max-height: 49px;
 }
 
+.header-main .purple-bar {
+  display: flex;
+  align-items: center;
+  background-color: #949cb5; /* фіолетовий, можеш змінити */
+  height: 60px;
+  padding: 0 20px;
+}
+
+.header-main .logo_header {
+  max-width: 47px;
+  max-height: 49px;
+  margin-right: 20px;
+}
+
 .history-section {
 display: table-cell;
 vertical-align: middle;
@@ -450,12 +479,9 @@ gap: 12px;
 
 
 
-
-
-
 .contact-info {
 flex: 1;
-min-width: 250px;
+width: 250px;
 }
 
 body.registration-page {
@@ -534,17 +560,21 @@ box-sizing: border-box;
 
 .form-group label {
 display: block;
-margin-bottom: 8px;
+margin-bottom: 0;
 font-weight: 500;
 color: #344c8c;
 }
 
 .form-group input {
-width: 100%;
+width: 60px;
 padding: 10px 12px;
 border: 1px solid #ddd;
 border-radius: 6px;
 font-size: 14px;
+}
+
+#name {
+  width: 60%
 }
 
 .form-group input:invalid {
@@ -792,8 +822,9 @@ color: white;
 
 .cards-container-categories {
   display: grid;
-  grid-template-columns: repeat(2, minmax(300px, 1.1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1.5fr));
   gap: 24px;
+  /* max-width: 400px; */
 }
 
 .request-card-categories {
@@ -807,13 +838,13 @@ color: white;
   justify-content: space-between;
   height: 160px;
   position: relative;
-  max-width:320px
 }
 
 .card-content-categories {
   font-weight: 600;
   font-size: 22px;
 }
+
 
 .card-footer-categories {
   display: flex;
@@ -829,7 +860,7 @@ color: white;
   font-size: 16px;
   font-weight: 600;
   white-space: nowrap;
-  margin-right: 8px
+  margin-right:8px
 }
 
 .arrow-link-categories {
@@ -841,4 +872,20 @@ color: white;
 
 .arrow-link-categories:hover {
   color: #dcdcdc;
+}
+
+.checkbox-group-request {
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: row-reverse;
+  max-width: 80%;
+  justify-content: flex-end;
+  margin-bottom: 20px;
 }

@@ -13,17 +13,7 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <header class="navbar">
-    <img src="/static/photos/logo_white.png" class="logo_small" />
-    <nav>
-      <a href="/home"><button>Home</button></a>
-      <a href="/categories"><button>Categories</button></a>
-      <a href="/profile"><button>Profile</button></a>
-      <a href="/settings"><button>Settings</button></a>
-      <a href="/aboutus"><button>About Us</button></a>
-    </nav>
-  </header>
-
+  <div id="header"></div>
 
   <main class="container">
 
@@ -111,11 +101,30 @@
 
   </main>
 
-  <footer>
-    <img src="/static/photos/logo_white.png" class="logo_small" />
-    <p>Name © 2025</p>
-    <p>UCU Apps Industries</p>
-    <p>All rights reserved</p>
-  </footer>
+  <div id="footer"></div>
+
+
+  <script>
+    fetch('/static/header.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('header').innerHTML = html;
+  
+      const burger = document.getElementById('burger');
+      const navMenu = document.getElementById('nav-menu');
+  
+      burger.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    });
+
+
+    fetch('/static/footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
 </body>
 </html>

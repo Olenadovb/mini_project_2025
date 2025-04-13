@@ -9,21 +9,11 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
   <!-- <link rel="manifest" href="/favicon/site.webmanifest"> -->
-  <title>Volunteer Profile</title>
+  <title>Hands - Profile</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <header class="navbar">
-    <img src="/static/photos/logo_white.png" class="logo_small" />
-    <nav>
-      <a href="/home"><button>Home</button></a>
-      <a href="/categories"><button>Categories</button></a>
-      <a href="/profile"><button>Profile</button></a>
-      <a href="/settings"><button>Settings</button></a>
-      <a href="/aboutus"><button>About Us</button></a>
-    </nav>
-  </header>
-
+  <div id="header"></div>
 
   <main class="container">
     <section class="profile">
@@ -33,33 +23,37 @@
         <p>{{ user.phone }}</p>
         <p>{{ user.email }}</p>
       </div>
-    
-      <div class="user-info-flex">
-        <div class="user-text">
-          <h1>{{ user.name }} {{ user.surname }}</h1>
-          <p>{{ user.age }} y. o.</p>
-          <p>{{ user.city }}</p>
-          <p>specifies in:</p>
-    
-          <div class="tags-and-button">
+      <div class="profile-container">
+        <div class="user-info">
+            <h1>{{ user.name }} {{ user.surname }}</h1>
+            <p>{{ user.age }} y. o.</p>
+            <p>{{ user.city }}</p>
+            <p>specifies in:</p>
             <div class="tags">
               {% for category in user.categories.split(",") %}
                 <span>{{ category }}</span>
               {% endfor %}
             </div>
-            <a href="/go_edit_profile"><button class="outlined-btn">Edit my information</button></a>
-          </div>
         </div>
-    
-        <!-- <img src="/{{ user.image_path }}" alt="Profile photo" class="avatar" /> -->
-        <img src="/{{ user.image_path if user.image_path else 'photos/default.svg' }}" alt="Profile photo" class="avatar" />
+        <div class="profile-photo">
+            <img src="/{{ user.image_path if user.image_path else 'photos/default.svg' }}" alt="Volunteer" />
+        </div>
+    </div>
+</section>
 
-      </div>
-    </section>
+<div class="about-user">
+  <h2>About me</h2>
+  <p>
+    {{ user.description }}
+  </p>
+</div>
 
+<div class="center-wrapper">
+  <a href="/go_edit_profile"><button class="outlined-btn">Edit my information</button></a>
     <section class="add-activity">
       <a href="/add_request"><button>Add new activity</button></a>
     </section>
+</div>
 
     <section class="history">
       <h2>History of activity</h2>
@@ -80,12 +74,30 @@
     </section>
   </main>
 
+  <div id="footer"></div>
 
-  <footer>
-    <img src="/static/photos/logo_white.png" class="logo_small" />
-    <p>Name © 2025</p>
-    <p>UCU Apps Industries</p>
-    <p>All rights reserved</p>
-  </footer>
+  <script>
+    fetch('/static/header.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('header').innerHTML = html;
+  
+      const burger = document.getElementById('burger');
+      const navMenu = document.getElementById('nav-menu');
+  
+      burger.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    });
+
+
+    fetch('/static/footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
+  
 </body>
 </html>
