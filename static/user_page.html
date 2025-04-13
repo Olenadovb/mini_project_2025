@@ -37,7 +37,7 @@
 
 <div class="center-wrapper">
     <button class="outlined-btn">Edit my information</button>
-    <form action="Adding_new_activity_page.html">
+    <form action="add_activity_page.html">
         <button type="submit" class="homepage_button_join">Add new activity</button>
     </form>
 </div>
@@ -77,11 +77,14 @@
       });
     });
 
+
     fetch('footer.html')
       .then(response => response.text())
       .then(html => {
         document.getElementById('footer').innerHTML = html;
+        
       });
   </script>
+  
 </body>
 </html>

@@ -645,7 +645,7 @@ border-radius: 16px;
 margin-right: 6px;
 margin-top: 6px;
 font-size: 16px;
-cursor: pointer; /* курсор-палець */
+cursor: pointer;
 background-color: white;
 color: #344c8c;
 transition: background-color 0.2s ease, color 0.2s ease;
@@ -656,80 +656,77 @@ background-color: #344c8c;
 color: white;
 }
 
-/* Додай до свого файлу в кінець */
 
 .burger {
-display: none;
-font-size: 32px;
-cursor: pointer;
-margin-left: auto;
-padding: 8px;
+  display: none;
+  font-size: 32px;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 8px;
 }
 
-/* Стилі для посилань у нав-меню */
 .nav-menu a {
-width: 160px;
-text-align: center;
-text-decoration: none;
-background-color: #5E678B;
-color: white;
-padding: 14px 32px;
-border-radius: 6px;
-font-size: 22px;
-border: 1px solid #E8E8E8;
-transition: background-color 0.3s;
+  width: 160px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #5E678B;
+  color: white;
+  padding: 14px 32px;
+  border-radius: 6px;
+  font-size: 22px;
+  border: 1px solid #E8E8E8;
+  transition: background-color 0.3s;
 }
 
 .nav-menu a:hover {
-background-color: #4d5678;
+  background-color: #4d5678;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-.nav-menu {
-  display: none;
-  flex-direction: column;
-  background-color: #5E678B;
-  position: absolute;
-  top: 60px;
-  right: 24px;
-  padding: 10px;
-  border-radius: 8px;
-  z-index: 999;
+  nav {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #333;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    z-index: 1000;
+  }
+
+  nav.show {
+    display: flex;
+  }
+
+  .burger {
+    display: block;
+  }
 }
 
-.nav-menu.show {
-  display: flex;
+@media (min-width: 769px) {
+  .burger {
+    display: none;
+  }
 }
-
-.burger {
-  display: block;
-}
-
-.navbar {
-  justify-content: space-between;
-  position: relative;
-}
-}
-
-
 .center-wrapper {
-display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: column;
-gap: 15px;
-margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
 .profile-photo {
-flex: 0 0 auto;
-align-self: flex-start;
+  flex: 0 0 auto;
+  align-self: flex-start;
 }
 
 .profile-photo img {
-width: 150px;
-height: 150px;
-border-radius: 50%;
-object-fit: cover;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
 }
