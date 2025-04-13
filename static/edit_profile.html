@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Profile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type="file"] {
+      border: none;
+      padding-left: 0;
+    }
+
+    .required::after {
+      content: " *";
+      color: red;
+    }
+
+    .checkbox-group {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+    }
+
+    .checkbox-container label {
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .preview-container {
+      width: 150px;
+      height: 150px;
+      border: 1px dashed #ccc;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #imagePreview {
+      max-width: 100%;
+      max-height: 100%;
+      display: none;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Edit your profile</h2>
+    <form id="editProfileForm" method="post" enctype="multipart/form-data" action="/edit_profile">
+      <div class="form-group">
+        <label for="firstName" class="required">First Name</label>
+        <input type="text" id="firstName" name="name" value="{{ user.name }}" required />
+        <div id="firstNameError" class="error">First name is required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="secondName" class="required">Surname</label>
+        <input type="text" id="secondName" name="surname" value="{{ user.surname }}" required />
+        <div id="secondNameError" class="error">Surname is required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="age" class="required">Age</label>
+        <input type="number" id="age" name="age" value="{{ user.age }}" required />
+        <div id="ageError" class="error">Age must be between 17 and 120</div>
+      </div>
+
+      <div class="form-group">
+        <label for="country" class="required">Country</label>
+        <input type="text" id="country" name="country" value="{{ user.country }}" />
+        <div id="countryError" class="error">Country is required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="city" class="required">City</label>
+        <input type="text" id="city" name="city" value="{{ user.city }}" />
+        <div id="cityError" class="error">City is required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone" class="required">Phone</label>
+        <input type="text" id="phone" name="phone" value="{{ user.phone }}" />
+        <div id="phoneError" class="error">Phone number must be in +380XXXXXXXXX format</div>
+      </div>
+
+      <div class="form-group">
+        <label for="about" class="required">About</label>
+        <textarea id="about" name="description" maxlength="200">{{ user.description }}</textarea>
+        <div id="aboutCounter"></div>
+        <div id="aboutError" class="error">Description is required and must be under 200 characters</div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">Categories (Select at least one)</label>
+        <div id="categoriesError" class="error">Select at least one category</div>
+        <div class="checkbox-group">
+          {% set selected_categories = user.categories.split(', ') if user.categories else [] %}
+          {% for cat in [
+            'Clothing & Gear', 'Navigation & Surveillance', 'Communication Equipment',
+            'Shelter & Sleeping Gear', 'Food & Water Supplies', 'Medical & First Aid',
+            'Tools & Repair Kits', 'Power & Energy', 'Vehicle & Transport Support', 'Protective Equipment'
+          ] %}
+            <div class="checkbox-container">
+              <input type="checkbox" id="category-{{ loop.index }}" name="categories" value="{{ cat }}"
+                {% if cat in selected_categories %}checked{% endif %} />
+              <label for="category-{{ loop.index }}">{{ cat }}</label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="photo">Profile Photo</label>
+        <input type="file" id="photo" name="photo" />
+        <div id="photoError" class="error">Photo is required</div>
+      </div>
+
+      <button type="submit">Save changes</button>
+    </form>
+  </main>
+      <script>
+        function setupCharCounter(inputId, counterId, maxLength) {
+          const input = document.getElementById(inputId);
+          const counter = document.getElementById(counterId);
+          counter.textContent = `${input.value.length}/${maxLength} characters`;
+          input.addEventListener("input", () => {
+            counter.textContent = `${input.value.length}/${maxLength} characters`;
+          });
+        }
+    
+        setupCharCounter("about", "aboutCounter", 200);
+    
+        document.getElementById("editProfileForm").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          let isValid = true;
+    
+          const showError = (id, condition) => {
+            const el = document.getElementById(id);
+            el.style.display = condition ? "block" : "none";
+            return !condition;
+          };
+    
+          const getValue = id => document.getElementById(id).value.trim();
+    
+          isValid &= showError("firstNameError", getValue("firstName") === "");
+          isValid &= showError("secondNameError", getValue("secondName") === "");
+          isValid &= showError("ageError", !(+getValue("age") >= 17 && +getValue("age") <= 120));
+          isValid &= showError("countryError", getValue("country") === "");
+          isValid &= showError("cityError", getValue("city") === "");
+          isValid &= showError("phoneError", !/^\+\d{12}$/.test(getValue("phone").replace(/\s+/g, "")));
+          isValid &= showError("aboutError", getValue("about") === "" || getValue("about").length > 200);
+          isValid &= showError("categoriesError", document.querySelectorAll("input[name='categories']:checked").length === 0);
+        //   isValid &= showError("photoError", document.getElementById("photo").files.length === 0);
+    
+          if (isValid) {
+            const formData = new FormData();
+            formData.append("name", getValue("firstName"));
+            formData.append("surname", getValue("secondName"));
+            formData.append("age", getValue("age"));
+            formData.append("country", getValue("country"));
+            formData.append("city", getValue("city"));
+            formData.append("phone", getValue("phone"));
+            formData.append("description", getValue("about"));
+    
+            const photo = document.getElementById("photo").files[0];
+            if (photo) formData.append("photo", photo);
+    
+            const categories = Array.from(document.querySelectorAll("input[name='categories']:checked")).map(cb => cb.value);
+            formData.append("categories", categories.join(", "));
+    
+            try {
+              const response = await fetch("/edit_profile", {
+                method: "POST",
+                body: formData,
+              });
+              const result = await response.json();
+    
+              if (!response.ok) {
+                throw new Error(result.error || "Server error");
+              }
+    
+              if (result.redirect_url) {
+                window.location.href = result.redirect_url;
+              }
+            } catch (error) {
+              alert("❌ Error: " + error.message);
+            }
+          }
+        });
+      </script>
+</body>
+</html>

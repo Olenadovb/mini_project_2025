@@ -12,8 +12,9 @@ from fastapi import (
     File,
     Form,
     HTTPException,
+    APIRouter,
 )
-from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
+from fastapi.responses import RedirectResponse, FileResponse, JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -48,6 +49,8 @@ logger = logging.getLogger(__name__)
 
 
 app = FastAPI()
+router = APIRouter()
+app.include_router(router)
 
 # app.add_middleware(
 #     CORSMiddleware,
@@ -145,6 +148,13 @@ async def registrate():
 # LOG IN / SIGN IN
 
 
+def get_current_user(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if user_id:
+        return db.query(models.User).filter(models.User.idUsers == user_id).first()
+    raise HTTPException(status_code=401, detail="Unauthorized")
+
+
 @app.get("/login")
 async def login():
     flow = Flow.from_client_secrets_file(
@@ -189,6 +199,7 @@ async def callback(request: Request, db: Session = Depends(get_db)):
     user_email = id_info["email"]
     request.session["user_email"] = user_email
     user = db.query(models.User).filter(models.User.email == user_email).first()
+    request.session["user_id"] = user.idUsers
 
     if user:
         return RedirectResponse(url="/home")
@@ -202,9 +213,77 @@ async def create_pr(request: Request):
     return static.TemplateResponse("create_profile.html", {"request": request})
 
 
-# @app.get("/welcome", response_class=FileResponse)
-# async def welcome(request: Request):
-#     return static.TemplateResponse("welcome.html", {"request": request})
+@app.get("/go_edit_profile", response_class=HTMLResponse)
+async def get_edit_profile(
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    user = (
+        db.query(models.User)
+        .filter(models.User.idUsers == current_user.idUsers)
+        .first()
+    )
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return static.TemplateResponse(
+        "edit_profile.html", {"request": request, "user": user}
+    )
+
+
+@app.post("/edit_profile")
+async def post_edit_profile(
+    name: str = Form(...),
+    surname: str = Form(...),
+    age: int = Form(...),
+    country: str = Form(...),
+    city: str = Form(...),
+    phone: str = Form(...),
+    description: str = Form(...),
+    categories: str = Form(...),
+    photo: UploadFile = File(None),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    print(
+        "Received:", name, surname, age, country, city, phone, description, categories
+    )
+    user = (
+        db.query(models.User)
+        .filter(models.User.idUsers == current_user.idUsers)
+        .first()
+    )
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.name = name
+    user.surname = surname
+    user.age = age
+    user.country = country
+    user.city = city
+    user.phone = phone
+    user.description = description
+    user.categories = categories
+
+    if photo:
+        uploads_dir = "static/uploads"
+        os.makedirs(uploads_dir, exist_ok=True)
+        filename = f"user_{user.idUsers}_{photo.filename}"
+        file_path = os.path.join(uploads_dir, filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(photo.file, buffer)
+        user.photo = file_path
+
+    db.commit()
+    db.refresh(user)
+
+    return JSONResponse(
+        status_code=200,
+        content={
+            "message": "Profile updated successfully",
+            "redirect_url": "/profile",
+        },
+    )
 
 
 # DATABASE
