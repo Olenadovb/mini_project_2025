@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Volunteer Profile</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <main class="container">
+    <section class="profile">
+      <div class="contact-info">
+        <h2>My profile</h2>
+        <p><strong>Contacts</strong></p>
+        <p>+380123456789</p>
+        <p>volunteer@gmail.com</p>
+      </div>
+      <div class="profile-container">
+        <div class="user-info">
+            <h2>Volunteer</h2>
+            <p>23 y. o.</p>
+            <p>city Lviv</p>
+            <p>specifies in:</p>
+            <div class="tags">
+                <span class="tag">Clothes</span>
+                <span class="tag">Furniture</span>
+                <span class="tag">Medicine</span>
+            </div>
+        </div>
+        <div class="profile-photo">
+            <img src="premium_photo-1690407617686-d449aa2aad3c.jpeg" alt="Volunteer" />
+        </div>
+    </div>
+</section>
+
+<div class="center-wrapper">
+    <button class="outlined-btn">Edit my information</button>
+    <form action="add_activity_page.html">
+        <button type="submit" class="homepage_button_join">Add new activity</button>
+    </form>
+</div>
+
+    <section class="history">
+      <h2>History of activity</h2>
+      <div class="cards">
+        <div class="card">
+          <p>Bought a lot of medicine for army</p>
+          <span>Medicine</span>
+        </div>
+        <div class="card">
+          <p>Bought a lot of clothes for army</p>
+          <span>Clothes</span>
+        </div>
+        <div class="card">
+          <p>Bought a lot of guns for army</p>
+          <span>Furniture</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    fetch('header.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('header').innerHTML = html;
+  
+      const burger = document.getElementById('burger');
+      const navMenu = document.getElementById('nav-menu');
+  
+      burger.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    });
+
+
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
+  
+</body>
+</html>

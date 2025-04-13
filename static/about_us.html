@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Volunteer Service — Home</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+
+</head>
+<body style="background-color:#f9f9f9;">
+  <div id="header"></div>
+
+<!-- Our History Section -->
+<section class="about-container">
+    <div class="about-row" style="max-width: 1032px; align-items:center;">
+      <div class="about-text">
+        <h2 style=" font-family:Arial, sans-serif">Our history</h2>
+        <p style="font-size:28px;">
+            Founded in response to Ukraine's need for strong and organized support, our volunteer company has been actively providing aid to the military and frontline defenders since its inception.         </p>
+      </div>
+      <div class="about-image">
+        <img src="/static/photos/photo_volunteers.png" class="about-image">
+      </div>
+    </div>
+  </section>
+
+<!-- Our Aims and Plans Section -->
+<section class="about-section">
+    <div class="about-container">
+      <div class="about-row reverse">
+        <div class="about-text">
+          <h2 style=" font-family:Arial, sans-serif">Our aims and plans</h2>
+          <p>
+            Our aim is to mobilize resources, coordinate logistics, and deliver essential supplies, ensuring soldiers have the necessary equipment, medical aid, and humanitarian support. Looking ahead, we plan to expand our network, strengthen international partnerships, and develop sustainable aid programs to provide long-term assistance in Ukraine’s fight for freedom and security.
+          </p>
+        </div>
+        <div class="about-image">
+            <img src="/static/photos/photo_volunteers.png" class="about-image">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Team Section -->
+  <section class="team-section">
+    <h2 class="team-title">Our team</h2>
+    <div class="team-cards">
+      <!-- Team Member 1 -->
+      <div class="team-member">
+        <img src="/static/photos/person1.avif" class="team-photo">
+        <h3 class="teammate-name">Anastassiaa</h3>
+        <p class="team-description">
+          A dedicated volunteer, specializes in medical supply coordination, ensuring frontline defenders receive essential first aid and emergency care kits.
+        </p>
+      </div>
+  
+      <!-- Team Member 2 -->
+      <div class="team-member">
+        <img src="/static/photos/person1.avif" class="team-photo">
+        <h3 class="teammate-name">Katarina</h3>
+        <p class="team-description">
+          A dedicated volunteer, specializes in medical supply coordination, ensuring frontline defenders receive essential first aid and emergency care kits.
+        </p>
+      </div>
+  
+      <!-- Team Member 3 -->
+      <div class="team-member">
+        <img src="/static/photos/person1.avif" class="team-photo">
+        <h3 class="teammate-name">Milania</h3>
+        <p class="team-description">
+          A dedicated volunteer, specializes in medical supply coordination, ensuring frontline defenders receive essential first aid and emergency care kits.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+
+  <script>
+    fetch('header.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('header').innerHTML = html;
+  
+      const burger = document.getElementById('burger');
+      const navMenu = document.getElementById('nav-menu');
+  
+      burger.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    });
+
+
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
+</body>
+</html>
