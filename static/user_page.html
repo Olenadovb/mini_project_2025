@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Volunteer Profile</title>
-  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div id="header"></div>
@@ -17,31 +17,30 @@
         <p>+380123456789</p>
         <p>volunteer@gmail.com</p>
       </div>
-    
-      <div class="user-info-flex">
-        <div class="user-text">
-          <h1>Volunteer</h1>
-          <p>23 y. o.</p>
-          <p>city Lviv</p>
-          <p>specifies in:</p>
-    
-          <div class="tags-and-button">
+      <div class="profile-container">
+        <div class="user-info">
+            <h2>Volunteer</h2>
+            <p>23 y. o.</p>
+            <p>city Lviv</p>
+            <p>specifies in:</p>
             <div class="tags">
-              <span>Clothes</span>
-              <span>Furniture</span>
-              <span>Medicine</span>
+                <span class="tag">Clothes</span>
+                <span class="tag">Furniture</span>
+                <span class="tag">Medicine</span>
             </div>
-            <button class="outlined-btn">Edit my information</button>
-          </div>
         </div>
-    
-        <img src="/static/photos/person1.avif" alt="Profile photo" class="avatar" />
-      </div>
-    </section>
+        <div class="profile-photo">
+            <img src="premium_photo-1690407617686-d449aa2aad3c.jpeg" alt="Volunteer" />
+        </div>
+    </div>
+</section>
 
-    <section class="add-activity">
-      <button>Add new activity</button>
-    </section>
+<div class="center-wrapper">
+    <button class="outlined-btn">Edit my information</button>
+    <form action="Adding_new_activity_page.html">
+        <button type="submit" class="homepage_button_join">Add new activity</button>
+    </form>
+</div>
 
     <section class="history">
       <h2>History of activity</h2>
@@ -66,10 +65,17 @@
 
   <script>
     fetch('header.html')
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('header').innerHTML = html;
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('header').innerHTML = html;
+  
+      const burger = document.getElementById('burger');
+      const navMenu = document.getElementById('nav-menu');
+  
+      burger.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
       });
+    });
 
     fetch('footer.html')
       .then(response => response.text())
