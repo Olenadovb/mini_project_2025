@@ -13,6 +13,7 @@ from fastapi import (
     Form,
     HTTPException,
     APIRouter,
+    Query,
 )
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -42,6 +43,7 @@ from pathlib import Path
 from datetime import datetime
 import pytz
 import traceback
+from typing import List, Optional
 
 import logging
 
@@ -104,14 +106,32 @@ async def home():
 # @app.get("/categories")
 # async def categories():
 #     return FileResponse("static/categories.html")
+
+
 @app.get("/categories")
-def show_categories(request: Request, db: Session = Depends(get_db)):
+def show_categories(
+    request: Request,
+    category: Optional[List[str]] = Query(None),
+    db: Session = Depends(get_db),
+):
     all_requests = db.query(models.Request).all()
+
+    if category:
+
+        def matches_categories(req: models.Request):
+            req_cats = [c.strip() for c in req.categories.split(",")]
+            return any(c in req_cats for c in category)
+
+        filtered_requests = [req for req in all_requests if matches_categories(req)]
+    else:
+        filtered_requests = all_requests
+
     return static.TemplateResponse(
         "categories.html",
         {
             "request": request,
-            "requests": all_requests,
+            "requests": filtered_requests,
+            "selected_categories": category,
         },
     )
 

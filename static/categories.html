@@ -10,17 +10,41 @@
 <body>
     <h1>Categories</h1>
     <nav>
-        <a href="/home">Home</a>
-        <a href="/categories">Categories</a>
-        <a href="/profile">Profile</a>
-        <a href="/settings">Settings</a>
-        <a href="/aboutus">About Us</a>
+        <a href="/home"><button>Home</button></a>
+        <a href="/categories"><button>Categories</button></a>
+        <a href="/profile"><button>Profile</button></a>
+        <a href="/settings"><button>Settings</button></a>
+        <a href="/aboutus"><button>About Us</button></a>
     </nav>
+    <form method="get" action="/categories">
+        <fieldset>
+            <legend>Фільтр за категоріями:</legend>
+            {% for cat in ['Clothing & Gear', 'Navigation & Surveillance', 'Communication Equipment', 'Shelter & Sleeping Gear', 'Food & Water Supplies', '
+            Medical & First Aid', 'Tools & Repair Kits', 'Power & Energy', 'Vehicle & Transport Support', 'Protective Equipment'] %}
+                <label>
+                    <input type="checkbox" name="category" value="{{ cat }}"
+                           {% if selected_categories and cat in selected_categories %}checked{% endif %}>
+                    {{ cat }}
+                </label><br>
+            {% endfor %}
+        </fieldset>
+        <button type="submit">Save</button>
+    </form>
     <ul>
         {% for request in requests %}
             <li>
                 <strong>{{ request.name }}</strong><br>
                 {{ request.description }}<br>
+                <strong>Categories:</strong>
+                {% if request.categories %}
+                    <ul>
+                        {% for cat in request.categories.split(',') %}
+                            <li>{{ cat.strip() }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <em>—</em><br>
+                {% endif %}
                 Status: 
                 {% if request.state == 1 %}
                     Active
