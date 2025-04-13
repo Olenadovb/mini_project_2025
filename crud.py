@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.models import User, Request, Category
-from schemas.schemas import UserCreate, RequestCreate
+from models import User, Request, Category
+from schemas import UserCreate, RequestCreate
 from fastapi import UploadFile, File
 from datetime import datetime
 import json
@@ -10,49 +10,48 @@ def create_user(
     db: Session,
     name: str,
     surname: str,
-    email: str,
-    phone: str,
-    description: str,
-    image_path: str,
+    age: int,
     country: str,
     city: str,
+    phone: str,
+    email: str,
+    description: str,
+    image_path: str,
+    categories: str,
     created_at=None,
 ):
     db_user = User(
         name=name,
         surname=surname,
-        email=email,
-        phone=phone,
-        description=description,
-        image_path=image_path,
+        age=age,
         country=country,
         city=city,
+        phone=phone,
+        email=email,
+        description=description,
+        image_path=image_path,
+        categories=categories,
         created_at=created_at or datetime.utcnow(),
     )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-
-# def create_user(db: Session, user: UserCreate):
-#     # db_user = User(**user.dict())
-#     db_user = User(
-#         name=user.name,
-#         surname=user.surname,
-#         email=user.email,
-#         phone=user.phone,
-#         description=user.description,
-#         image_path=user.image_path,
-#         country=user.country,
-#         city=user.city,
-#         created_at=user.created_at or datetime.utcnow(),
-#     )
-#     db.add(db_user)
-#     db.commit()
-#     db.refresh(db_user)
-#     print(db.query(User).filter_by(email=user.email).first())
-#     return db_user
+    # db.add(db_user)
+    # db.commit()
+    # db.refresh(db_user)
+    # return db_user
+    try:
+        print("...adding user to DB:", db_user)
+        db.add(db_user)
+        db.commit()
+        print("Committed to DB")
+        db.refresh(db_user)
+        print("Refreshed from DB")
+        print("user saved to db", db_user)
+        # db.flush()
+        # print("Flushed successfully")
+        return db_user
+    except Exception as e:
+        db.rollback()
+        print("❌ CRUD error:", e)
+        raise e
 
 
 def create_request(db: Session, req: RequestCreate, image: UploadFile = File(...)):

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Adminpage</title>
+</head>
+<body>
+    <h1>Список користувачів</h1>
+    <h2>feel the POWER 😈</h2>
+    <ul>
+        {% for user in users %}
+            <li>
+                <strong>{{ user.name }} {{ user.surname }}</strong> — {{ user.email }}<br>
+                Місто: {{ user.city }}, Вік: {{ user.age }}<br>
+                <img src="/{{ user.image_path }}" alt="Profile Image" width="100px"><br><br>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

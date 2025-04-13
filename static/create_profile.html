@@ -45,7 +45,31 @@
             content: " *";
             color: red;
         }
+
+        .checkbox-group {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
         
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .checkbox-container label {
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -125,7 +149,6 @@
                 <option value="IN">India</option>
                 <option value="BR">Brazil</option>
                 <option value="UA">Ukraine</option>
-                <!-- Add more countries as needed -->
             </select>
             <div id="countryError" class="error">Please select a country</div>
         </div>
@@ -141,13 +164,13 @@
             <input type="tel" id="phone" name="phone" placeholder="e.g., +380 507 456 789" required>
             <div id="phoneError" class="error">Please enter a valid phone number</div>
         </div>
-        
+<!--         
         <div class="form-group">
             <label for="email" class="required">Email</label>
             <input type="email" id="email" name="email" maxlength="99" required>
             <div id="emailError" class="error">Please enter a valid email address</div>
         </div>
-        
+         -->
 
         <div class="form-group">
             <label class="required">Categories (Select at least one)</label>
@@ -216,25 +239,145 @@
     </form>
 
     <script>
+        function setupCharCounter(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            counter.textContent = `0/${maxLength} characters`;
+            input.addEventListener("input", () => {
+                counter.textContent = `${input.value.length}/${maxLength} characters`;
+            });
+        }
+        setupCharCounter("about", "aboutCounter", 200);
+    
+        document.getElementById("registrationForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            let isValid = true;
+    
+            const showError = (id, condition) => {
+                const el = document.getElementById(id);
+                el.style.display = condition ? "block" : "none";
+                return !condition;
+            };
+    
+            const getValue = id => document.getElementById(id).value.trim();
+    
+            isValid &= showError("firstNameError", getValue("firstName") === "");
+            isValid &= showError("secondNameError", getValue("secondName") === "");
+            isValid &= showError("ageError", !(+getValue("age") >= 17 && +getValue("age") <= 120));
+            isValid &= showError("countryError", getValue("country") === "");
+            isValid &= showError("cityError", getValue("city") === "");
+            isValid &= showError("phoneError", !/^\+\d{12}$/.test(getValue("phone").replace(/\s+/g, "")));
+            // isValid &= showError("emailError", !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(getValue("email")));
+            isValid &= showError("photoError", document.getElementById("photo").files.length === 0);
+            isValid &= showError("aboutError", getValue("about") === "" || getValue("about").length > 200);
+            isValid &= showError("categoriesError", document.querySelectorAll("input[name='categories']:checked").length === 0);
+    
+            if (isValid) {
+                try {
+                    const formData = new FormData();
+                    formData.append("name", getValue("firstName"));
+                    formData.append("surname", getValue("secondName"));
+                    formData.append("age", getValue("age"));
+                    formData.append("country", getValue("country"));
+                    formData.append("city", getValue("city"));
+                    formData.append("phone", getValue("phone"));
+                    // formData.append("email", getValue("email"));
+                    formData.append("description", getValue("about"));
+                    formData.append("photo", document.getElementById("photo").files[0]);
+        
+                    const categories = Array.from(document.querySelectorAll("input[name='categories']:checked")).map(cb => cb.value);
+                    formData.append("categories", categories.join(", "));
+        
+                    // try {
+                    //     const res = await fetch("/create_user", { method: "POST", body: formData });
+                    //     if (!res.ok) throw new Error(await res.text());
+                    //     alert("Successfully registered!");
+                    // } catch (err) {
+                    //     alert("Error: " + err.message);
+                    // }
+                    // fetch("/create_user", {
+                    //     method: "POST",
+                    //     body: formData,
+                    // })
+                    const response = await fetch("/create_user", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(result.error || "Помилка сервера");
+                    }
+
+                    if (result.redirect_url) {
+                        window.location.href = result.redirect_url;
+                    }
+                } catch (error) {
+                    console.error("Помилка при відправці форми:", error);
+                    alert(`Помилка: ${error.message}`);
+                }
+                    // .then(response => {
+                    //     console.log("Response status:", response.status);
+                    //     return response.json();
+                    // })
+                    // .then(data => {
+                    //     if (data.redirect_url) {
+                    //         window.location.href = data.redirect_url;
+                    //     } else {
+                    //         alert("⚠️ Помилка: " + (data.error || "Невідома помилка"));
+                    //     }
+                    // })
+                // .catch(err => {
+                //     console.error("❌ Failed to fetch:", err);
+                //     alert("❌ Failed to fetch. Можливо, проблема на сервері.");
+                // });
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+    <!-- <script>
         document.getElementById('registrationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            const form = document.getElementById('registrationForm');
+            const formData = new FormData(form);
+
+            const selectedCategories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
+            if (selectedCategories.length === 0) {
+                document.getElementById("categoriesError").style.display = "block";
+                return;
+            } else {
+                document.getElementById("categoriesError").style.display = "none";
+            }
+
+            formData.append("categories", selectedCategories.join(", "));
         
-            const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
-        
-            const formData = {
-                name: document.getElementById('firstName').value,
-                surname: document.getElementById('secondName').value,
-                age: parseInt(document.getElementById('age').value),
-                country: document.getElementById('country').value,
-                city: document.getElementById('city').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-                categories: categories.join(', '),
-                image_path: "image_placeholder.png",
-                description: document.getElementById('about').value,
-                created_at: None,
-                requests: []
-            };
+            // const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
+            // formData.set('categories', categories.join(', '));
+            // const formData = {
+            //     name: document.getElementById('firstName').value,
+            //     surname: document.getElementById('secondName').value,
+            //     age: parseInt(document.getElementById('age').value),
+            //     country: document.getElementById('country').value,
+            //     city: document.getElementById('city').value,
+            //     phone: document.getElementById('phone').value,
+            //     email: document.getElementById('email').value,
+            //     categories: categories.join(', '),
+            //     image_path: "image_placeholder.png",
+            //     description: document.getElementById('about').value,
+            //     created_at: None,
+            //     requests: []
+            // };
         
             const response = await fetch('/create_user', {
                 method: 'POST',
@@ -255,4 +398,4 @@
         });
         </script>        
 </body>
-</html>
+</html> -->
