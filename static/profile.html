@@ -24,28 +24,30 @@
       <div class="contact-info">
         <h2>My profile</h2>
         <p><strong>Contacts</strong></p>
-        <p>+380123456789</p>
-        <p>volunteer@gmail.com</p>
+        <p>{{ user.phone }}</p>
+        <p>{{ user.email }}</p>
       </div>
     
       <div class="user-info-flex">
         <div class="user-text">
-          <h1>Volunteer</h1>
-          <p>23 y. o.</p>
-          <p>city Lviv</p>
+          <h1>{{ user.name }} {{ user.surname }}</h1>
+          <p>{{ user.age }} y. o.</p>
+          <p>{{ user.city }}</p>
           <p>specifies in:</p>
     
           <div class="tags-and-button">
             <div class="tags">
-              <span>Clothes</span>
-              <span>Furniture</span>
-              <span>Medicine</span>
+              {% for category in user.categories.split(",") %}
+                <span>{{ category }}</span>
+              {% endfor %}
             </div>
             <button class="outlined-btn">Edit my information</button>
           </div>
         </div>
     
-        <img src="/photos/person1.avif" alt="Profile photo" class="avatar" />
+        <!-- <img src="/{{ user.image_path }}" alt="Profile photo" class="avatar" /> -->
+        <img src="/{{ user.image_path if user.image_path else 'photos/default.svg' }}" alt="Profile photo" class="avatar" />
+
       </div>
     </section>
 
