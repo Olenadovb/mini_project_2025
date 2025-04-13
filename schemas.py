@@ -17,7 +17,6 @@ class UserCreate(BaseModel):
     created_at: Optional[str] = None
 
 
-
 class UserResponse(UserCreate):
     idUsers: int
     created_at: datetime

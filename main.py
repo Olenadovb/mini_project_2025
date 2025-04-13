@@ -377,8 +377,118 @@ def run_migrations():
     command.upgrade(alembic_cfg, "head")
 
 
-if __name__ == "__main__":
-    import uvicorn
+# DATABASE
 
-    run_migrations()
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# models.Base.metadata.create_all(bind=engine)
+
+UPLOAD_FOLDER = Path("static/uploads")
+UPLOAD_FOLDER.mkdir(exist_ok=True)
+
+# def get_db():
+#     db = SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled error: {exc}")
+    return JSONResponse(status_code=500, content={"detail": str(exc)})
+
+
+logging.basicConfig()
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+
+
+# DATABASE WRITE
+
+
+@app.post("/create_user")
+async def create_user(
+    request: Request,
+    name: str = Form(...),
+    surname: str = Form(...),
+    age: int = Form(...),
+    country: str = Form(...),
+    city: str = Form(...),
+    phone: str = Form(...),
+    description: str = Form(...),
+    categories: str = Form(...),
+    photo: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    user_email = request.session.get("user_email")
+    if not user_email:
+        # raise HTTPException(status_code=401, detail="Not authenticated")
+        return RedirectResponse(url="/error", status_code=401)
+    print("start")
+    file_ext = os.path.splitext(photo.filename)[1]
+    filename = (
+        f"{user_email.replace('@', '_')}_{int(datetime.utcnow().timestamp())}{file_ext}"
+    )
+    file_path = UPLOAD_FOLDER / filename
+
+    with open(file_path, "wb") as buffer:
+        buffer.write(await photo.read())
+
+    print("image added", file_path)
+    new_user = models.User(
+        name=name,
+        surname=surname,
+        age=age,
+        country=country,
+        city=city,
+        phone=phone,
+        email=user_email,
+        description=description,
+        image_path=str(file_path),
+        created_at=datetime.utcnow(),
+        categories=categories,
+    )
+
+    # print("user created (before adding)")
+    db.add(new_user)
+    # print("after adding")
+    db.commit()
+    # db.flush()
+    print("user added")
+    request.session["user_email"] = new_user.email
+
+    return JSONResponse(
+        status_code=200,
+        content={"message": "User created", "redirect_url": "/home"},
+    )
+
+
+# def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+#     return crud.create_user(db, user)
+
+
+@app.post("/requests", response_model=schemas.RequestResponse)
+def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)):
+    return crud.create_request(db, req)
+
+
+# DATABASE READ
+
+
+@app.get("/users")
+def list_users(request: Request, db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    return static.TemplateResponse("users.html", {"request": request, "users": users})
+
+
+# DATABASE MIGRATIONS
+
+
+def run_migrations():
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
+
+
+# if __name__ == "__main__":
+#     import uvicorn
+#     run_migrations()
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
