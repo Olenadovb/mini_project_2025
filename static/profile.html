@@ -14,32 +14,32 @@
       <div class="contact-info">
         <h2>My profile</h2>
         <p><strong>Contacts</strong></p>
-        <p>+380123456789</p>
-        <p>volunteer@gmail.com</p>
+        <p>{{ user.phone }}</p>
+        <p>{{ user.email }}</p>
       </div>
       <div class="profile-container">
         <div class="user-info">
-            <h2>Volunteer</h2>
-            <p>23 y. o.</p>
-            <p>city Lviv</p>
+            <h1>{{ user.name }} {{ user.surname }}</h1>
+            <p>{{ user.age }} y. o.</p>
+            <p>{{ user.city }}</p>
             <p>specifies in:</p>
             <div class="tags">
-                <span class="tag">Clothes</span>
-                <span class="tag">Furniture</span>
-                <span class="tag">Medicine</span>
+              {% for category in user.categories.split(",") %}
+                <span>{{ category }}</span>
+              {% endfor %}
             </div>
         </div>
         <div class="profile-photo">
-            <img src="/static/photos/premium_photo-1690407617686-d449aa2aad3c.jpeg" alt="Volunteer" />
+            <img src="/{{ user.image_path if user.image_path else 'photos/default.svg' }}" alt="Volunteer" />
         </div>
     </div>
 </section>
 
 <div class="center-wrapper">
-    <button class="outlined-btn">Edit my information</button>
-    <form action="add_activity_page.html">
-        <button type="submit" class="homepage_button_join">Add new activity</button>
-    </form>
+  <a href="/go_edit_profile"><button class="outlined-btn">Edit my information</button></a>
+    <section class="add-activity">
+      <a href="/add_request"><button>Add new activity</button></a>
+    </section>
 </div>
 
     <section class="history">
