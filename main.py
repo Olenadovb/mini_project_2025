@@ -29,11 +29,11 @@ from alembic.config import Config
 
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
-from database import SessionLocal, engine
-import models
-import crud
-import schemas
-from config import settings
+from server.database import SessionLocal, engine
+from server import models
+from server import crud
+from server import schemas
+from server.config import settings
 from uuid import uuid4
 import shutil
 import os

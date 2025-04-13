@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import User, Request, Category
-from schemas import UserCreate, RequestCreate
+from server.models import User, Request, Category
+from server.schemas import UserCreate, RequestCreate
 from fastapi import UploadFile, File
 from datetime import datetime
 import json
