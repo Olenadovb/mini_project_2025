@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import (
     FastAPI,
     Request,
-    Response,
+    # Response,
     Depends,
     UploadFile,
     File,
@@ -92,48 +92,9 @@ SCOPES = [
 REDIRECT_URI = "http://localhost:8000/callback"
 
 
-@app.get("/")
-async def index(request: Request):
-    # return FileResponse("static/index.html")
-    return static.TemplateResponse("index.html", {"request": request})
-
-
-@app.get("/home")
-async def home():
-    return FileResponse("static/home.html")
-
-
-# @app.get("/categories")
-# async def categories():
-#     return FileResponse("static/categories.html")
-
-
-@app.get("/categories")
-def show_categories(
-    request: Request,
-    category: Optional[List[str]] = Query(None),
-    db: Session = Depends(get_db),
-):
-    all_requests = db.query(models.Request).all()
-
-    if category:
-
-        def matches_categories(req: models.Request):
-            req_cats = [c.strip() for c in req.categories.split(",")]
-            return any(c in req_cats for c in category)
-
-        filtered_requests = [req for req in all_requests if matches_categories(req)]
-    else:
-        filtered_requests = all_requests
-
-    return static.TemplateResponse(
-        "categories.html",
-        {
-            "request": request,
-            "requests": filtered_requests,
-            "selected_categories": category,
-        },
-    )
+# @app.get("/home")
+# async def home():
+#     return FileResponse("static/home.html")
 
 
 @app.get("/settings")
@@ -147,23 +108,6 @@ async def error(request: Request, status_code: int):
     return static.TemplateResponse(
         "error.html", {"status_code": status_code, "status_text": status_text}
     )
-
-
-# @app.get("/profile")
-# async def profile():
-#     return FileResponse("static/profile.html")
-
-
-@app.get("/profile", response_class=FileResponse)
-def profile(request: Request, db: Session = Depends(get_db)):
-    user_email = request.session.get("user_email")
-    if not user_email:
-        return RedirectResponse(url="/login")
-
-    user = db.query(models.User).filter(models.User.email == user_email).first()
-    if not user:
-        return RedirectResponse(url="/create_profile")
-    return static.TemplateResponse("profile.html", {"request": request, "user": user})
 
 
 @app.get("/aboutus")
@@ -204,16 +148,6 @@ async def login():
 def logout(request: Request):
     request.session.clear()
     return RedirectResponse(url="/")
-
-
-# @app.get("/callback")
-# async def callback(request: Request):
-#     flow = Flow.from_client_secrets_file(
-#         CLIENT_SECRETS_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI
-#     )
-#     flow.fetch_token(authorization_response=str(request.url))
-#     credentials = flow.credentials
-#     return RedirectResponse(url="/create_profile")
 
 
 @app.get("/callback")
@@ -367,7 +301,7 @@ async def create_user(
     if not user_email:
         # raise HTTPException(status_code=401, detail="Not authenticated")
         return RedirectResponse(url="/error", status_code=401)
-    print("start")
+    # print("start")
     file_ext = os.path.splitext(photo.filename)[1]
     filename = (
         f"{user_email.replace('@', '_')}_{int(datetime.utcnow().timestamp())}{file_ext}"
@@ -378,7 +312,7 @@ async def create_user(
         buffer.write(await photo.read())
 
     # local_tz = pytz.timezone("Europe/Kyiv")
-    print("image added", file_path)
+    # print("image added", file_path)
     new_user = models.User(
         name=name,
         surname=surname,
@@ -398,7 +332,7 @@ async def create_user(
     # print("after adding")
     db.commit()
     db.refresh(new_user)
-    print("user added")
+    # print("user added")
     request.session["user_email"] = new_user.email
     request.session["user_id"] = new_user.idUsers
 
@@ -451,15 +385,6 @@ async def create_request(
     )
 
 
-# def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-#     return crud.create_user(db, user)
-
-
-# @app.post("/requests", response_model=schemas.RequestResponse)
-# def create_new_request(req: schemas.RequestCreate, db: Session = Depends(get_db)):
-#     return crud.create_request(db, req)
-
-
 # DATABASE READ
 
 
@@ -467,6 +392,185 @@ async def create_request(
 def list_users(request: Request, db: Session = Depends(get_db)):
     users = db.query(models.User).all()
     return static.TemplateResponse("users.html", {"request": request, "users": users})
+
+
+# @app.get("/profile", response_class=FileResponse)
+# def profile(request: Request, db: Session = Depends(get_db)):
+#     user_email = request.session.get("user_email")
+#     if not user_email:
+#         return RedirectResponse(url="/login")
+
+#     user = db.query(models.User).filter(models.User.email == user_email).first()
+#     if not user:
+#         return RedirectResponse(url="/create_profile")
+#     return static.TemplateResponse("profile.html", {"request": request, "user": user})
+
+
+@app.get("/categories")
+def show_categories(
+    request: Request,
+    category: Optional[List[str]] = Query(None),
+    db: Session = Depends(get_db),
+):
+    all_requests = db.query(models.Request).all()
+    if category:
+
+        def matches_categories(req: models.Request):
+            req_cats = [c.strip() for c in req.categories.split(",")]
+            return any(c in req_cats for c in category)
+
+        filtered_requests = [req for req in all_requests if matches_categories(req)]
+    else:
+        filtered_requests = all_requests
+    return static.TemplateResponse(
+        "categories.html",
+        {
+            "request": request,
+            "requests": filtered_requests,
+            "selected_categories": category,
+        },
+    )
+
+
+@app.get("/", response_class=HTMLResponse)
+def get_activity(request: Request, db: Session = Depends(get_db)):
+    recent_requests = (
+        db.query(models.Request, models.User)
+        .join(models.User, models.User.idUsers == models.Request.id_author)
+        .order_by(models.Request.created_at.desc())
+        .limit(5)
+        .all()
+    )
+    activities = []
+    for req, user in recent_requests:
+        activities.append(
+            {
+                "name": user.name,
+                "surname": user.surname,
+                "description": req.description,
+                "image_path": (
+                    req.image_path if req.image_path else "/static/default_avatar.jpg"
+                ),
+                "time": req.created_at,
+            }
+        )
+    return static.TemplateResponse(
+        "index.html", {"request": request, "activities": activities}
+    )
+
+
+# @app.get("/home", response_class=HTMLResponse)
+# async def homepage(request: Request, db: Session = Depends(get_db)):
+#     requests = (
+#         db.query(models.Request)
+#         .order_by(models.Request.created_at.desc())
+#         .limit(5)
+#         .all()
+#     )
+#     return static.TemplateResponse(
+#         "home.html",
+#         {"request": request, "requests": requests},
+#     )
+
+
+@app.get("/home", response_class=HTMLResponse)
+def home_request(request: Request, db: Session = Depends(get_db)):
+    recent_requests = (
+        db.query(models.Request, models.User)
+        .join(models.User, models.User.idUsers == models.Request.id_author)
+        # .filter(models.Request.state != 3)
+        .order_by(models.Request.created_at.desc())
+        .limit(2)
+        .all()
+    )
+    activities = []
+    for req, user in recent_requests:
+        activities.append(
+            {
+                "firstname": user.name,
+                "surname": user.surname,
+                "name": req.name,
+                "categories": req.categories,
+                "description": req.description,
+                "image_path": (
+                    req.image_path if req.image_path else "/static/default_avatar.jpg"
+                ),
+                "time": req.created_at,
+            }
+        )
+    return static.TemplateResponse(
+        "home.html", {"request": request, "activities": activities}
+    )
+
+
+# @app.get("/profile", response_class=HTMLResponse)
+# def profile_history(
+#     request: Request,
+#     db: Session = Depends(get_db),
+#     current_user: models.User = Depends(get_current_user),
+# ):
+#     # user_id = 1
+#     user_requests = (
+#         db.query(models.Request, models.User)
+#         .join(models.User, models.Request.id_author == current_user.idUsers)
+#         .order_by(models.Request.created_at.desc())
+#         .all()
+#     )
+#     # print(current_user.idUsers)
+#     # print(models.Request.id_author)
+#     activities = []
+#     for req in user_requests:
+#         activities.append(
+#             {
+#                 "name": req.name,
+#                 "categories": req.categories,
+#                 "description": req.description,
+#                 "image_path": (
+#                     req.image_path if req.image_path else "/static/default_avatar.jpg"
+#                 ),
+#                 "time": req.created_at,
+#             }
+#         )
+#         print("finish")
+#     return static.TemplateResponse(
+#         "profile.html", {"request": request, "activities": activities}
+#     )
+
+
+@app.get("/profile", response_class=HTMLResponse)
+def profile(
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    user = (
+        db.query(models.User)
+        .filter(models.User.idUsers == current_user.idUsers)
+        .first()
+    )
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_requests = (
+        db.query(models.Request)
+        .filter(models.Request.id_author == current_user.idUsers)
+        .order_by(models.Request.created_at.desc())
+        .all()
+    )
+    activities = [
+        {
+            "name": req.name,
+            "categories": req.categories,
+            "description": req.description,
+            "image_path": (
+                req.image_path if req.image_path else "/static/default_avatar.jpg"
+            ),
+            "time": req.created_at,
+        }
+        for req in user_requests
+    ]
+    return static.TemplateResponse(
+        "profile.html", {"request": request, "user": user, "activities": activities}
+    )
 
 
 # DATABASE MIGRATIONS

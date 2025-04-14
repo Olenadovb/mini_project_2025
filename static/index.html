@@ -15,7 +15,7 @@
 <body>
   <header class="navbar">
     <img src="/static/photos/logo_white.png" class="logo_small" />
-    <h1 id="index_title"><b>Helping Hands</b> — Glory to Ukraine! Glory to the Heroes!</h1>
+    <h1 id="index-title"><b>Helping Hands</b> — <em>Glory to Ukraine! Glory to the Heroes!</em></h1>
   </header>
 
 
@@ -68,25 +68,15 @@
     <section style="margin: 71px 77px 79px 79px; align-items: center">
       <h2 style="text-align: center; color: #344c8c; font-size: 36px;">Here’s what user activity looks like...</h2>
       <div style="margin-top: 71px; height:305px; width: 1122px;display: flex; flex-direction: column; align-items: center; gap: 25px;">
+        {% for activity in activities[:3] %}
         <div class="activity-row">
-          <img src="/static/photos/mini_project_2025/user1.jpg" class="avatar" />
-          <span>Name Surname</span>
-          <span style="flex: 1;">Report of user requests</span>
-          <span style="color: #666;">20:07</span>
+          <img src="{{ activity.image_path or '/static/default_avatar.jpg' }}" class="avatar" />
+          <span class="act-author-name">{{ activity.name }} {{ activity.surname }}</span>
+          <span style="flex: 1;">{{ activity.description }}</span>
+          <span class="activity-time" style="color: #666;" data-time="{{ activity.time }}"></span>
         </div>
-        <div class="activity-row">
-          <img src="/static/photos/mini_project_2025/user2.jpg" class="avatar" />
-          <span>Name Surname</span>
-          <span style="flex: 1;">Report of user requests</span>
-          <span style="color: #666;">20:05</span>
+        {% endfor %}
         </div>
-        <div class="activity-row">
-          <img src="/static/photos/mini_project_2025/user3.jpg" class="avatar" />
-          <span>Name Surname</span>
-          <span style="flex: 1;">Report of user requests</span>
-          <span style="color: #666;">18:47</span>
-        </div>
-      </div>
     </section>
 
     <!-- FINAL CTA -->
@@ -113,6 +103,43 @@
         document.getElementById('footer').innerHTML = html;
         
       });
+
+    function formatTimeLabel(dateStr) {
+      const date = new Date(dateStr);
+      if (isNaN(date)) return "unknown date";
+
+      const now = new Date();
+
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const startOfDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+      const diffMs = startOfToday - startOfDate;
+      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+      const timeStr = date.toLocaleTimeString("uk-UA", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      if (diffDays === 0) return `${timeStr} today`;
+      if (diffDays === 1) return `${timeStr} yesterday`;
+      if (diffDays < 7) return `${timeStr} ${diffDays} days ago`;
+
+      const dateStrFormatted = date.toLocaleDateString("uk-UA", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+
+      return `${dateStrFormatted} о ${timeStr}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".activity-time").forEach((el) => {
+        const rawTime = el.getAttribute("data-time");
+        el.textContent = formatTimeLabel(rawTime);
+      });
+    });
   </script>
 </body>
 </html>

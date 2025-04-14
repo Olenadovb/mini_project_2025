@@ -20,35 +20,23 @@
     <!-- Current Activities + Help Block -->
     <section style="display: flex; max-width: 1030px; flex-wrap: wrap; align-items: center; gap: 40px; margin: 77px 125px;">
       <!-- Current Activities -->
-      <div style="background-color: #bbc79b; padding: 24px; border-radius: 16px; flex: 1; height: 491px; max-width: 476px;">
+      <div style="background-color: #bbc79b; padding: 24px; border-radius: 16px; flex: 1; max-height: 550px; max-width: 476px; min-width: 250px">
         <h3 style="background-color: #7a885b; color: white; padding: 8px 16px; border-radius: 16px; margin: 0 0 16px;">Current activities</h3>
-        <div style="background-color: #dfe6d5; padding: 16px; border-radius: 16px; margin-bottom: 22px;">
-          <div style="display: flex; gap: 8px;margin-bottom: 8px;">
-            <div class="tags">
-                <span>Clothes</span>
-                <span>Furniture</span>
+        {% for activity in activities %}
+          <div style="background-color: #dfe6d5; padding: 16px; border-radius: 16px; margin-bottom: 22px;">
+            <div style="display: flex; gap: 8px;margin-bottom: 8px;">
+              <div class="tags" style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap:7px">
+                {% for tag in activity.categories.split(', ') %}
+                  <span>{{ tag.strip() }}</span>
+                {% endfor %}
+              </div>
             </div>
+            <p style="font-size: 22px; margin-bottom: 18px;">{{ activity.name }}</p>
+            <!-- <p style="font-size: 16px; margin-bottom: 4px;">{{ activity.description }}</p> -->
+            <span class="activity-time" style="color: #666;" data-time="{{ activity.time }}">{{ activity.time.strftime('%d %B, %H:%M') }}</span>
+            <span class="activity-author" style="color: #666; margin-left:5px">{{ activity.firstname }} {{ activity.surname }}</span>
           </div>
-          <p style="font-size: 22px; margin-bottom: 16px;">Name of request</p>
-        </div>
-        
-        <div style="background-color: #dfe6d5; padding: 16px; border-radius: 16px; margin-bottom: 22px;">
-          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <div class="tags">
-                <span>Clothes</span>
-            </div>
-          </div>
-          <p style="font-size: 22px; margin-bottom: 16px;">Name of request</p>
-        </div>
-        
-        <div style="background-color: #dfe6d5; padding: 16px; border-radius: 16px;">
-          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <div class="tags" style="margin-bottom: 0;">
-                <span>Clothes</span>
-            </div>
-          </div>
-          <p style="font-size: 22px; margin-bottom: 16px;">Name of request</p>
-        </div>
+        {% endfor %}
       </div>
 
       <!-- Help Text -->
@@ -57,42 +45,26 @@
             If you need assistance, whether it's supplies, logistical support, or guidance, our team is here to help. Likewise, if you want to contribute—whether through volunteering, donations, or sharing resources—we welcome your support. Together, we can strengthen our efforts and make a real difference for those defending Ukraine.
         </p>
         <div style="display: flex; gap: 12px;">
-          <button class="homepage_button_join">I need help</button>
-          <button class="outlined-btn">I can help</button>
+          <a href="/categories"><button class="homepage_button_join">I need help</button></a>
+          <a href="/add_request"><button class="outlined-btn">I can help</button></a>
         </div>
       </div>
     </section>
 <!-- The last requests block -->
-<section class="last-requests">
+<section class="last-requests" style="margin: 71px 77px 79px 79px; align-items: center">
   <h3 class="last-requests-header">The last requests</h3>
-
-  <div class="request-row">
-    <div class="request-user">
-      <img src="/static/photos/photo-1507003211169-0a1dd7228f2d.jpeg" class="request-avatar" alt="User 1" />
-      <span>Name Surname</span>
+  <div style="margin-top: 71px; height:305px; max-width: 100%;display: flex; flex-direction: column; align-items: center; gap: 25px;">
+  {% for act in activities %}
+    <div class="request-row">
+      <div class="request-user">
+        <img src="{{ act.image_path or '/static/default-avatar.jpg' }}" class="request-avatar" alt="{{ act.name }}" />
+        <span class="act-author-name">{{ act.firstname }} {{ act.surname }}</span>
+      </div>
+      <span class="request-text" style="flex: 1;">{{ act.description }}</span>
+      <span id="custom-time" class="activity-time" style="color: #666;" data-time="{{ act.time }}">{{ act.time }}</span>
     </div>
-    <span class="request-text">Report of user requests</span>
-    <span class="request-time">20:07</span>
+  {% endfor %}
   </div>
-
-  <div class="request-row">
-    <div class="request-user">
-      <img src="/static/photos/photo-1562572766-953b8ab55ae1.jpeg" class="request-avatar" alt="User 2" />
-      <span>Anna Kalchenko</span>
-    </div>
-    <span class="request-text">Report of user requests</span>
-    <span class="request-time">20:05</span>
-  </div>
-
-  <div class="request-row">
-    <div class="request-user">
-      <img src="/static/photos/premium_photo-1690407617686-d449aa2aad3c.jpeg" class="request-avatar" alt="User 3" />
-      <span>Name Surname</span>
-    </div>
-    <span class="request-text">Report of user requests</span>
-    <span class="request-time">18:47</span>
-  </div>
-
   <div class="request-footer">
     <img src="/static/photos/Chevrons down.png" />
   </div>
@@ -125,6 +97,41 @@
         document.getElementById('footer').innerHTML = html;
         
       });
+
+
+      document.addEventListener("DOMContentLoaded", function () {
+      const times = document.querySelectorAll("#custom-time");
+
+      times.forEach(el => {
+        const dateStr = el.dataset.time;
+        const time = new Date(dateStr);
+        const now = new Date();
+
+        const diffMs = now - time;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMins / 60);
+        const diffDays = Math.floor(diffHours / 24);
+
+        let text = "";
+
+        if (diffDays === 0) {
+          if (diffHours === 0) {
+            text = `${diffMins} min ago`;
+          } else {
+            text = `${diffHours} h ago`;
+          }
+        } else if (diffDays === 1) {
+          text = "yesterday";
+        } else if (diffDays <= 7) {
+          text = `${diffDays} days ago`;
+        } else {
+          text = time.toLocaleDateString("uk-UA");
+        }
+
+        el.textContent = text;
+      });
+    });
+
   </script>
 </body>
 </html>

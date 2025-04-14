@@ -89,28 +89,45 @@ header.navbar nav button {
   cursor: pointer;
 }
 
+.act-author-name{
+  max-width: 100px;
+  text-align: center;
+  font-size: 24px;
+
+}
 .activity-row {
   display: flex;
   align-items: center;
   background-color: #a0a4b8;
-  padding: 12px 16px;
+  padding: 13px 13px;
   border-radius: 16px;
   width: 100%;
   height: 85px;
   max-width: 1032px;
   margin: 0 auto;
-  gap: 12px;
+  gap: 25px;
   font-family: Arial, sans-serif;
-  font-size: 24px;
+  font-size: 22px;
   color: white;
 }
 
 .activity-row .avatar {
-  margin-top: -20px;
-  width: 40px;
-  height: 40px;
+  width: 65px;
+  height: 65px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid white;
+  align-self: center;
+}
+
+.activity-time {
+  color: #565656;
+  border: 1px solid white;
+  border-radius: 17px;
+  padding: 8px 9px 8px 9px;
+  max-width: 90px;
+  text-align: center;
+  background-color: #dbd9e5;
 }
 
 .container {
@@ -132,6 +149,11 @@ header.navbar nav button {
 .user-info {
   flex: 1;
   order: 1;
+}
+
+#index-title{
+  color: #2f2f5d;
+  font-size: 29px;
 }
 
 .profile-photo {
@@ -181,7 +203,8 @@ header.navbar nav button {
 /* Tags styling - kept from your original CSS */
 .tags span {
   display: inline-block;
-  max-width: 115px;
+  max-width: 130px;
+  width:40%;
   border: 1px solid #344c8c;
   padding: 4px 8px;
   border-radius: 16px;
@@ -242,7 +265,7 @@ header.navbar nav button {
 
 .card {
   width: 296px;
-  height: 249px;
+  max-height: 280px;
   background-color: #7F7C98;
   color: white;
   padding: 20px;
@@ -254,6 +277,7 @@ header.navbar nav button {
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
+  gap:5px
 }
 .about-section {
   background-color: #dfe6d5;
@@ -351,6 +375,7 @@ header.navbar nav button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 30px;
 }
 
 .request-user {
@@ -467,7 +492,7 @@ font-family: 'crimson text';
 footer {
 background-color: #a0a4b8;
 margin-top: 40px;
-padding: 16px 32px;
+padding: 16px 25px 16px 5px;
 color: #333;
 display: flex;
 justify-content: space-between;
@@ -520,10 +545,12 @@ text-align: center;
 justify-content: center;
 margin-bottom: 24px;
 max-width: 600px;
+margin: 0 auto;
+margin-top:50px
 }
 
 .hero-text h1 {
-font-size: 24px;
+font-size: 40px;
 margin-bottom: 12px;
 color: #344c8c;
 }
@@ -531,7 +558,8 @@ color: #344c8c;
 .hero-text p {
 font-style: italic;
 color: #6c738c;
-font-size: 16px;
+font-size: 18px;
+padding:10px
 }
 
 .registration-form {
@@ -609,12 +637,12 @@ margin-top: 4px;
 
 .signup-btn {
 width: 100%;
-padding: 10px;
+padding: 17px;
 background-color: #6c738c;
 color: white;
 border: none;
-border-radius: 6px;
-font-size: 14px;
+border-radius: 8px;
+font-size: 19px;
 font-weight: 500;
 cursor: pointer;
 margin: 12px 0;
@@ -642,7 +670,7 @@ margin: 12px 0;
 .login-link {
 text-align: center;
 color: #6c738c;
-font-size: 14px;
+font-size: 17px;
 }
 
 .login-link a {

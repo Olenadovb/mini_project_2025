@@ -11,6 +11,14 @@
   <!-- <link rel="manifest" href="/favicon/site.webmanifest"> -->
   <title>Hands - Profile</title>
   <link rel="stylesheet" href="/static/styles.css" />
+  <style>
+    .activity-time{
+      max-width: 120px
+    }
+    .card :after {
+      right:25px
+    }
+  </style>
 </head>
 <body>
   <div id="header"></div>
@@ -38,38 +46,39 @@
         <div class="profile-photo">
             <img src="/{{ user.image_path if user.image_path else 'photos/default.svg' }}" alt="Volunteer" />
         </div>
-    </div>
-</section>
-
-<div class="about-user">
-  <h2>About me</h2>
-  <p>
-    {{ user.description }}
-  </p>
-</div>
-
-<div class="center-wrapper">
-  <a href="/go_edit_profile"><button class="outlined-btn">Edit my information</button></a>
-    <section class="add-activity">
-      <a href="/add_request"><button>Add new activity</button></a>
+      </div>
     </section>
-</div>
+
+    <div class="about-user">
+      <h2>About me</h2>
+      <p>
+        {{ user.description }}
+      </p>
+    </div>
+
+    <div class="center-wrapper">
+      <a href="/go_edit_profile"><button class="outlined-btn">Edit my information</button></a>
+        <section class="add-activity">
+          <a href="/add_request"><button>Add new activity</button></a>
+        </section>
+    </div>
 
     <section class="history">
       <h2>History of activity</h2>
       <div class="cards">
+        {% for activity in activities %}
+        {% if activities %}
         <div class="card">
-          <p>Bought a lot of medicine for army</p>
-          <span>Medicine</span>
+          <p>{{ activity.name }}</p>
+          {% for tag in activity.categories.split(', ') %}
+            <span>{{ tag.strip() }}</span>
+          {% endfor %}
+          <span class="activity-time" data-created="{{ request.created_at.isoformat() if request.created_at else '' }}Z" style="color: #666;" data-time="{{ activity.time.isoformat() }}">{{ activity.time.strftime('%d %B, %H:%M') }}</span>
         </div>
-        <div class="card">
-          <p>Bought a lot of clothes for army</p>
-          <span>Clothes</span>
-        </div>
-        <div class="card">
-          <p>Bought a lot of guns for army</p>
-          <span>Furniture</span>
-        </div>
+        {% endif %}
+        {% else %}
+          <p>You haven’t published any requests yet.</p>
+        {% endfor %}
       </div>
     </section>
   </main>
@@ -97,6 +106,42 @@
         document.getElementById('footer').innerHTML = html;
         
       });
+
+
+      function timeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+    
+            const intervals = [
+                { label: 'year', seconds: 31536000 },
+                { label: 'month', seconds: 2592000 },
+                { label: 'day', seconds: 86400 },
+                { label: 'hour', seconds: 3600 },
+                { label: 'minute', seconds: 60 },
+                { label: 'second', seconds: 1 }
+            ];
+    
+            for (const interval of intervals) {
+                const count = Math.floor(seconds / interval.seconds);
+                if (count >= 1) {
+                    return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
+                }
+            }
+            return 'just now';
+        }
+    
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('.created-at').forEach(el => {
+                const isoDate = el.dataset.created;
+                if (!isoDate) return;
+    
+                const utcDate = new Date(isoDate);
+                const localDateString = utcDate.toLocaleString();
+                const ago = timeAgo(utcDate);
+    
+                el.innerHTML = `${localDateString} (${ago})`;
+            });
+        });
+
   </script>
   
 </body>
