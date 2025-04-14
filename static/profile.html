@@ -73,7 +73,8 @@
           {% for tag in activity.categories.split(', ') %}
             <span>{{ tag.strip() }}</span>
           {% endfor %}
-          <span class="activity-time" data-created="{{ request.created_at.isoformat() if request.created_at else '' }}Z" style="color: #666;" data-time="{{ activity.time.isoformat() }}">{{ activity.time.strftime('%d %B, %H:%M') }}</span>
+          <span class="activity-time" data-time="{{ activity.time.isoformat() }}Z"></span>
+
         </div>
         {% endif %}
         {% else %}
@@ -108,40 +109,30 @@
       });
 
 
-      function timeAgo(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-    
-            const intervals = [
-                { label: 'year', seconds: 31536000 },
-                { label: 'month', seconds: 2592000 },
-                { label: 'day', seconds: 86400 },
-                { label: 'hour', seconds: 3600 },
-                { label: 'minute', seconds: 60 },
-                { label: 'second', seconds: 1 }
-            ];
-    
-            for (const interval of intervals) {
-                const count = Math.floor(seconds / interval.seconds);
-                if (count >= 1) {
-                    return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
-                }
-            }
-            return 'just now';
-        }
-    
-        document.addEventListener("DOMContentLoaded", () => {
-            document.querySelectorAll('.created-at').forEach(el => {
-                const isoDate = el.dataset.created;
-                if (!isoDate) return;
-    
-                const utcDate = new Date(isoDate);
-                const localDateString = utcDate.toLocaleString();
-                const ago = timeAgo(utcDate);
-    
-                el.innerHTML = `${localDateString} (${ago})`;
-            });
+      document.addEventListener("DOMContentLoaded", () => {
+        const localFormatter = new Intl.DateTimeFormat('en-GB', {
+          day: '2-digit',
+          month: 'long',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
         });
 
+        document.querySelectorAll('.activity-time').forEach(el => {
+          const utcStr = el.getAttribute('data-time');
+          if (!utcStr) return;
+
+          const utcDate = new Date(utcStr);
+
+          const parts = localFormatter.formatToParts(utcDate);
+          const day = parts.find(p => p.type === 'day')?.value;
+          const month = parts.find(p => p.type === 'month')?.value;
+          const hour = parts.find(p => p.type === 'hour')?.value;
+          const minute = parts.find(p => p.type === 'minute')?.value;
+
+          el.textContent = `${day} ${month}, ${hour}:${minute}`;
+        });
+      });
   </script>
   
 </body>
