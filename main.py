@@ -18,6 +18,7 @@ from fastapi import (
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
@@ -29,6 +30,8 @@ from alembic import command
 from alembic.config import Config
 
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
 from sqlalchemy.orm import Session
 from server.database import SessionLocal, engine
 from server import models
@@ -133,6 +136,14 @@ def get_current_user(request: Request, db: Session = Depends(get_db)):
             return user
     raise HTTPException(status_code=401, detail="Unauthorized")
     # return RedirectResponse(url="/error", status_code=401)
+
+
+def admin_required(
+    current_user: models.User = Depends(get_current_user),
+) -> models.User:
+    if current_user.email != settings.admin_email:
+        raise HTTPException(status_code=403, detail="Access denied: Admins only")
+    return current_user
 
 
 @app.get("/login")
@@ -270,12 +281,6 @@ UPLOAD_FOLDER = Path("static/uploads")
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 
 
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Unhandled error: {exc}")
-    return JSONResponse(status_code=500, content={"detail": str(exc)})
-
-
 logging.basicConfig()
 logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
@@ -388,8 +393,18 @@ async def create_request(
 # DATABASE READ
 
 
+# @app.get("/users")
+# def list_users(request: Request, db: Session = Depends(get_db)):
+#     users = db.query(models.User).all()
+#     return static.TemplateResponse("users.html", {"request": request, "users": users})
+
+
 @app.get("/users")
-def list_users(request: Request, db: Session = Depends(get_db)):
+def list_users(
+    request: Request,
+    db: Session = Depends(get_db),
+    admin: models.User = Depends(admin_required),
+):
     users = db.query(models.User).all()
     return static.TemplateResponse("users.html", {"request": request, "users": users})
 
@@ -567,6 +582,47 @@ async def view_request(
             "request_data": db_request,
             "author": author,
         },
+    )
+
+# ERROR HANDLING
+
+# @app.exception_handler(Exception)
+# async def global_exception_handler(request: Request, exc: Exception):
+#     logger.error(f"Unhandled error: {exc}")
+#     return JSONResponse(status_code=500, content={"detail": str(exc)})
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    logger.error(f"HTTPException: {exc.status_code} - {exc.detail}")
+    return static.TemplateResponse(
+        "error.html",
+        {"request": request, "status_code": exc.status_code, "status_text": exc.detail},
+        status_code=exc.status_code,
+    )
+
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled Exception: {repr(exc)}")
+    return static.TemplateResponse(
+        "error.html",
+        {
+            "request": request,
+            "status_code": 500,
+            "status_text": "Internal Server Error",
+        },
+        status_code=500,
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    logger.error(f"Validation Error: {exc}")
+    return static.TemplateResponse(
+        "error.html",
+        {"request": request, "status_code": 422, "status_text": "Validation Error"},
+        status_code=422,
     )
 
 

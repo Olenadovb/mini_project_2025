@@ -74,6 +74,7 @@ header.navbar nav button {
   border-radius: 16px;
   font-weight: 500;
   cursor: pointer;
+  margin-left: 20px;
 }
 
 .homepage_button_join_green {
