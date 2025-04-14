@@ -15,8 +15,13 @@
     .activity-time{
       max-width: 120px
     }
-    .card :after {
-      right:25px
+    .arrow-link-categories{
+      align-self: end;
+      position:relative;
+      top:-20px;
+    }
+    .card {
+      padding-bottom:0;
     }
   </style>
 </head>
@@ -74,6 +79,7 @@
             <span>{{ tag.strip() }}</span>
           {% endfor %}
           <span class="activity-time" data-time="{{ activity.time.isoformat() }}Z"></span>
+          <a class="arrow-link-categories" href="/request/{{ activity.req_id }}">↗</a>
 
         </div>
         {% endif %}

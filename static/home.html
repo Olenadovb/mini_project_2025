@@ -33,7 +33,7 @@
             </div>
             <p style="font-size: 22px; margin-bottom: 18px;">{{ activity.name }}</p>
             <!-- <p style="font-size: 16px; margin-bottom: 4px;">{{ activity.description }}</p> -->
-            <span class="activity-time" style="color: #666;" data-time="{{ activity.time }}">{{ activity.time.strftime('%d %B, %H:%M') }}</span>
+            <span class="activity-time" style="color: #666;" data-time="{{ activity.time }}Z">{{ activity.time.strftime('%d %B, %H:%M') }}</span>
             <span class="activity-author" style="color: #666; margin-left:5px">{{ activity.firstname }} {{ activity.surname }}</span>
           </div>
         {% endfor %}
@@ -45,8 +45,8 @@
             If you need assistance, whether it's supplies, logistical support, or guidance, our team is here to help. Likewise, if you want to contribute—whether through volunteering, donations, or sharing resources—we welcome your support. Together, we can strengthen our efforts and make a real difference for those defending Ukraine.
         </p>
         <div style="display: flex; gap: 12px;">
-          <a href="/categories"><button class="homepage_button_join">I need help</button></a>
-          <a href="/add_request"><button class="outlined-btn">I can help</button></a>
+          <a href="/add_request"><button class="homepage_button_join">I need help</button></a>
+          <a href="/categories"><button class="outlined-btn">I can help</button></a>
         </div>
       </div>
     </section>
@@ -57,16 +57,16 @@
   {% for act in activities %}
     <div class="request-row">
       <div class="request-user">
-        <img src="{{ act.image_path or '/static/default-avatar.jpg' }}" class="request-avatar" alt="{{ act.name }}" />
+        <img src="{{ act.image_path or '/static/photos/default.svg' }}" class="request-avatar" alt="{{ act.name }}" />
         <span class="act-author-name">{{ act.firstname }} {{ act.surname }}</span>
       </div>
-      <span class="request-text" style="flex: 1;">{{ act.description }}</span>
-      <span id="custom-time" class="activity-time" style="color: #666;" data-time="{{ act.time }}">{{ act.time }}</span>
+      <span class="request-text" style="flex: 1; max-height: 120px; max-height: 100px; overflow: hidden;text-overflow: ellipsis;white-space: break-spaces;">{{ act.description }}</span>
+      <span id="custom-time" class="activity-time" style="color: #666;" data-time="{{ act.time }}Z">{{ act.time }}</span>
     </div>
   {% endfor %}
   </div>
   <div class="request-footer">
-    <img src="/static/photos/Chevrons down.png" />
+    <a href="/categories"><img src="/static/photos/Chevrons down.png" /></a>
   </div>
 </section>
 
@@ -99,39 +99,31 @@
       });
 
 
-      document.addEventListener("DOMContentLoaded", function () {
-      const times = document.querySelectorAll("#custom-time");
+      document.addEventListener("DOMContentLoaded", () => {
+        const kyivFormatter = new Intl.DateTimeFormat('en-GB', {
+          day: '2-digit',
+          month: 'long',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+          timeZone: 'Europe/Kyiv',
+        });
 
-      times.forEach(el => {
-        const dateStr = el.dataset.time;
-        const time = new Date(dateStr);
-        const now = new Date();
+        document.querySelectorAll('.activity-time').forEach(el => {
+          const utcStr = el.getAttribute('data-time');
+          if (!utcStr) return;
 
-        const diffMs = now - time;
-        const diffMins = Math.floor(diffMs / 60000);
-        const diffHours = Math.floor(diffMins / 60);
-        const diffDays = Math.floor(diffHours / 24);
+          const utcDate = new Date(utcStr); 
 
-        let text = "";
+          const parts = kyivFormatter.formatToParts(utcDate);
+          const day = parts.find(p => p.type === 'day')?.value;
+          const month = parts.find(p => p.type === 'month')?.value;
+          const hour = parts.find(p => p.type === 'hour')?.value;
+          const minute = parts.find(p => p.type === 'minute')?.value;
 
-        if (diffDays === 0) {
-          if (diffHours === 0) {
-            text = `${diffMins} min ago`;
-          } else {
-            text = `${diffHours} h ago`;
-          }
-        } else if (diffDays === 1) {
-          text = "yesterday";
-        } else if (diffDays <= 7) {
-          text = `${diffDays} days ago`;
-        } else {
-          text = time.toLocaleDateString("uk-UA");
-        }
-
-        el.textContent = text;
+          el.textContent = `${day} ${month}, ${hour}:${minute}`;
+        });
       });
-    });
-
   </script>
 </body>
 </html>

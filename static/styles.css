@@ -169,8 +169,8 @@ header.navbar nav button {
 }
 
 .about-user {
-  margin: 2rem 0;
-  padding: 1rem;
+  padding: 16px;
+  margin: 0 20px 20px 20px;
   background-color: #f5f5f5;
   border-radius: 10px;
 }
@@ -198,7 +198,9 @@ header.navbar nav button {
   padding: 32px 16px;
   gap: 48px;
   flex-wrap: wrap;
+  padding-left: 25px;
 }
+
 
 /* Tags styling - kept from your original CSS */
 .tags span {
@@ -341,14 +343,14 @@ header.navbar nav button {
   align-self: flex-start;
 }
 
-.card::after {
+/* .card::after {
   content: "↗";
   position: absolute;
   bottom: 27px;
   right: 17.5px;
   font-size: 20px;
   color: white;
-}
+} */
 
 
 .last-requests {
@@ -376,6 +378,10 @@ header.navbar nav button {
   align-items: center;
   justify-content: space-between;
   gap: 30px;
+  /* max-height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: break-spaces; */
 }
 
 .request-user {
@@ -395,6 +401,10 @@ header.navbar nav button {
 
 .request-text {
   font-size: 26px;
+  max-height: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: break-spaces;
 }
 
 .request-time {
@@ -881,7 +891,7 @@ color: white;
 }
 
 .category-tag-categories {
-  background-color: white;
+  background-color: #d5d4df;
   color: #444;
   border-radius: 8px;
   padding: 2px 10px;

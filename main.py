@@ -503,40 +503,6 @@ def home_request(request: Request, db: Session = Depends(get_db)):
     )
 
 
-# @app.get("/profile", response_class=HTMLResponse)
-# def profile_history(
-#     request: Request,
-#     db: Session = Depends(get_db),
-#     current_user: models.User = Depends(get_current_user),
-# ):
-#     # user_id = 1
-#     user_requests = (
-#         db.query(models.Request, models.User)
-#         .join(models.User, models.Request.id_author == current_user.idUsers)
-#         .order_by(models.Request.created_at.desc())
-#         .all()
-#     )
-#     # print(current_user.idUsers)
-#     # print(models.Request.id_author)
-#     activities = []
-#     for req in user_requests:
-#         activities.append(
-#             {
-#                 "name": req.name,
-#                 "categories": req.categories,
-#                 "description": req.description,
-#                 "image_path": (
-#                     req.image_path if req.image_path else "/static/default_avatar.jpg"
-#                 ),
-#                 "time": req.created_at,
-#             }
-#         )
-#         print("finish")
-#     return static.TemplateResponse(
-#         "profile.html", {"request": request, "activities": activities}
-#     )
-
-
 @app.get("/profile", response_class=HTMLResponse)
 def profile(
     request: Request,
@@ -565,11 +531,42 @@ def profile(
                 req.image_path if req.image_path else "/static/default_avatar.jpg"
             ),
             "time": req.created_at,
+            "req_id": req.idRequests,
         }
         for req in user_requests
     ]
     return static.TemplateResponse(
         "profile.html", {"request": request, "user": user, "activities": activities}
+    )
+
+
+@app.get("/request/{request_id}", response_class=HTMLResponse)
+async def view_request(
+    request: Request,
+    request_id: int,
+    db: Session = Depends(get_db),
+):
+    db_request = (
+        db.query(models.Request)
+        .filter(models.Request.idRequests == int(request_id))
+        .first()
+    )
+    if not db_request:
+        raise HTTPException(status_code=404, detail="Request not found")
+    author = (
+        db.query(models.User)
+        .filter(models.User.idUsers == db_request.id_author)
+        .first()
+    )
+    if not author:
+        raise HTTPException(status_code=404, detail="Author not found")
+    return static.TemplateResponse(
+        "request.html",
+        {
+            "request": request,
+            "request_data": db_request,
+            "author": author,
+        },
     )
 
 

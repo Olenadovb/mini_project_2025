@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
+  <!-- <link rel="manifest" href="/favicon/site.webmanifest"> -->
+  <title>Hands - Request</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <main class="container">
+    <section>
+        <div style="
+        display: flex;
+        padding: 24px;
+        ">
+        <div style="font-size: 36px; font-weight: bold; cursor: pointer; margin-right: 20px;" onclick="history.back()">&#x2039; </div>
+        <div style="font-size: 36px; font-weight: bold; ">{{ request_data.name }}</div>
+
+        </div>
+  
+      <div style="display: flex; gap: 40px; flex-wrap: wrap; margin-left: 25px;">
+        <div style="flex: 1; min-width: 280px; max-width: 577px;">
+            <p style="font-size: 20px; line-height: 1.6;"><strong>Author:</strong> {{ author.name }} {{ author.surname }}</p>
+            <p style="font-size: 20px; line-height: 1.6;"><strong>Description:</strong> {{ request_data.description }}</p>
+            <p style="font-size: 14px; margin-top: 12px;"><strong>{{ request_data.time}}</strong></p>
+        </div>
+  
+        <div style="flex: 1; min-width: 280px; align-items: center;">
+            {% if request_data.image_path %}
+            <!-- <img src="{{ request_data.image_path.replace('/request', '') }}" alt="Image" width="300"> -->
+            <img src="{{ request_data.image_path or '/static/photos/default.svg' }}" alt="Image" width="300">
+            {% endif %}
+          <div style="margin-top: 32px; display: flex; gap: 16px;">
+            {% for tag in request_data.categories.split(', ') %}
+                <span class="clickable-tags">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+  
+    </section>
+  </main>
+  
+  
+  
+  <div id="footer" style="position:fixed;bottom: 0;width:100%"></div>
+
+  <script>
+    fetch('/static/header.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('header').innerHTML = html;
+  
+      const burger = document.getElementById('burger');
+      const navMenu = document.getElementById('nav-menu');
+  
+      burger.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    });
+
+
+    fetch('/static/footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+  </script>
+  
+</body>
+</html>
