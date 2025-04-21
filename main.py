@@ -43,7 +43,7 @@ import shutil
 import os
 
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import traceback
 from typing import List, Optional
@@ -66,7 +66,14 @@ app.include_router(router)
 #     allow_headers=["*"],
 # )
 
-app.add_middleware(SessionMiddleware, secret_key="some-secret-key")
+# app.add_middleware(SessionMiddleware, secret_key="some-secret-key")
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="some-secret-key",
+    max_age=60 * 60 * 24 * 7,
+    https_only=False,
+    same_site="lax",
+)
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 static = Jinja2Templates(directory="static")
@@ -109,7 +116,8 @@ async def settings_page():
 async def error(request: Request, status_code: int):
     status_text = ""
     return static.TemplateResponse(
-        "error.html", {"status_code": status_code, "status_text": status_text}
+        "error.html",
+        {"request": request, "status_code": status_code, "status_text": status_text},
     )
 
 
@@ -158,7 +166,7 @@ async def login():
 @app.get("/logout")
 def logout(request: Request):
     request.session.clear()
-    return RedirectResponse(url="/")
+    return RedirectResponse(url="/", status_code=302)
 
 
 @app.get("/callback")
@@ -448,10 +456,17 @@ def show_categories(
 
 
 @app.get("/", response_class=HTMLResponse)
-def get_activity(request: Request, db: Session = Depends(get_db)):
+def get_activity(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    logger.info(f"Session data: {request.session}")
+    user = request.session.get("user_email")
+    if user:
+        return RedirectResponse(url="/home", status_code=302)
     recent_requests = (
         db.query(models.Request, models.User)
-        .join(models.User, models.User.idUsers == models.Request.id_author)
+        # .join(models.User, models.User.idUsers == models.Request.id_author)
         .order_by(models.Request.created_at.desc())
         .limit(5)
         .all()
@@ -469,6 +484,11 @@ def get_activity(request: Request, db: Session = Depends(get_db)):
                 "time": req.created_at,
             }
         )
+    # user = request.session.get("user")
+    # if user:
+    #     return static.TemplateResponse(
+    #         "home.html", {"request": request, "activities": activities}
+    #     )
     return static.TemplateResponse(
         "index.html", {"request": request, "activities": activities}
     )

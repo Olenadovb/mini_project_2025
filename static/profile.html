@@ -64,6 +64,7 @@
 
     <div class="center-wrapper">
       <a href="/go_edit_profile"><button class="outlined-btn">Edit my information</button></a>
+      <a href="/logout"><button class="outlined-btn">Logout</button></a>
         <section class="add-activity">
           <a href="/add_request"><button>Add new activity</button></a>
         </section>
@@ -76,7 +77,7 @@
         {% if activities %}
         <div class="card">
           <p>{{ activity.name }}</p>
-          {% for tag in activity.categories.split(', ') %}
+          {% for tag in activity["categories"].split(', ') %}
             <span>{{ tag.strip() }}</span>
           {% endfor %}
           <span class="activity-time" data-time="{{ activity.time.isoformat() }}Z"></span>

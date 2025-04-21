@@ -26,7 +26,7 @@
           <div style="background-color: #dfe6d5; padding: 16px; border-radius: 16px; margin-bottom: 22px;">
             <div style="display: flex; gap: 8px;margin-bottom: 8px;">
               <div class="tags" style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap:7px">
-                {% for tag in activity.categories.split(', ') %}
+                {% for tag in activity["categories"].split(', ') %}
                   <span>{{ tag.strip() }}</span>
                 {% endfor %}
               </div>
