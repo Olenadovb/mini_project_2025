@@ -32,7 +32,6 @@
   <main class="container">
     <section class="profile">
       <div class="contact-info">
-        <h2>My profile</h2>
         <p><strong>Contacts</strong></p>
         <p>{{ user.phone }}</p>
         <p style="overflow-wrap: break-word; word-break: break-word;">{{ user.email }}</p>
@@ -60,14 +59,6 @@
       <p>
         {{ user.description }}
       </p>
-    </div>
-
-    <div class="center-wrapper">
-      <a href="/go_edit_profile"><button class="outlined-btn">Edit my information</button></a>
-      <a href="/logout"><button class="outlined-btn">Logout</button></a>
-        <section class="add-activity">
-          <a href="/add_request"><button>Add new activity</button></a>
-        </section>
     </div>
 
     <section class="history">

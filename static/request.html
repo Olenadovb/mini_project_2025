@@ -28,22 +28,20 @@
   
       <div style="display: flex; gap: 40px; flex-wrap: wrap; margin-left: 25px;">
         <div style="flex: 1; min-width: 280px; max-width: 577px;">
-            <p style="font-size: 20px; line-height: 1.6;"><strong>Author:</strong> {{ author.name }} {{ author.surname }}</p>
+            <p style="font-size: 20px; line-height: 1.6;"><a href="/user/{{ author.idUsers }}" style="text-decoration: none; color:black"><strong>Author:</strong> {{ author.name }} {{ author.surname }} ↗</a></p>
             <p style="font-size: 20px; line-height: 1.6;"><strong>Description:</strong> {{ request_data.description }}</p>
             <p style="font-size: 14px; margin-top: 12px;"><strong>{{ request_data.time}}</strong></p>
+            <div style="flex: 1; min-width: 280px; align-items: center;">
+              <!-- <img src="{{ request_data.image_path.replace('/request', '') }}" alt="Image" width="300"> -->
+              <div style="margin-top: 32px; display: flex; gap: 16px;">
+                {% for tag in request_data.categories.split(', ') %}
+                    <span class="clickable-tags">{{ tag }}</span>
+                {% endfor %}
+              </div>
+            </div>
         </div>
   
-        <div style="flex: 1; min-width: 280px; align-items: center;">
-            {% if request_data.image_path %}
-            <!-- <img src="{{ request_data.image_path.replace('/request', '') }}" alt="Image" width="300"> -->
-            <img src="{{ request_data.image_path or '/static/photos/default.svg' }}" alt="Image" width="300">
-            {% endif %}
-          <div style="margin-top: 32px; display: flex; gap: 16px;">
-            {% for tag in request_data.categories.split(', ') %}
-                <span class="clickable-tags">{{ tag }}</span>
-            {% endfor %}
-          </div>
-        </div>
+        <img src="/{{ request_data.image_path if request_data.image_path else 'photos/default.svg' }}" alt="Image" width="300">
       </div>
   
     </section>

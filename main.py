@@ -460,7 +460,7 @@ def get_activity(
     request: Request,
     db: Session = Depends(get_db),
 ):
-    logger.info(f"Session data: {request.session}")
+    # logger.info(f"Session data: {request.session}")
     user = request.session.get("user_email")
     if user:
         return RedirectResponse(url="/home", status_code=302)
@@ -492,20 +492,6 @@ def get_activity(
     return static.TemplateResponse(
         "index.html", {"request": request, "activities": activities}
     )
-
-
-# @app.get("/home", response_class=HTMLResponse)
-# async def homepage(request: Request, db: Session = Depends(get_db)):
-#     requests = (
-#         db.query(models.Request)
-#         .order_by(models.Request.created_at.desc())
-#         .limit(5)
-#         .all()
-#     )
-#     return static.TemplateResponse(
-#         "home.html",
-#         {"request": request, "requests": requests},
-#     )
 
 
 @app.get("/home", response_class=HTMLResponse)
@@ -603,6 +589,40 @@ async def view_request(
             "author": author,
         },
     )
+
+
+@app.get("/user/{user_id}", response_class=HTMLResponse)
+async def view_user(
+    request: Request,
+    user_id: int,
+    db: Session = Depends(get_db),
+):
+    user = db.query(models.User).filter(models.User.idUsers == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_requests = (
+        db.query(models.Request)
+        .filter(models.Request.id_author == user.idUsers)
+        .order_by(models.Request.created_at.desc())
+        .all()
+    )
+    activities = [
+        {
+            "name": req.name,
+            "categories": req.categories,
+            "description": req.description,
+            "image_path": (
+                req.image_path if req.image_path else "/static/default_avatar.jpg"
+            ),
+            "time": req.created_at,
+            "req_id": req.idRequests,
+        }
+        for req in user_requests
+    ]
+    return static.TemplateResponse(
+        "user.html", {"request": request, "user": user, "activities": activities}
+    )
+
 
 # ERROR HANDLING
 
