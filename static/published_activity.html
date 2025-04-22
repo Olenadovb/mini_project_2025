@@ -16,27 +16,29 @@
         padding: 24px;
         ">
         <div style="font-size: 36px; font-weight: bold; cursor: pointer; margin-right: 20px;" onclick="history.back()">&#x2039; </div>
-        <div style="font-size: 36px; font-weight: bold; ">Published</div>
+        <div style="font-size: 36px; font-weight: bold; " id="published-name">Published</div>
 
         </div>
   
-      <div style="display: flex; gap: 40px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 280px; max-width: 577px;">
-          <p style="font-size: 20px; line-height: 1.6;">
-            Lorem ipsum jerhvjvjnbjvnwnj Lorem ipsum jerhvjvjnbjvnwnjLorem ipsum j erhvjvj nbjvnwnjLorem ipsum jerhvjvjnbjvnwnj Lorem ipsum jerhvjvjnbjvnwnjLorem ipsum jerhvjvjnbjvnwnjLor em ipsum jerhvjvjnbjvnwnjLorem ipsum jerhvjvjnbjvnwnjLorem ipsum jerhvjvjnbjvnwnj.
-          </p>
-          <p style="font-size: 14px; margin-top: 12px;"><strong>09.03.2025</strong></p>
-        </div>
-  
-        <div style="flex: 1; min-width: 280px; align-items: center;">
-          <div style="width: 400px; height: 282px; background-color: #D9D9D9; border-radius: 12px;"></div>
-          <div style="margin-top: 32px; display: flex; gap: 16px;">
-            <button class="clickable-tags">Clothes</button>
-            <button class="clickable-tags">Furniture</button>
-            <button class="clickable-tags">Medicine</button>
+        <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 280px; max-width: 577px;">
+            <!-- Динамічний опис -->
+            <p id="published-description" style="font-size: 20px; line-height: 1.6;"></p>
+            <!-- Дата -->
+            <p style="font-size: 14px; margin-top: 12px;"><strong id="published-date"></strong></p>
+          </div>
+        
+          <div style="flex: 1; min-width: 280px; align-items: center;">
+            <!-- Місце для картинки або сірої заглушки -->
+            <div style="width: 400px; height: 282px; background-color: #D9D9D9; border-radius: 12px;"></div>
+        
+            <!-- Теги з localStorage -->
+            <div style="margin-top: 32px; display: flex; gap: 16px;" id="published-tags">
+              <!-- Теги зʼявляться тут -->
+            </div>
           </div>
         </div>
-      </div>
+        
   
     </section>
   </main>
@@ -66,6 +68,24 @@
         document.getElementById('footer').innerHTML = html;
         
       });
+        const name = localStorage.getItem('form_name');
+        document.getElementById('published-name').textContent = name;
+
+        const date = localStorage.getItem('form_date');
+        const description = localStorage.getItem('form_description');
+        const tags = JSON.parse(localStorage.getItem('form_tags')) || [];
+      
+        document.getElementById('published-description').textContent = description;
+        document.getElementById('published-date').textContent = date;
+      
+        const tagsContainer = document.getElementById('published-tags');
+        tags.forEach(tag => {
+          const btn = document.createElement('button');
+          btn.className = 'clickable-tags';
+          btn.textContent = tag;
+          tagsContainer.appendChild(btn);
+        });
+      
   </script>
   
 </body>
