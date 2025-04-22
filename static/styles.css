@@ -852,3 +852,18 @@ color: white;
 .arrow-link-categories:hover {
   color: #dcdcdc;
 }
+
+.image-404 {
+  max-width: 600px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+
+.container-404 {
+  align-self: center;
+align-items: center;
+text-align: center;
+/* font-size: 48px; */
+max-width: 600px;
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Volunteer Service — Home</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+
+</head>
+<body style="background-color:#f9f9f9;">
+  <div id="header"></div>
+<main class="container">
+  <section class="container-404">
+    <img src="/static/photos/404 1.png" class="image-404" />
+    <h1 style="font-size: 48px; color: rgb(45, 63, 116);">ERROR</h1>
+    <p  style="font-size: 28px; color: rgb(86, 100, 142); font-weight: bold;">PAGE NOT FOUND</p>
+  </section>
+
+</main>
+
+  
+<div id="footer"></div>
+
+
+<script>
+  fetch('header.html')
+  .then(response => response.text())
+  .then(html => {
+    document.getElementById('header').innerHTML = html;
+
+    const burger = document.getElementById('burger');
+    const navMenu = document.getElementById('nav-menu');
+
+    burger.addEventListener('click', () => {
+      navMenu.classList.toggle('show');
+    });
+  });
+
+
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('footer').innerHTML = html;
+      
+    });
+</script>
+</body>
+</html>
