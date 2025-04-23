@@ -24,6 +24,53 @@
     .card {
       padding-bottom:0;
     }
+
+    .card button {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+
+    .status-dropdown-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .status-button {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+    }
+
+    .status-dropdown {
+      display: none;
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 6px;
+      border-radius: 8px;
+      z-index: 10;
+      top: 25px;
+      left: -10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .status-dropdown form button {
+      display: block;
+      background: none;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+    }
+
+    .status-dropdown form button:hover {
+      background-color: #f0f0f0;
+    }
+
   </style>
 </head>
 <body>
@@ -70,11 +117,29 @@
         </section>
     </div>
 
+    {% set status_map = {
+      1: 'Active',
+      2: 'In Progress',
+      3: 'Closed'
+    } %}
+
+    {% set status_colors = {
+      1: '#34c759',
+      2: '#ffcc00',
+      3: '#ff3b30'
+    } %}
+    
+    {% set status_transitions = {
+      1: [2, 3],
+      2: [1, 3],
+      3: [1]
+    } %}
+
     <section class="history">
       <h2>History of activity</h2>
       <div class="cards">
-        {% for activity in activities %}
         {% if activities %}
+        {% for activity in activities %}
         <div class="card">
           <p>{{ activity.name }}</p>
           {% for tag in activity["categories"].split(', ') %}
@@ -82,12 +147,35 @@
           {% endfor %}
           <span class="activity-time" data-time="{{ activity.time.isoformat() }}Z"></span>
           <a class="arrow-link-categories" href="/request/{{ activity.req_id }}">↗</a>
-
-        </div>
-        {% endif %}
+          {% set current_status = activity.status %}
+          {% set available_statuses = status_transitions[current_status] %}
+          
+          <div class="status-dropdown-wrapper">
+            {% if available_statuses %}
+              <button class="status-button" style="background-color: {{ status_colors[current_status] }};"
+                      onclick="toggleDropdown(this)">
+              </button>
+              <div class="status-dropdown">
+                <form action="/request/{{ activity.req_id }}/change_status" method="POST" onsubmit="return confirm('Change status?');">
+                  <input type="hidden" name="activity_id" value="{{ activity.req_id }}">
+                  {% for status_code in available_statuses %}
+                    <button type="submit" name="new_status" value="{{ status_code }}">
+                      {{ status_map[status_code] }}
+                    </button>
+                  {% endfor %}
+                </form>
+              </div>
+            {% else %}
+              <div class="status-label">
+                <p><strong style="color: {{ status_colors[current_status] }}">{{ status_map[current_status] }}</strong></p>
+              </div>
+            {% endif %}
+            </div>
+          </div>
+        {% endfor %}
         {% else %}
           <p>You haven’t published any requests yet.</p>
-        {% endfor %}
+        {% endif %}
       </div>
     </section>
   </main>
@@ -141,6 +229,41 @@
           el.textContent = `${day} ${month}, ${hour}:${minute}`;
         });
       });
+
+      function toggleDropdown(button) {
+        const dropdown = button.nextElementSibling;
+        document.querySelectorAll('.status-dropdown').forEach(d => {
+          if (d !== dropdown) d.style.display = 'none';
+        });
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+      }
+
+      document.addEventListener('click', function(event) {
+        if (!event.target.closest('.status-dropdown-wrapper')) {
+          document.querySelectorAll('.status-dropdown').forEach(d => d.style.display = 'none');
+        }
+      });
+
+    //   function changeStatus(id, currentStatus) {
+    //   const newStatus = prompt("Choose status (active, inactive, closed):", currentStatus);
+    //   if (newStatus && ['active', 'inactive', 'closed'].includes(newStatus)) {
+    //     fetch(`/request/${req_id}/change_status`, {
+    //       method: 'POST',
+    //       headers: { 'Content-Type': 'application/json' },
+    //       body: JSON.stringify({ status: newStatus }),
+    //     })
+    //     .then(response => {
+    //       if (response.ok) {
+    //         alert("Status updated!");
+    //         location.reload();
+    //       } else {
+    //         alert("Error occured while updating status");
+    //       }
+    //     });
+    //   } else if (newStatus) {
+    //     alert("Error");
+    //   }
+    // }
   </script>
   
 </body>

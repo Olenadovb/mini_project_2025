@@ -99,7 +99,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",
 ]
-REDIRECT_URI = "http://localhost:8000/callback"
+REDIRECT_URI = "https://causal-joannes-olenadovb-ede57763.koyeb.app/callback"
 
 
 # @app.get("/home")
@@ -280,6 +280,34 @@ async def post_edit_profile(
     )
 
 
+@app.post("/request/${request_id}/change_status")
+async def update_request_state(
+    request_id: int,
+    new_state: int = Form(...),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+    admin: models.User = Depends(admin_required),
+):
+    request_obj = db.query(models.Request).filter_by(idRequest=request_id).first()
+    if not request_obj:
+        raise HTTPException(status_code=404, detail="Request not found")
+
+    if (
+        request_obj.id_author != current_user.idUsers
+        and request_obj.id_author != admin.idUsers
+    ):
+        raise HTTPException(
+            status_code=403, detail="Not allowed to modify this request"
+        )
+
+    request_obj.state = new_state
+    db.commit()
+    db.refresh(request_obj)
+    return JSONResponse(
+        status_code=200, content={"message": "State updated successfully"}
+    )
+
+
 # DATABASE
 
 # models.Base.metadata.drop_all(bind=engine)
@@ -407,7 +435,7 @@ async def create_request(
 #     return static.TemplateResponse("users.html", {"request": request, "users": users})
 
 
-@app.get("/users")
+@app.get("/admin")
 def list_users(
     request: Request,
     db: Session = Depends(get_db),
