@@ -1,0 +1,21 @@
+{
+    "name": "Helping hands",
+    "short_name": "Hands",
+    "start_url": "/home.html",
+    "display": "browser",
+    "background_color": "#FBF9F3",
+    "theme_color": "#9DA4B9",
+    "orientation": "standalone",
+    "icons": [
+        {
+            "src": "/static/photos/logo_blue.jpg",
+            "type": "image/jpg",
+            "sizes": "48x48"
+        },
+        {
+            "src": "/static/photos/logo_white.png",
+            "type": "image/png",
+            "sizes": "48x48"
+        }
+    ]
+}
