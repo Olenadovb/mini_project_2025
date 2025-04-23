@@ -12,3 +12,5 @@ cliend ID:
 
 page:
 https://causal-joannes-olenadovb-ede57763.koyeb.app/
+
+redirect_uri=https://causal-joannes-olenadovb-ede57763.koyeb.app/callback flowName=GeneralOAuthFlow
