@@ -280,32 +280,57 @@ async def post_edit_profile(
     )
 
 
-@app.post("/request/${request_id}/change_status")
-async def update_request_state(
-    request_id: int,
-    new_state: int = Form(...),
+# @app.post("/request/{request_id}/change_status")
+# async def update_request_state(
+#     request_id: int,
+#     new_state: int = Form(...),
+#     db: Session = Depends(get_db),
+#     current_user: models.User = Depends(get_current_user),
+#     admin: models.User = Depends(admin_required),
+# ):
+#     request_obj = db.query(models.Request).filter_by(idRequest=request_id).first()
+#     if not request_obj:
+#         raise HTTPException(status_code=404, detail="Request not found")
+
+#     if (
+#         request_obj.id_author != current_user.idUsers
+#         and request_obj.id_author != admin.idUsers
+#     ):
+#         raise HTTPException(
+#             status_code=403, detail="Not allowed to modify this request"
+#         )
+
+#     request_obj.state = new_state
+#     db.commit()
+#     db.refresh(request_obj)
+#     return JSONResponse(
+#         status_code=200, content={"message": "State updated successfully"}
+#     )
+
+
+@app.post("/request/{req_id}/change_status")
+async def change_status(
+    req_id: int,
+    new_status: int = Form(...),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
-    admin: models.User = Depends(admin_required),
 ):
-    request_obj = db.query(models.Request).filter_by(idRequest=request_id).first()
-    if not request_obj:
-        raise HTTPException(status_code=404, detail="Request not found")
+    activity = (
+        db.query(models.Request)
+        .filter_by(idRequests=req_id, id_author=current_user)
+        .first()
+    )
+    if not activity:
+        return RedirectResponse(url="/error", status_code=303)
 
-    if (
-        request_obj.id_author != current_user.idUsers
-        and request_obj.id_author != admin.idUsers
-    ):
-        raise HTTPException(
-            status_code=403, detail="Not allowed to modify this request"
-        )
-
-    request_obj.state = new_state
+    activity.state = new_status
     db.commit()
-    db.refresh(request_obj)
+
     return JSONResponse(
         status_code=200, content={"message": "State updated successfully"}
     )
+
+    # return RedirectResponse(url="/profile", status_code=303)
 
 
 # DATABASE
@@ -624,6 +649,7 @@ async def view_user(
     request: Request,
     user_id: int,
     db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
 ):
     user = db.query(models.User).filter(models.User.idUsers == user_id).first()
     if not user:
@@ -647,6 +673,10 @@ async def view_user(
         }
         for req in user_requests
     ]
+    if current_user == user_id:
+        return static.TemplateResponse(
+            "profile.html", {"request": request, "user": user, "activities": activities}
+        )
     return static.TemplateResponse(
         "user.html", {"request": request, "user": user, "activities": activities}
     )

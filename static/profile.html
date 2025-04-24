@@ -17,12 +17,17 @@
     }
     .arrow-link-categories{
       align-self: end;
-      position:relative;
-      top:-40px;
+      position: relative;
+      /* top: 190px; */
       height: 20px;
+      bottom:10px
     }
     .card {
-      padding-bottom:0;
+      padding-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      /* align-items: center; */
+      padding-top: 0;
     }
 
     .card button {
@@ -31,9 +36,38 @@
       right: 10px;
     }
 
+    .bottom-block{
+      display: flex;
+      flex-direction: row;
+      padding-bottom: 10px;
+      align-items: flex-end;
+      justify-content: space-between;
+      width:100%
+    }
+
+    .left-block {
+      display: flex;
+      align-items: left;
+      flex-direction: column;
+      /* align-content: flex-start; */
+      gap: 5px;
+    }
+
+    .right-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
     .status-dropdown-wrapper {
       position: relative;
-      display: inline-block;
+      min-width: 25px;
+      background-color: white;
+      border-radius: 10px;
+      /* top: 200px; */
+      height: 20px;
+      color: #4d5678;
     }
 
     .status-button {
@@ -70,7 +104,6 @@
     .status-dropdown form button:hover {
       background-color: #f0f0f0;
     }
-
   </style>
 </head>
 <body>
@@ -142,22 +175,29 @@
         {% for activity in activities %}
         <div class="card">
           <p>{{ activity.name }}</p>
+          <div class="bottom-block">
+          <div class="left-block">
           {% for tag in activity["categories"].split(', ') %}
             <span>{{ tag.strip() }}</span>
           {% endfor %}
           <span class="activity-time" data-time="{{ activity.time.isoformat() }}Z"></span>
-          <a class="arrow-link-categories" href="/request/{{ activity.req_id }}">↗</a>
-          {% set current_status = activity.status %}
+          </div>
+          <div class="right-block">
+            <a class="arrow-link-categories" href="/request/{{ activity.idRequests }}">↗</a>
+          {% set current_status = activity.state %}
           {% set available_statuses = status_transitions[current_status] %}
           
           <div class="status-dropdown-wrapper">
             {% if available_statuses %}
-              <button class="status-button" style="background-color: {{ status_colors[current_status] }};"
+              <button class="status-button" style="background-color: {{ status_colors[current_status] }}"
                       onclick="toggleDropdown(this)">
+                      <!-- <p style="color: {{ status_colors[current_status] }}">
+                        {{ status_map[current_status] }}
+                      </p> -->
               </button>
               <div class="status-dropdown">
-                <form action="/request/{{ activity.req_id }}/change_status" method="POST" onsubmit="return confirm('Change status?');">
-                  <input type="hidden" name="activity_id" value="{{ activity.req_id }}">
+                <form action="/request/{{ activity.idRequests }}/change_status" method="POST" onsubmit="return confirm('Change status?');">
+                  <input type="hidden" name="activity_id" value="{{ activity.idRequests }}">
                   {% for status_code in available_statuses %}
                     <button type="submit" name="new_status" value="{{ status_code }}">
                       {{ status_map[status_code] }}
@@ -170,6 +210,8 @@
                 <p><strong style="color: {{ status_colors[current_status] }}">{{ status_map[current_status] }}</strong></p>
               </div>
             {% endif %}
+            </div>
+            </div>
             </div>
           </div>
         {% endfor %}
@@ -247,7 +289,7 @@
     //   function changeStatus(id, currentStatus) {
     //   const newStatus = prompt("Choose status (active, inactive, closed):", currentStatus);
     //   if (newStatus && ['active', 'inactive', 'closed'].includes(newStatus)) {
-    //     fetch(`/request/${req_id}/change_status`, {
+    //     fetch(`/request/${idRequests}/change_status`, {
     //       method: 'POST',
     //       headers: { 'Content-Type': 'application/json' },
     //       body: JSON.stringify({ status: newStatus }),
