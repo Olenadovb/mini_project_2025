@@ -13,18 +13,28 @@
     <link rel="stylesheet" href="/static/styles.css"/>
 </head>
 <body>
-    <h1>sth went wrong...</h1>
-    <p>Status code: {{ status_code }}</p>
-    <p>Esplanation: {{ status_text }}</p>
-    <!-- <div id="footer"></div>
+  <header class="navbar">
+    <img src="/static/photos/logo_white.png" class="logo_small" />
+    <h1 id="index-title"><b>Helping Hands</b> — <em>Glory to Ukraine! Glory to the Heroes!</em></h1>
+  </header>
 
-  <script>
-    fetch('/static/footer.html')
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('footer').innerHTML = html;
-        
-      });
-  </script> -->
+    <main class="container">
+      <section class="container-404">
+        <h1 style="font-size: 48px; color: rgb(45, 63, 116);">Status code: {{ status_code }}</h1>
+        <p  style="font-size: 28px; color: rgb(86, 100, 142); font-weight: bold;">Esplanation: {{ status_text }}</p>
+        <img src="/static/photos/error.jpg" class="image-404" style="width: 50%"/>
+      </section>
+    
+    </main>
+
+  <div id="footer"></div>
+<script>
+  fetch('/static/footer.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('footer').innerHTML = html;
+      
+    });
+</script>
 </body>
 </html>
