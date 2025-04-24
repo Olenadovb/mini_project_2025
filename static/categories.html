@@ -5,6 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Volunteer Service — Categories</title>
   <link rel="stylesheet" href="/static/styles.css" />
+  <style>
+    .not-found-message {
+      display: none;
+      width: 100%;
+      height: 100%;
+      min-height: 465px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin-left: 20px;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      color: #666;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .cards-container-categories {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      position: relative;
+      min-height: 400px;
+    }
+  </style>
 </head>
 <body>
   <div id="header"></div>
@@ -62,7 +87,8 @@
           </div>
           <a class="arrow-link-categories" href="published_activity.html">↗</a>
         </div>
-      </div>      
+      </div>
+      <div class="not-found-message" id="not-found-message">Requests not found</div>
     </div>
   </main>
 
@@ -81,18 +107,23 @@
         document.getElementById('footer').innerHTML = html;
       });
 
-      function applyFilters() {
-        const checkboxes = document.querySelectorAll('.filter-panel-categories input[type="checkbox"]:checked');
-        const selectedCategories = Array.from(checkboxes).map(cb => cb.value);
-        const cards = document.querySelectorAll('.request-card-categories');
+    function applyFilters() {
+      const checkboxes = document.querySelectorAll('.filter-panel-categories input[type="checkbox"]:checked');
+      const selectedCategories = Array.from(checkboxes).map(cb => cb.value);
+      const cards = document.querySelectorAll('.request-card-categories');
+      const notFoundMessage = document.getElementById('not-found-message');
+      
+      let visibleCards = 0;
+      
+      cards.forEach(card => {
+          const categories = card.getAttribute('data-category').split(',').map(c => c.trim());
+          const hasMatch = selectedCategories.length === 0 || categories.some(cat => selectedCategories.includes(cat));
+          card.style.display = hasMatch ? 'flex' : 'none';
+          if (hasMatch) visibleCards++;
+      });
 
-        cards.forEach(card => {
-            const categories = card.getAttribute('data-category').split(',').map(c => c.trim());
-            const hasMatch = categories.some(cat => selectedCategories.includes(cat));
-            card.style.display = hasMatch ? 'flex' : 'none';
-        });
+      notFoundMessage.style.display = (visibleCards === 0 && selectedCategories.length > 0) ? 'flex' : 'none';
     }
-
 
     function selectAll() {
       document.querySelectorAll('.filter-panel-categories input[type="checkbox"]').forEach(cb => cb.checked = true);
