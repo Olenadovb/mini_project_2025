@@ -9,24 +9,60 @@
     <link rel="manifest" href="/favicon/manifest.json" />
     <link rel="stylesheet" href="/static/styles.css" />
     <title>Adminpage</title>
+    <style>
+      .user {
+        list-style: none;
+        background-color: #d5d9ea;
+        padding: 10px;
+        border-radius: 20px;
+        margin: 20px;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+      }
+
+      .user img {
+        border-radius: 20px;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+      }
+
+      .user-name {
+        background-color: aliceblue;
+        padding: 5px 10px 5px 10px;
+        width: fit-content;
+        border-radius: 7px;
+      }
+
+      .user-info p {
+        margin:0;
+      }
+    </style>
 </head>
 <body>
     <header class="navbar">
         <img src="/static/photos/logo_white.png" class="logo_small" />
-        <h1 id="index-title"><b>the Dark Side of Helping Hands</b> — <em>feel the POWER </em>😈</h1>
+        <h1 id="index-title"><strong>the Dark Side of Helping Hands</strong> — <em>feel the POWER </em>😈</h1>
       </header>
-    <main>
-    <ul>
+    <main style="margin-bottom: 60px;">
+    <ul style="padding-inline-start: 0;">
         {% for user in users %}
-            <li>
-                <strong>{{ user.name }} {{ user.surname }}</strong> — {{ user.email }}<br>
-                Місто: {{ user.city }}, Вік: {{ user.age }}<br>
-                <img src="/{{ user.image_path }}" alt="Profile Image" width="100px"><br><br>
+            <li class="user">
+              <img src="/{{ user.image_path }}" alt="Profile Image" width="100px"><br><br>
+              <div class="user-info">
+                <p class="user-name"><strong>{{ user.name }} {{ user.surname }}</strong></p>
+                <p>{{ user.email }}</p>
+                <p><strong>Місто:</strong> {{ user.city }}, <strong>Вік:</strong> {{ user.age }}</p>
+              </div>
             </li>
-        {% endfor %}
+        {% endfor %}          
     </ul>
     </main>
-    <div id="footer" style="position:absolute; bottom:0; width:100%"></div>
+    <div id="footer"></div>
 
 
   <script>

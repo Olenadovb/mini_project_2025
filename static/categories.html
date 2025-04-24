@@ -11,6 +11,57 @@
   <link rel="manifest" href="/favicon/manifest.json" />
   <title>Hands — Categories</title>
   <link rel="stylesheet" href="/static/styles.css"/>
+  <style>
+    .not-found-message {
+      display: none;
+      width: 100%;
+      height: 100%;
+      min-height: 465px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin-left: 20px;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      color: #666;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+  </style>
+  <script>
+    function applyCategoryFilters() {
+      const checkboxes = document.querySelectorAll('.filter-panel-categories input[type="checkbox"]:checked');
+      const selectedCategories = Array.from(checkboxes).map(cb => cb.value);
+      const cards = document.querySelectorAll('.request-card-categories');
+      const notFoundMessage = document.getElementById('not-found-message');
+  
+      let visibleCards = 0;
+  
+      cards.forEach(card => {
+        const categoryTags = card.querySelectorAll('.category-tag-categories');
+        const cardCategories = Array.from(categoryTags).map(tag => tag.textContent.trim());
+        const hasMatch = selectedCategories.length === 0 || cardCategories.some(cat => selectedCategories.includes(cat));
+        
+        card.style.display = hasMatch ? 'flex' : 'none';
+        if (hasMatch) visibleCards++;
+      });
+  
+      if (selectedCategories.length > 0 && visibleCards === 0) {
+        notFoundMessage.style.display = 'flex';
+      } else {
+        notFoundMessage.style.display = 'none';
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      const filterForm = document.querySelector('.filter-panel-categories');
+      filterForm.addEventListener('submit', event => {
+        event.preventDefault(); 
+        applyCategoryFilters();
+      });
+  
+      applyCategoryFilters();
+    });
+  </script>
 </head>
 <body>
   <div id="header"></div>
@@ -52,6 +103,7 @@
           </div>
         </div>
       {% endfor %}
+      <div class="not-found-message" id="not-found-message">Requests not found</div>
     </div>
   </main>
 
