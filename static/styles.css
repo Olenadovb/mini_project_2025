@@ -25,12 +25,14 @@ html, body {
 header.navbar nav button {
   background-color: #5E678B;
   color: white;
-  padding: 14px 69px;
-  font-size: 22px;
+  padding: 0.8rem 1.5rem;
+  font-size: min(1.1rem, 3vw);
   border-radius: 6px 6px;
   border: 1px solid #E8E8E8;
   cursor: pointer;
   transition: background-color 0.3s;
+  white-space: nowrap; /* Забороняє перенос тексту */
+  min-width: max-content; /* Мінімальна ширина */
 }
 
 .navbar button:hover {
