@@ -30,7 +30,7 @@
         
           <div style="flex: 1; min-width: 280px; align-items: center;">
             <!-- Місце для картинки або сірої заглушки -->
-            <div style="width: 400px; height: 282px; background-color: #D9D9D9; border-radius: 12px;"></div>
+            <img id="published-photo" style="width: 400px; height: 282px; border-radius: 12px; object-fit: cover; background-color: #D9D9D9;" />
         
             <!-- Теги з localStorage -->
             <div style="margin-top: 32px; display: flex; gap: 16px;" id="published-tags">
@@ -85,6 +85,11 @@
           btn.textContent = tag;
           tagsContainer.appendChild(btn);
         });
+        const photo = localStorage.getItem('form_photo');
+if (photo) {
+  document.getElementById('published-photo').src = photo;
+}
+
       
   </script>
   

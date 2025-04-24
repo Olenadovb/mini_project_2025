@@ -36,54 +36,28 @@
                 </div>
               </div>
         
-              <!-- Опис і фото -->
-              <!-- <div style="display: flex; gap: 40px; flex-wrap: wrap;">
-                <div style="flex: 1; width: 505px; max-width: 505px">
-                  <p style="font-weight: bold; font-size: 24px">Add name</p>
-                  <textarea style="width: 100%; height:24px; border: 1px solid #ccc; border-radius: 12px; padding: 12px; font-size: 24px;"></textarea>
-                  <p style="font-weight: bold; font-size: 24px">Add date</p>
-                  <style>
-                    input[type="date"] {
-                      padding: 10px;
-                      border-radius: 5px;
-                      border: 1px solid #ccc;
-                      font-size: 16px;
-                    }
-                  
-                    label {
-                      display: block;
-                      margin-bottom: 6px;
-                      font-weight: bold;
-                    }
-                  </style>
-                  <input type="date" id="date" name="date">
-                  <p style="font-weight: bold; font-size: 24px">Provide a description</p>
-                  <textarea style="width: 100%; height: 160px; border: 1px solid #ccc; border-radius: 12px; padding: 12px; font-size: 24px;"></textarea>
-                  
-                </div> -->
-                <form onsubmit="saveFormData(event)">
-                  <div style="display: flex; gap: 40px; flex-wrap: wrap;">
-                    <div style="flex: 1; width: 505px; max-width: 505px">
-                      <p style="font-weight: bold; font-size: 24px">Add name</p>
-                      <textarea id="username" style="width: 100%; height:24px; border: 1px solid #ccc; border-radius: 12px; padding: 12px; font-size: 24px;"></textarea>
-                      
-                      <p style="font-weight: bold; font-size: 24px">Add date</p>
-                      <input type="date" id="date" name="date">
-                
-                      <p style="font-weight: bold; font-size: 24px">Provide a description</p>
-                      <textarea id="description" style="width: 100%; height: 160px; border: 1px solid #ccc; border-radius: 12px; padding: 12px; font-size: 24px;"></textarea>
-                
-                      <button class="homepage_button_join" style="padding: 12px 36px;" onclick="window.location.href='published_activity.html'">Publish</button>                    </div>
+              <form onsubmit="saveFormData(event)" enctype="multipart/form-data">
+                <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+                  <div style="flex: 1; width: 505px; max-width: 505px">
+                    <p style="font-weight: bold; font-size: 24px">Add name</p>
+                    <textarea id="username" style="width: 100%; height:24px; border: 1px solid #ccc; border-radius: 12px; padding: 12px; font-size: 24px;"></textarea>
+              
+                    <p style="font-weight: bold; font-size: 24px">Add date</p>
+                    <input type="date" id="date" name="date">
+              
+                    <p style="font-weight: bold; font-size: 24px">Provide a description</p>
+                    <textarea id="description" style="width: 100%; height: 160px; border: 1px solid #ccc; border-radius: 12px; padding: 12px; font-size: 24px;"></textarea>
+              
+                    <p style="font-weight: bold; font-size: 24px">Attach a photo</p>
+                    <input type="file" id="photo" name="photo" accept="image/*" style="font-size: 18px; margin-bottom: 16px;">
+              
+                    <button type="submit" class="homepage_button_join" style="padding: 12px 36px;">Publish</button>
                   </div>
-                </form>
+                </div>
+              </form>
+              
 
                 
-
-
-                <div style="flex: 1; min-width: 280px;">
-                  <p style="font-weight: bold; font-size: 24px">Attach a photo</p>
-                  <div style="width: 100%; height: 160px; background-color: #e0e0e0; border-radius: 12px;"></div>
-                </div>
               </div>
         
             </section>
@@ -108,6 +82,30 @@
         navMenu.classList.toggle('show');
       });
     });
+    function saveFormData(event) {
+      event.preventDefault();
+    
+      const name = document.getElementById('username').value;
+      const date = document.getElementById('date').value;
+      const description = document.getElementById('description').value;
+      const photoFile = document.getElementById('photo').files[0];
+    
+      localStorage.setItem('form_name', name);
+      localStorage.setItem('form_date', date);
+      localStorage.setItem('form_description', description);
+    
+      if (photoFile) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          localStorage.setItem('form_photo', e.target.result);
+          window.location.href = 'published_activity.html';
+        };
+        reader.readAsDataURL(photoFile);
+      } else {
+        window.location.href = 'published_activity.html';
+      }
+    }
+    
 
 
     fetch('footer.html')
@@ -118,17 +116,28 @@
       });
       function saveFormData(event) {
         event.preventDefault();
-  
+      
         const name = document.getElementById('username').value;
         const date = document.getElementById('date').value;
         const description = document.getElementById('description').value;
-  
+        const photoFile = document.getElementById('photo').files[0];
+      
         localStorage.setItem('form_name', name);
         localStorage.setItem('form_date', date);
         localStorage.setItem('form_description', description);
-  
-        window.location.href = 'published_activity.html';
+      
+        if (photoFile) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            localStorage.setItem('form_photo', e.target.result);
+            window.location.href = 'published_activity.html';
+          };
+          reader.readAsDataURL(photoFile);
+        } else {
+          window.location.href = 'published_activity.html';
+        }
       }
+      
   </script>
     </body>
 </html>
