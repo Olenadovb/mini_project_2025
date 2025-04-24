@@ -112,7 +112,7 @@ def admin_required(
     current_user: models.User = Depends(get_current_user),
 ) -> models.User:
     if current_user.email != settings.admin_email:
-        raise HTTPException(status_code=403, detail="Access denied: Admins only")
+        raise HTTPException(status_code=403, detail="Access denied - Admins only")
     return current_user
 
 

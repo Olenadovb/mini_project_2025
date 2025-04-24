@@ -60,7 +60,7 @@
         <img src="{{ act.image_path or '/static/photos/default.svg' }}" class="request-avatar" alt="{{ act.name }}" />
         <span class="act-author-name">{{ act.firstname }} {{ act.surname }}</span>
       </div>
-      <span class="request-text" style="flex: 1; max-height: 120px; max-height: 100px; overflow: hidden;text-overflow: ellipsis;white-space: break-spaces;">{{ act.description }}</span>
+      <span class="request-text" style="flex: 1; max-height: 90px; overflow: hidden;text-overflow: ellipsis;white-space: break-spaces;">{{ act.description }}</span>
       <span id="custom-time" class="activity-time" style="color: #666;" data-time="{{ act.time }}Z">{{ act.time }}</span>
     </div>
   {% endfor %}

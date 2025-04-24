@@ -22,6 +22,10 @@ html, body {
   gap: 2;
 }
 
+#nav-menu {
+  width: 80%;
+}
+
 header.navbar nav button {
     background-color: #5E678B;
     color: white;
@@ -32,7 +36,8 @@ header.navbar nav button {
     cursor: pointer;
     transition: background-color 0.3s;
     white-space: nowrap;
-    min-width: max-content;
+    /* min-width: max-content; */
+    width: 23%
   }
 
 .navbar button:hover {
@@ -230,7 +235,6 @@ header.navbar nav button {
   display: block;
   color: #f9f9f9;
   background-color: #344c8c;
-  margin: 20px auto;
   text-align: center;
 }
 
@@ -508,7 +512,7 @@ footer {
   padding: 16px 25px 16px 5px;
   color: #333;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   font-size: 14px;
   gap: 12px;
@@ -778,6 +782,14 @@ color: white;
 
   .burger {
     display: block;
+  }
+
+  #nav-menu {
+    width: 150px;
+  }
+
+  #nav-menu button {
+    width: 150px
   }
 }
 

@@ -11,7 +11,48 @@
   <link rel="manifest" href="/favicon/manifest.json" />
   <title>Hands — Home</title>
   <link rel="stylesheet" href="/static/styles.css" />
+  <style>
+    /* CSS */
+    .contacts-section {
+      padding: 40px 20px;
+      font-family: Arial, sans-serif;
+    }
 
+    .contacts-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: space-between;
+    }
+
+    .contact-info,
+    .contact-socials {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .contacts-section h2 {
+      font-size: 36px;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .contacts-section p {
+      font-size: 24px;
+      margin: 14px 0;
+    }
+
+    .contact-socials a {
+      color: #344c8c;
+      text-decoration: none;
+    }
+
+    .contact-socials a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body style="background-color:#f9f9f9;">
   <div id="header"></div>
@@ -71,7 +112,7 @@
     <div class="team-cards">
       <!-- Team Member 1 -->
       <div class="team-member">
-        <img src="/static/photos/person1.avif" class="team-photo">
+        <img src="/static/photos/olenka.jpg" class="team-photo">
         <h3 class="teammate-name">Olenka</h3>
         <p class="team-description">
           Olenka is a passionate volunteer who thrives in organizing events and bringing people together. With a warm heart and sharp mind, she ensures every detail is handled. Her energy uplifts the team, and she’s always the first to offer help — whether it’s logistics or just a comforting word.
@@ -81,7 +122,7 @@
   
       <!-- Team Member 2 -->
       <div class="team-member">
-        <img src="/static/photos/person1.avif" class="team-photo">
+        <img src="/static/photos/yulia.jpg" class="team-photo">
         <h3 class="teammate-name">Yulia</h3>
         <p class="team-description">
           Yulia is a hands-on problem-solver with a love for action. You’ll find her on the ground, making sure supplies reach the right people or leading youth workshops with contagious enthusiasm and unwavering focus. She’s not afraid to get her hands dirty — her impact is as real and lasting as it gets.
@@ -90,7 +131,7 @@
   
       <!-- Team Member 3 -->
       <div class="team-member">
-        <img src="/static/photos/person1.avif" class="team-photo">
+        <img src="/static/photos/polina.jpg" class="team-photo">
         <h3 class="teammate-name">Polina</h3>
         <p class="team-description">
           Polina handles internal communication and logistics. She creates volunteer shifts, writes internal guides, and oversees supply inventory. Thanks to her, everyone knows where to be, what to bring, and who to ask. She’s the quiet engine that makes big things happen without chaos.
@@ -98,7 +139,7 @@
       </div>
 
       <div class="team-member">
-        <img src="/static/photos/person1.avif" class="team-photo">
+        <img src="/static/photos/jiya.jpg" class="team-photo">
         <h3 class="teammate-name">Jiya</h3>
         <p class="team-description">
           Jiya is the heartbeat of any volunteer group — dependable, driven, and deeply caring. She’s the one making checklists, coordinating schedules, and still finding time to bring snacks for everyone. With her strong sense of responsibility and gentle humor, she keeps everything — and everyone — running smoothly.

@@ -50,9 +50,10 @@
                 <div class="form-group">
                     <label class="required">
                         <div style="margin-bottom: 24px;">
-                            <p style="font-weight: bold; font-size: 24px">Choose categories:</p></div>
+                            <p style="font-weight: bold; font-size: 24px">Choose categories:</p>
+                        </div>
                     </label>
-                    <div class="checkbox-group-request">
+                    <div class="checkbox-group-request" required>
                         <div class="checkbox-container">
                             <input type="checkbox" id="category-clothing" name="categories" value="Clothing & Gear">
                             <label for="category-clothing">Clothing & Gear</label>
@@ -94,7 +95,9 @@
                             <label for="category-power-energy">Protective Equipment</label>
                         </div>
                     </div>
-                    <div id="categoriesError" class="error"><strong>Please select at least one category</strong></div>
+                    <div id="categoriesError" class="error" style="display:none; color: red; font-weight: bold;">
+                        <strong>Please select from 1 to 3 categories</strong>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -140,7 +143,15 @@
             e.preventDefault();
 
             const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
+            const categoriesError = document.getElementById('categoriesError');
             const formData = new FormData();
+
+            if (categories.length < 1 || categories.length > 3) {
+                categoriesError.style.display = 'block';
+                return;
+            } else {
+                categoriesError.style.display = 'none';
+            }
 
             formData.append("name", document.getElementById('name').value);
             formData.append("description", document.getElementById('description').value);
