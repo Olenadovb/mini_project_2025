@@ -104,42 +104,31 @@
         
       });
 
-    function formatTimeLabel(dateStr) {
-      const date = new Date(dateStr);
-      if (isNaN(date)) return "unknown date";
+      document.addEventListener("DOMContentLoaded", () => {
+        const kyivFormatter = new Intl.DateTimeFormat('en-GB', {
+          day: '2-digit',
+          month: 'long',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+          timeZone: 'Europe/Kyiv',
+        });
 
-      const now = new Date();
+        document.querySelectorAll('.activity-time').forEach(el => {
+          const utcStr = el.getAttribute('data-time');
+          if (!utcStr) return;
 
-      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const startOfDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+          const utcDate = new Date(utcStr); 
 
-      const diffMs = startOfToday - startOfDate;
-      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+          const parts = kyivFormatter.formatToParts(utcDate);
+          const day = parts.find(p => p.type === 'day')?.value;
+          const month = parts.find(p => p.type === 'month')?.value;
+          const hour = parts.find(p => p.type === 'hour')?.value;
+          const minute = parts.find(p => p.type === 'minute')?.value;
 
-      const timeStr = date.toLocaleTimeString("uk-UA", {
-        hour: "2-digit",
-        minute: "2-digit",
+          el.textContent = `${day} ${month}, ${hour}:${minute}`;
+        });
       });
-
-      if (diffDays === 0) return `${timeStr} today`;
-      if (diffDays === 1) return `${timeStr} yesterday`;
-      if (diffDays < 7) return `${timeStr} ${diffDays} days ago`;
-
-      const dateStrFormatted = date.toLocaleDateString("uk-UA", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
-
-      return `${dateStrFormatted} о ${timeStr}`;
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll(".activity-time").forEach((el) => {
-        const rawTime = el.getAttribute("data-time");
-        el.textContent = formatTimeLabel(rawTime);
-      });
-    });
   </script>
 </body>
 </html>
