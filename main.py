@@ -255,9 +255,8 @@ async def change_status(
     activity.state = new_status
     db.commit()
 
-    return JSONResponse(
-        status_code=200, content={"message": "State updated successfully"}
-    )
+    print("State updated successfully", activity.state)
+    return RedirectResponse(url="/profile", status_code=302)
 
 
 # DATABASE

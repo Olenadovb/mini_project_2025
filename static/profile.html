@@ -198,7 +198,7 @@
           <span class="activity-time" data-time="{{ activity.time.isoformat() }}Z"></span>
           </div>
           <div class="right-block">
-            <a class="arrow-link-categories" href="/request/{{ activity.idRequests }}">↗</a>
+            <a class="arrow-link-categories" href="/request/{{ activity.req_id }}">↗</a>
           {% set current_status = activity.state %}
           {% set available_statuses = status_transitions[activity.state] %}
           
@@ -208,8 +208,8 @@
                       onclick="toggleDropdown(this)">
               </button>
               <div class="status-dropdown" style="display:none;">
-                <form action="/request/{{ activity.idRequests }}/change_status" method="POST" onsubmit="return confirm('Change status?');">
-                  <input type="hidden" name="activity_id" value="{{ activity.idRequests }}">
+                <form action="/request/{{ activity.req_id }}/change_status" method="POST" onsubmit="return confirm('Change status?');">
+                  <input type="hidden" name="activity_id" value="{{ activity.req_id }}">
                   <div class="status-buttons">
                   {% for status_code in available_statuses %}
                     <button type="submit" name="new_status" value="{{ status_code }}" class="st-button">
