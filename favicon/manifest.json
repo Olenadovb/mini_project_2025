@@ -1,7 +1,7 @@
 {
     "name": "Helping hands",
     "short_name": "Hands",
-    "start_url": "/home.html",
+    "start_url": "/",
     "display": "browser",
     "background_color": "#FBF9F3",
     "theme_color": "#9DA4B9",

@@ -6,13 +6,16 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
-    <!-- <link rel="manifest" href="/favicon/site.webmanifest"> -->
+    <link rel="manifest" href="/favicon/manifest.json" />
     <link rel="stylesheet" href="/static/styles.css" />
     <title>Adminpage</title>
 </head>
 <body>
-    <h1>Список користувачів</h1>
-    <h2>feel the POWER 😈</h2>
+    <header class="navbar">
+        <img src="/static/photos/logo_white.png" class="logo_small" />
+        <h1 id="index-title"><b>the Dark Side of Helping Hands</b> — <em>feel the POWER </em>😈</h1>
+      </header>
+    <main>
     <ul>
         {% for user in users %}
             <li>
@@ -22,5 +25,54 @@
             </li>
         {% endfor %}
     </ul>
+    </main>
+    <div id="footer" style="position:absolute; bottom:0; width:100%"></div>
+
+
+  <script>
+    fetch('/static/footer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        
+      });
+
+    function formatTimeLabel(dateStr) {
+      const date = new Date(dateStr);
+      if (isNaN(date)) return "unknown date";
+
+      const now = new Date();
+
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const startOfDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+      const diffMs = startOfToday - startOfDate;
+      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+      const timeStr = date.toLocaleTimeString("uk-UA", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      if (diffDays === 0) return `${timeStr} today`;
+      if (diffDays === 1) return `${timeStr} yesterday`;
+      if (diffDays < 7) return `${timeStr} ${diffDays} days ago`;
+
+      const dateStrFormatted = date.toLocaleDateString("uk-UA", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+
+      return `${dateStrFormatted} о ${timeStr}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".activity-time").forEach((el) => {
+        const rawTime = el.getAttribute("data-time");
+        el.textContent = formatTimeLabel(rawTime);
+      });
+    });
+  </script>
 </body>
 </html>

@@ -58,19 +58,11 @@ app = FastAPI()
 router = APIRouter()
 app.include_router(router)
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["http://localhost:8000"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-# app.add_middleware(SessionMiddleware, secret_key="some-secret-key")
 app.add_middleware(
     SessionMiddleware,
     secret_key="some-secret-key",
     max_age=60 * 60 * 24 * 7,
+    session_cookie="session",
     https_only=False,
     same_site="lax",
 )
@@ -102,35 +94,6 @@ SCOPES = [
 REDIRECT_URI = "https://causal-joannes-olenadovb-ede57763.koyeb.app/callback"
 
 
-# @app.get("/home")
-# async def home():
-#     return FileResponse("static/home.html")
-
-
-@app.get("/settings")
-async def settings_page():
-    return FileResponse("static/settings.html")
-
-
-@app.get("/error")
-async def error(request: Request, status_code: int):
-    status_text = ""
-    return static.TemplateResponse(
-        "error.html",
-        {"request": request, "status_code": status_code, "status_text": status_text},
-    )
-
-
-@app.get("/aboutus")
-async def aboutus():
-    return FileResponse("static/aboutus.html")
-
-
-@app.get("/registrate")
-async def registrate():
-    return FileResponse("static/registration.html")
-
-
 # LOG IN / SIGN IN
 
 
@@ -143,7 +106,6 @@ def get_current_user(request: Request, db: Session = Depends(get_db)):
         if user:
             return user
     raise HTTPException(status_code=401, detail="Unauthorized")
-    # return RedirectResponse(url="/error", status_code=401)
 
 
 def admin_required(
@@ -176,12 +138,6 @@ async def callback(request: Request, db: Session = Depends(get_db)):
     )
     flow.fetch_token(authorization_response=str(request.url))
     credentials = flow.credentials
-
-    # oauth2_client = build("oauth2", "v2", credentials=credentials)
-    # user_info = oauth2_client.userinfo().get().execute()
-    # user_email = user_info["email"]
-    # request.session["user_email"] = user_email
-
     id_info = id_token.verify_oauth2_token(
         credentials.id_token, requests.Request(), audience=None
     )
@@ -191,6 +147,7 @@ async def callback(request: Request, db: Session = Depends(get_db)):
 
     if user:
         request.session["user_id"] = user.idUsers
+        print("Set session before redirect:", request.session)
         return RedirectResponse(url="/home")
     return RedirectResponse(url="/create_profile")
 
@@ -280,34 +237,6 @@ async def post_edit_profile(
     )
 
 
-# @app.post("/request/{request_id}/change_status")
-# async def update_request_state(
-#     request_id: int,
-#     new_state: int = Form(...),
-#     db: Session = Depends(get_db),
-#     current_user: models.User = Depends(get_current_user),
-#     admin: models.User = Depends(admin_required),
-# ):
-#     request_obj = db.query(models.Request).filter_by(idRequest=request_id).first()
-#     if not request_obj:
-#         raise HTTPException(status_code=404, detail="Request not found")
-
-#     if (
-#         request_obj.id_author != current_user.idUsers
-#         and request_obj.id_author != admin.idUsers
-#     ):
-#         raise HTTPException(
-#             status_code=403, detail="Not allowed to modify this request"
-#         )
-
-#     request_obj.state = new_state
-#     db.commit()
-#     db.refresh(request_obj)
-#     return JSONResponse(
-#         status_code=200, content={"message": "State updated successfully"}
-#     )
-
-
 @app.post("/request/{req_id}/change_status")
 async def change_status(
     req_id: int,
@@ -317,7 +246,7 @@ async def change_status(
 ):
     activity = (
         db.query(models.Request)
-        .filter_by(idRequests=req_id, id_author=current_user)
+        .filter_by(idRequests=req_id, id_author=current_user.idUsers)
         .first()
     )
     if not activity:
@@ -329,8 +258,6 @@ async def change_status(
     return JSONResponse(
         status_code=200, content={"message": "State updated successfully"}
     )
-
-    # return RedirectResponse(url="/profile", status_code=303)
 
 
 # DATABASE
@@ -453,13 +380,6 @@ async def create_request(
 
 # DATABASE READ
 
-
-# @app.get("/users")
-# def list_users(request: Request, db: Session = Depends(get_db)):
-#     users = db.query(models.User).all()
-#     return static.TemplateResponse("users.html", {"request": request, "users": users})
-
-
 @app.get("/admin")
 def list_users(
     request: Request,
@@ -470,24 +390,20 @@ def list_users(
     return static.TemplateResponse("users.html", {"request": request, "users": users})
 
 
-# @app.get("/profile", response_class=FileResponse)
-# def profile(request: Request, db: Session = Depends(get_db)):
-#     user_email = request.session.get("user_email")
-#     if not user_email:
-#         return RedirectResponse(url="/login")
-
-#     user = db.query(models.User).filter(models.User.email == user_email).first()
-#     if not user:
-#         return RedirectResponse(url="/create_profile")
-#     return static.TemplateResponse("profile.html", {"request": request, "user": user})
-
-
 @app.get("/categories")
 def show_categories(
     request: Request,
     category: Optional[List[str]] = Query(None),
     db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
 ):
+    user = (
+        db.query(models.User)
+        .filter(models.User.idUsers == current_user.idUsers)
+        .first()
+    )
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
     all_requests = db.query(models.Request).all()
     if category:
 
@@ -537,18 +453,17 @@ def get_activity(
                 "time": req.created_at,
             }
         )
-    # user = request.session.get("user")
-    # if user:
-    #     return static.TemplateResponse(
-    #         "home.html", {"request": request, "activities": activities}
-    #     )
     return static.TemplateResponse(
         "index.html", {"request": request, "activities": activities}
     )
 
 
 @app.get("/home", response_class=HTMLResponse)
-def home_request(request: Request, db: Session = Depends(get_db)):
+def home_request(
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
     recent_requests = (
         db.query(models.Request, models.User)
         .join(models.User, models.User.idUsers == models.Request.id_author)
@@ -557,6 +472,13 @@ def home_request(request: Request, db: Session = Depends(get_db)):
         .limit(2)
         .all()
     )
+    user = (
+        db.query(models.User)
+        .filter(models.User.idUsers == current_user.idUsers)
+        .first()
+    )
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
     activities = []
     for req, user in recent_requests:
         activities.append(
@@ -572,6 +494,7 @@ def home_request(request: Request, db: Session = Depends(get_db)):
                 "time": req.created_at,
             }
         )
+    print("Session in /home:", request.session)
     return static.TemplateResponse(
         "home.html", {"request": request, "activities": activities}
     )
@@ -606,6 +529,7 @@ def profile(
             ),
             "time": req.created_at,
             "req_id": req.idRequests,
+            "state": req.state,
         }
         for req in user_requests
     ]
@@ -619,7 +543,15 @@ async def view_request(
     request: Request,
     request_id: int,
     db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
 ):
+    user = (
+        db.query(models.User)
+        .filter(models.User.idUsers == current_user.idUsers)
+        .first()
+    )
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
     db_request = (
         db.query(models.Request)
         .filter(models.Request.idRequests == int(request_id))
@@ -673,21 +605,43 @@ async def view_user(
         }
         for req in user_requests
     ]
-    if current_user == user_id:
-        return static.TemplateResponse(
-            "profile.html", {"request": request, "user": user, "activities": activities}
-        )
+    if current_user.idUsers == user_id:
+        return RedirectResponse(url="/profile", status_code=302)
     return static.TemplateResponse(
         "user.html", {"request": request, "user": user, "activities": activities}
     )
 
 
+@app.get("/aboutus")
+async def aboutus(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    user = (
+        db.query(models.User)
+        .filter(models.User.idUsers == current_user.idUsers)
+        .first()
+    )
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return FileResponse("static/aboutus.html")
+
+
+@app.get("/registrate")
+async def registrate():
+    return FileResponse("static/registration.html")
+
+
 # ERROR HANDLING
 
-# @app.exception_handler(Exception)
-# async def global_exception_handler(request: Request, exc: Exception):
-#     logger.error(f"Unhandled error: {exc}")
-#     return JSONResponse(status_code=500, content={"detail": str(exc)})
+
+@app.get("/error")
+async def error(request: Request, status_code: int):
+    detail = ""
+    return static.TemplateResponse(
+        "error.html",
+        {"request": request, "status_code": status_code, "status_text": detail},
+    )
 
 
 @app.exception_handler(StarletteHTTPException)

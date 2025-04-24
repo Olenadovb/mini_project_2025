@@ -8,7 +8,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-  <!-- <link rel="manifest" href="/favicon/site.webmanifest"> -->
+  <link rel="manifest" href="/favicon/manifest.json" />
   <title>Hands - Profile</title>
   <link rel="stylesheet" href="/static/styles.css" />
   <style>
@@ -31,9 +31,11 @@
     }
 
     .card button {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
+      /* position: ; */
+    }
+
+    .card form button {
+      padding: 5px 0 0 0;
     }
 
     .bottom-block{
@@ -55,7 +57,7 @@
 
     .right-block {
       display: flex;
-      flex-direction: column;
+      flex-direction: row-reverse;
       justify-content: flex-end;
       gap: 10px;
     }
@@ -63,7 +65,6 @@
     .status-dropdown-wrapper {
       position: relative;
       min-width: 25px;
-      background-color: white;
       border-radius: 10px;
       /* top: 200px; */
       height: 20px;
@@ -78,27 +79,41 @@
       cursor: pointer;
     }
 
+    .status-buttons{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .st-button{
+      padding: 5px;
+    }
+
     .status-dropdown {
       display: none;
       position: absolute;
-      background-color: white;
       border: 1px solid #ccc;
-      padding: 6px;
       border-radius: 8px;
       z-index: 10;
       top: 25px;
-      left: -10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      display: block;
+      background-color: #c3bbcc;
+      width: 100px;
+      height: 55px
     }
 
     .status-dropdown form button {
       display: block;
       background: none;
       border: none;
-      padding: 5px 10px;
+      padding: 6px 10px;
       cursor: pointer;
       width: 100%;
-      text-align: left;
+      text-align: center;
+      left: 0;
+      color: #3a286b;
+      font-weight: 500;
     }
 
     .status-dropdown form button:hover {
@@ -157,9 +172,9 @@
     } %}
 
     {% set status_colors = {
-      1: '#34c759',
-      2: '#ffcc00',
-      3: '#ff3b30'
+      1: '#31cf7e',
+      2: '#e4c132',
+      3: '#cf3838'
     } %}
     
     {% set status_transitions = {
@@ -185,29 +200,28 @@
           <div class="right-block">
             <a class="arrow-link-categories" href="/request/{{ activity.idRequests }}">↗</a>
           {% set current_status = activity.state %}
-          {% set available_statuses = status_transitions[current_status] %}
+          {% set available_statuses = status_transitions[activity.state] %}
           
           <div class="status-dropdown-wrapper">
             {% if available_statuses %}
-              <button class="status-button" style="background-color: {{ status_colors[current_status] }}"
+              <button class="status-button" style="background-color: {{ status_colors[activity.state] }}"
                       onclick="toggleDropdown(this)">
-                      <!-- <p style="color: {{ status_colors[current_status] }}">
-                        {{ status_map[current_status] }}
-                      </p> -->
               </button>
-              <div class="status-dropdown">
+              <div class="status-dropdown" style="display:none;">
                 <form action="/request/{{ activity.idRequests }}/change_status" method="POST" onsubmit="return confirm('Change status?');">
                   <input type="hidden" name="activity_id" value="{{ activity.idRequests }}">
+                  <div class="status-buttons">
                   {% for status_code in available_statuses %}
-                    <button type="submit" name="new_status" value="{{ status_code }}">
+                    <button type="submit" name="new_status" value="{{ status_code }}" class="st-button">
                       {{ status_map[status_code] }}
                     </button>
                   {% endfor %}
+                  </div>
                 </form>
               </div>
             {% else %}
               <div class="status-label">
-                <p><strong style="color: {{ status_colors[current_status] }}">{{ status_map[current_status] }}</strong></p>
+                <p><strong style="color: {{ status_colors[activity.state] }}">{{ status_map[activity.state] }}</strong></p>
               </div>
             {% endif %}
             </div>
@@ -285,28 +299,6 @@
           document.querySelectorAll('.status-dropdown').forEach(d => d.style.display = 'none');
         }
       });
-
-    //   function changeStatus(id, currentStatus) {
-    //   const newStatus = prompt("Choose status (active, inactive, closed):", currentStatus);
-    //   if (newStatus && ['active', 'inactive', 'closed'].includes(newStatus)) {
-    //     fetch(`/request/${idRequests}/change_status`, {
-    //       method: 'POST',
-    //       headers: { 'Content-Type': 'application/json' },
-    //       body: JSON.stringify({ status: newStatus }),
-    //     })
-    //     .then(response => {
-    //       if (response.ok) {
-    //         alert("Status updated!");
-    //         location.reload();
-    //       } else {
-    //         alert("Error occured while updating status");
-    //       }
-    //     });
-    //   } else if (newStatus) {
-    //     alert("Error");
-    //   }
-    // }
   </script>
-  
 </body>
 </html>
