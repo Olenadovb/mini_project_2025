@@ -56,6 +56,7 @@ header.navbar nav button {
   border: 1px solid #344c8c;
   width: 228px;
   color: #344c8c;
+  height: 49px;
   background: none;
   padding: 12px 24px;
   border-radius: 16px;
@@ -355,12 +356,14 @@ header.navbar nav button {
   justify-content: space-between;
 }
 
+
 .request-user {
   display: flex;
   align-items: center;
   gap: 16px;
-  font-weight: lighter;
+  font-weight: 300;
   font-size: 18px;
+  color: #fff;
 }
 
 .request-avatar {
