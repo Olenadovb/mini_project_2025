@@ -68,6 +68,7 @@ header.navbar nav button {
   cursor: pointer;
   white-space: nowrap;
   font-size: 16px;
+  height: 49px;
 }
 
 .homepage_button_join {
@@ -395,8 +396,9 @@ header.navbar nav button {
   display: flex;
   align-items: center;
   gap: 16px;
-  font-weight: lighter;
+  font-weight: 300;
   font-size: 18px;
+  color: #fff;
 }
 
 .request-avatar {
