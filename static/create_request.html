@@ -91,8 +91,8 @@
                             <label for="category-vehicle">Vehicle & Transport Support</label>
                         </div>
                         <div class="checkbox-container">
-                            <input type="checkbox" id="category-power-energy" name="categories" value="Protective Equipment">
-                            <label for="category-power-energy">Protective Equipment</label>
+                            <input type="checkbox" id="protective-equiptment" name="categories" value="Protective Equipment">
+                            <label for="protective-equiptment">Protective Equipment</label>
                         </div>
                     </div>
                     <div id="categoriesError" class="error" style="display:none; color: red; font-weight: bold;">
@@ -139,38 +139,58 @@
             
         });
 
-        document.getElementById('createRequestForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkboxes = document.querySelectorAll('input[name="categories"]');
             const categoriesError = document.getElementById('categoriesError');
-            const formData = new FormData();
+            const form = document.getElementById('createRequestForm');
 
-            if (categories.length < 1 || categories.length > 3) {
-                categoriesError.style.display = 'block';
-                return;
-            } else {
-                categoriesError.style.display = 'none';
+            function updateCheckboxStates() {
+                const checked = Array.from(checkboxes).filter(cb => cb.checked);
+                if (checked.length >= 3) {
+                    checkboxes.forEach(cb => {
+                        if (!cb.checked) cb.disabled = true;
+                    });
+                } else {
+                    checkboxes.forEach(cb => cb.disabled = false);
+                }
             }
 
-            formData.append("name", document.getElementById('name').value);
-            formData.append("description", document.getElementById('description').value);
-            formData.append("state", 1);
-            formData.append("categories", categories.join(', '));
-            formData.append("image", document.getElementById('photo').files[0]);
-
-            const response = await fetch('/create_request', {
-                method: 'POST',
-                body: formData
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', () => {
+                    updateCheckboxStates();
+                    categoriesError.style.display = 'none';
+                });
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                window.location.href = data.redirect_url;
-            } else {
-                alert('Error creating request.');
-            }
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
 
+                const categories = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+                if (categories.length < 1 || categories.length > 3) {
+                    categoriesError.style.display = 'block';
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("name", document.getElementById('name').value);
+                formData.append("description", document.getElementById('description').value);
+                formData.append("state", 1);
+                formData.append("categories", categories.join(', '));
+                formData.append("image", document.getElementById('photo').files[0]);
+
+                const response = await fetch('/create_request', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('Error creating request.');
+                }
+            });
+            updateCheckboxStates();
         });
     </script>        
 </body>
