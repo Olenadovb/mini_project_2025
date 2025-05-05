@@ -52,7 +52,7 @@
         const hasMatch = selectedCategories.length === 0 || cardCategories.some(cat => selectedCategories.includes(cat));
         const matchesActive = !onlyActive || isActive;
         const matchesClosed = !hideClosed || !isClosed;
-        const show = matchesCategory && matchesActive && matchesClosed;
+        const show = hasMatch && matchesActive && matchesClosed;
         
         card.style.display = SHOW ? 'flex' : 'none';
         if (show) visibleCards++;
