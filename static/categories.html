@@ -46,15 +46,19 @@
         const categoryTags = card.querySelectorAll('.category-tag-categories');
         const cardCategories = Array.from(categoryTags).map(tag => tag.textContent.trim());
 
-        const isActive = card.state === 1;
-        const isClosed = card.state === 3;
+        const status = card.getAttribute('data-status');
+        const isActive = status === "1";
+        const isClosed = status === "3";
+
+        // const isActive = card.state === 1;
+        // const isClosed = card.state === 3;
 
         const hasMatch = selectedCategories.length === 0 || cardCategories.some(cat => selectedCategories.includes(cat));
         const matchesActive = !onlyActive || isActive;
         const matchesClosed = !hideClosed || !isClosed;
         const show = hasMatch && matchesActive && matchesClosed;
         
-        card.style.display = SHOW ? 'flex' : 'none';
+        card.style.display = show ? 'flex' : 'none';
         if (show) visibleCards++;
       });
   
@@ -78,6 +82,18 @@
 </head>
 <body>
   <div id="header"></div>
+
+  {% set status_map = {
+    1: 'Active',
+    2: 'In Progress',
+    3: 'Closed'
+  } %}
+
+  {% set status_colors = {
+    1: '#31cf7e',
+    2: '#e4c132',
+    3: '#cf3838'
+  } %}
 
   <main class="main-content-categories">
     <form method="get" action="/categories" class="filter-panel-categories">
@@ -108,7 +124,7 @@
 
     <div class="cards-container-categories">
       {% for request in requests %}
-        <div class="request-card-categories" data-status="{{ 'active' if request.is_active else 'closed' }}">
+        <div class="request-card-categories" data-status="{{ request.state }}">
           <div class="card-content-categories">{{ request.name }}
           </div>
           <div class="card-footer-categories">
@@ -120,6 +136,9 @@
               {% else %}
                 <em>—</em>
               {% endif %}
+            </div>
+            <div class="status-label">
+              <p><strong style="color: {{ status_colors[request.state] }}">{{ status_map[request.state] }}</strong></p>
             </div>
             <a class="arrow-link-categories" href="/request/{{ request.idRequests }}">↗</a>
           </div>
