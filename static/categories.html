@@ -31,6 +31,12 @@
     function applyCategoryFilters() {
       const checkboxes = document.querySelectorAll('.filter-panel-categories input[type="checkbox"]:checked');
       const selectedCategories = Array.from(checkboxes).map(cb => cb.value);
+      // const selectedCategories = Array.from(checkboxes)
+      //   .filter(cb => cb.name === 'category')
+      //   .map(cb => cb.value);
+      const onlyActive = document.querySelector('input[name="only_active"]').checked;
+      const hideClosed = document.querySelector('input[name="hide_closed"]').checked;
+
       const cards = document.querySelectorAll('.request-card-categories');
       const notFoundMessage = document.getElementById('not-found-message');
   
@@ -39,10 +45,17 @@
       cards.forEach(card => {
         const categoryTags = card.querySelectorAll('.category-tag-categories');
         const cardCategories = Array.from(categoryTags).map(tag => tag.textContent.trim());
+
+        const isActive = card.state === 1;
+        const isClosed = card.state === 3;
+
         const hasMatch = selectedCategories.length === 0 || cardCategories.some(cat => selectedCategories.includes(cat));
+        const matchesActive = !onlyActive || isActive;
+        const matchesClosed = !hideClosed || !isClosed;
+        const show = matchesCategory && matchesActive && matchesClosed;
         
-        card.style.display = hasMatch ? 'flex' : 'none';
-        if (hasMatch) visibleCards++;
+        card.style.display = SHOW ? 'flex' : 'none';
+        if (show) visibleCards++;
       });
   
       if (selectedCategories.length > 0 && visibleCards === 0) {
@@ -81,12 +94,21 @@
           {{ cat }}
         </label>
       {% endfor %}
+      <h3>Status filters:</h3>
+      <label>
+        <input type="checkbox" name="only_active" {% if only_active %}checked{% endif %}>
+        Only active
+      </label>
+      <label>
+        <input type="checkbox" name="hide_closed" {% if hide_closed %}checked{% endif %}>
+        Hide closed
+      </label>
       <button type="submit">Apply filters</button>
     </form>
 
     <div class="cards-container-categories">
       {% for request in requests %}
-        <div class="request-card-categories">
+        <div class="request-card-categories" data-status="{{ 'active' if request.is_active else 'closed' }}">
           <div class="card-content-categories">{{ request.name }}
           </div>
           <div class="card-footer-categories">
