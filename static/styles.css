@@ -125,7 +125,6 @@ header.navbar nav button {
   border-radius: 50%;
   object-fit: cover;
 }
-
 /* .container {
   max-width:  100%;
   align-items: center;
@@ -949,6 +948,34 @@ max-width: 600px;
 .contact-socials a:hover {
   text-decoration: underline;
 }
+@media (max-width: 600px) {
+  .activity-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .activity-row img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+  }
+
+  .activity-row span {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .activity-row span:last-child {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+  }
+}
+
+
+
 
 @media screen and (max-width: 600px) {
 
@@ -992,49 +1019,9 @@ max-width: 600px;
     padding: 0 16px !important;
     box-sizing: border-box;
   }
-
-  .activity-row {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 10px 0 !important;
-    padding: 8px 12px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    background-color: #b4bcd2;
-    border-radius: 12px !important;
-    box-sizing: border-box;
-    flex-wrap: nowrap !important;
-  }
-
-  .activity-row img {
-    width: 32px !important;
-    height: 32px !important;
-    border-radius: 50% !important;
-    flex-shrink: 0 !important;
-  }
-
-  .activity-row span {
-    font-size: 12px !important;
-    line-height: 1.2 !important;
-    text-align: left !important;
-    flex: 1 1 auto !important;
-    word-break: break-word;
-  }
-
-  .activity-row span:last-child {
-    font-size: 12px !important;
-    flex: none !important;
-    text-align: right !important;
-    color: #666 !important;
-    margin-left: auto !important;
-  }
-
-  .activity-section-wrapper {
-    padding: 0 16px !important;
-    width: 100% !important;
-    box-sizing: border-box;
-  }
+  
+ 
+  
 
   img[src="/static/photos/photo_volunteers.png"] {
     width: auto !important;
@@ -1042,10 +1029,10 @@ max-width: 600px;
     max-width: 90% !important;
   }
   .about-image {
-    width: 150%;        /* make it scale nicely on mobile */
-    max-width: 400px;  /* optional limit */
-    margin: 0 auto;    /* center the image */
-    display: block;    /* ensure it’s treated as block for centering */
+    width: 150%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
   }
 }
 
