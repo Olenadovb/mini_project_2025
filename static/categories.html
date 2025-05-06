@@ -26,6 +26,51 @@
       color: #666;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+
+    @media (max-width: 600px) {
+      .main-content-categories {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+
+      .filter-panel-categories {
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 15px;
+        box-sizing: border-box;
+      }
+
+      .cards-container-categories {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        box-sizing: border-box;
+      }
+
+      .request-card-categories {
+        width: 100%;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+      }
+
+      .filter-panel-categories label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+
+      .filter-panel-categories a,
+      .filter-panel-categories button {
+        align-self: flex-start;
+      }
+
+      .not-found-message {
+        margin-left: 0;
+      }
+    }
   </style>
   <script>
     function applyCategoryFilters() {
@@ -129,6 +174,13 @@
       .then(response => response.text())
       .then(html => {
         document.getElementById('header').innerHTML = html;
+        
+        const burger = document.getElementById('burger');
+        const navMenu = document.getElementById('nav-menu');
+    
+        burger.addEventListener('click', () => {
+          navMenu.classList.toggle('show');
+      });
       });
 
     fetch('/static/footer.html')

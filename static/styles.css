@@ -1,8 +1,19 @@
-html, body {
+html {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  box-sizing: border-box;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -139,11 +150,10 @@ header.navbar nav button {
   background-color: #dbd9e5;
 }
 
+
 .container {
-  max-width:  100%;
-  align-items: center;
-  margin: 0 auto;
-  padding: 50px 0px;
+  max-width: 100%;
+  padding: 0 16px;
   box-sizing: border-box;
 }
 
@@ -327,7 +337,7 @@ header.navbar nav button {
 
 .about-image {
   object-fit: cover;
-  width: 452px;
+  width: 476px;
   height: 377px;
   max-width: 100%;
   border-radius: 16px;
@@ -764,7 +774,7 @@ color: white;
   background-color: #4d5678;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   nav {
     display: none;
     flex-direction: column;
@@ -785,6 +795,10 @@ color: white;
   .burger {
     display: block;
   }
+  
+  .request-text {
+    font-size: 16px;
+  }
 
   #nav-menu {
     width: 150px;
@@ -795,7 +809,7 @@ color: white;
   }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 601px) {
   .burger {
     display: none;
   }
@@ -807,6 +821,15 @@ color: white;
   flex-direction: column;
   gap: 15px;
   margin-bottom: 20px;
+}
+
+
+.about-container {
+  padding: 100px 60px;
+  max-height: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  max-width: 100%;
 }
 
 .profile-photo {
@@ -985,4 +1008,113 @@ color: white;
 
 .contact-socials a:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .activity-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .activity-row img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+  }
+
+  .activity-row span {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .activity-row span:last-child {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+  }
+}
+
+
+@media screen and (max-width: 600px) {
+
+  h1, h2, h3, p {
+    font-size: 24px !important;
+    text-align: center !important;
+  }
+
+  .homepage_button_join,
+  .outlined-btn,
+  .homepage_button_join_green {
+    font-size: 20px !important;
+    padding: 10px 14px !important;
+  }
+
+  section {
+    margin: 30px 10px !important;
+  }
+
+  section[style*="display: flex"] {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  section img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .about-row,
+  .about-row.reverse {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  section[style*="height:305px"] {
+    height: auto !important;
+    width: 100% !important;
+    margin: 20px auto !important;
+    padding: 0 16px !important;
+    box-sizing: border-box;
+  }
+
+
+  img[src="/static/photos/photo_volunteers.png"] {
+    width: auto !important;
+    height: auto !important;
+    max-width: 90% !important;
+  }
+  .about-image {
+    width: 150%;        /* make it scale nicely on mobile */
+    max-width: 400px;  /* optional limit */
+    margin: 0 auto;    /* center the image */
+    display: block;    /* ensure it’s treated as block for centering */
+  }
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .button-group a {
+    width: 100%;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+
+    
 }

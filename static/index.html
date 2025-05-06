@@ -67,13 +67,15 @@
     <!-- ACTIVITY PREVIEW -->
     <section style="margin: 71px 77px 79px 79px; align-items: center">
       <h2 style="text-align: center; color: #344c8c; font-size: 36px;">Here’s what user activity looks like...</h2>
-      <div style="margin-top: 71px; height:305px; width: 1122px;display: flex; flex-direction: column; align-items: center; gap: 25px;">
+      <div style="margin-top: 71px; height:305px; width: 95%;display: flex; flex-direction: column; align-items: center; gap: 25px; justify-content:center;">
         {% for activity in activities[:3] %}
         <div class="activity-row">
           <img src="{{ activity.image_path or '/static/default_avatar.jpg' }}" class="avatar" />
-          <span class="act-author-name">{{ activity.name }} {{ activity.surname }}</span>
-          <span style="flex: 1;">{{ activity.description }}</span>
-          <span class="activity-time" style="color: #666;" data-time="{{ activity.time }}"></span>
+          <div class="activity-content">
+            <span class="act-author-name" class="name">{{ activity.name }} {{ activity.surname }}</span>
+            <span class="report" style="flex: 1;">{{ activity.description }}</span>
+            <span class="activity-time" class="time" style="color: #666;" data-time="{{ activity.time }}"></span>
+          </div>
         </div>
         {% endfor %}
         </div>
