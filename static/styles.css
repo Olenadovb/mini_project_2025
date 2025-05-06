@@ -312,7 +312,7 @@ header.navbar nav button {
 
 .about-image {
   object-fit: cover;
-  width: 452px;
+  width: 476px;
   height: 377px;
   max-width: 100%;
   border-radius: 16px;
@@ -326,7 +326,6 @@ header.navbar nav button {
   line-height: 1.6;
   max-width: 507px;
 }
-
 
 .card span {
   border: 1px solid white;
@@ -720,7 +719,7 @@ color: white;
   background-color: #4d5678;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   nav {
     display: none;
     flex-direction: column;
@@ -743,7 +742,7 @@ color: white;
   }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 600px) {
   .burger {
     display: none;
   }
@@ -757,6 +756,13 @@ color: white;
   margin-bottom: 20px;
 }
 
+.about-container {
+  padding: 100px 60px;
+  max-height: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  max-width: 100%;
+}
 .profile-photo {
   flex: 0 0 auto;
   align-self: flex-start;
@@ -944,17 +950,17 @@ max-width: 600px;
   text-decoration: underline;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 600px) {
 
   h1, h2, h3, p {
-    font-size: 14px !important;
+    font-size: 24px !important;
     text-align: center !important;
   }
 
   .homepage_button_join,
   .outlined-btn,
   .homepage_button_join_green {
-    font-size: 14px !important;
+    font-size: 20px !important;
     padding: 10px 14px !important;
   }
 
@@ -1035,5 +1041,35 @@ max-width: 600px;
     height: auto !important;
     max-width: 90% !important;
   }
+  .about-image {
+    width: 150%;        /* make it scale nicely on mobile */
+    max-width: 400px;  /* optional limit */
+    margin: 0 auto;    /* center the image */
+    display: block;    /* ensure it’s treated as block for centering */
+  }
 }
 
+.button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .button-group a {
+    width: 100%;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+
+    
+}
